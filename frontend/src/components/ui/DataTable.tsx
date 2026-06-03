@@ -1,246 +1,175 @@
 import React, { useState, useMemo } from 'react';
+import { Search, ChevronDown, ChevronUp, FileSpreadsheet, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from './Button';
 
 export interface Column<T> {
-  key: string;
-  title: string;
-  render?: (value: any, row: T) => React.ReactNode;
+  header: string;
+  accessor: keyof T | ((row: T) => React.ReactNode);
   sortable?: boolean;
-}
-
-interface BulkAction<T> {
-  label: string;
-  onClick: (selectedItems: T[]) => void;
-  variant?: 'primary' | 'danger' | 'secondary';
+  sortKey?: keyof T;
 }
 
 interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
-  searchKey?: keyof T;
   searchPlaceholder?: string;
-  bulkActions?: BulkAction<T>[];
-  onRowClick?: (row: T) => void;
-  rowsPerPage?: number;
+  searchKey?: keyof T;
+  actions?: (row: T) => React.ReactNode;
 }
 
 export function DataTable<T extends { id: string | number }>({
   columns,
   data,
-  searchKey,
   searchPlaceholder = 'Search records...',
-  bulkActions = [],
-  onRowClick,
-  rowsPerPage = 10,
+  searchKey,
+  actions
 }: DataTableProps<T>) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortKey, setSortKey] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortKey, setSortKey] = useState<keyof T | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState<Set<string | number>>(new Set());
+  const [pageSize, setPageSize] = useState(5);
 
-  // 1. Sort Handler
-  const handleSort = (key: string) => {
-    if (sortKey === key) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortKey(key);
-      setSortOrder('asc');
-    }
-  };
-
-  // 2. Filter & Sort data
+  // Filtered and Sorted Data
   const processedData = useMemo(() => {
     let result = [...data];
 
-    // Filter
-    if (searchTerm && searchKey) {
+    // Search filter
+    if (searchQuery && searchKey) {
       result = result.filter((item) => {
         const value = item[searchKey];
-        if (value === null || value === undefined) return false;
-        return String(value).toLowerCase().includes(searchTerm.toLowerCase());
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchQuery.toLowerCase());
+        }
+        return false;
       });
     }
 
-    // Sort
+    // Sorting
     if (sortKey) {
-      result.sort((a: any, b: any) => {
+      result.sort((a, b) => {
         const valA = a[sortKey];
         const valB = b[sortKey];
-        if (valA === undefined || valB === undefined) return 0;
-        
-        if (typeof valA === 'number' && typeof valB === 'number') {
-          return sortOrder === 'asc' ? valA - valB : valB - valA;
+
+        if (valA === valB) return 0;
+        if (valA === null || valA === undefined) return 1;
+        if (valB === null || valB === undefined) return -1;
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+          return sortDirection === 'asc'
+            ? valA.localeCompare(valB)
+            : valB.localeCompare(valA);
         }
-        
-        const strA = String(valA).toLowerCase();
-        const strB = String(valB).toLowerCase();
-        if (strA < strB) return sortOrder === 'asc' ? -1 : 1;
-        if (strA > strB) return sortOrder === 'asc' ? 1 : -1;
-        return 0;
+
+        return sortDirection === 'asc'
+          ? (valA as any) > (valB as any) ? 1 : -1
+          : (valB as any) > (valA as any) ? 1 : -1;
       });
     }
 
     return result;
-  }, [data, searchTerm, searchKey, sortKey, sortOrder]);
+  }, [data, searchQuery, searchKey, sortKey, sortDirection]);
 
-  // 3. Pagination
-  const totalPages = Math.ceil(processedData.length / rowsPerPage);
+  // Pagination Math
+  const totalPages = Math.ceil(processedData.length / pageSize);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    return processedData.slice(startIndex, startIndex + rowsPerPage);
-  }, [processedData, currentPage, rowsPerPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return processedData.slice(startIndex, startIndex + pageSize);
+  }, [processedData, currentPage, pageSize]);
 
-  // Reset page when search term changes
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleSort = (key: keyof T) => {
+    if (sortKey === key) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
     setCurrentPage(1);
-    setSelectedIds(new Set());
   };
 
-  // 4. Selection Management
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      const allIds = paginatedData.map((item) => item.id);
-      setSelectedIds(new Set(allIds));
-    } else {
-      setSelectedIds(new Set());
-    }
+  const handleExport = (type: 'csv' | 'pdf') => {
+    alert(`[Demo Mode] Exporting ${processedData.length} records to ${type.toUpperCase()}...`);
   };
-
-  const handleSelectRow = (id: string | number, e: React.MouseEvent) => {
-    e.stopPropagation(); // Avoid row click trigger
-    const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedIds(newSelected);
-  };
-
-  const selectedItems = useMemo(() => {
-    return data.filter((item) => selectedIds.has(item.id));
-  }, [data, selectedIds]);
 
   return (
-    <div className="datatable-container">
+    <div className="w-full">
       {/* Table Toolbar */}
-      <div className="table-toolbar">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         {searchKey && (
-          <div className="search-wrapper">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="search-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+          <div className="relative w-full md:max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
               placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="search-input"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 dark:focus:ring-school-blue/50 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all"
             />
           </div>
         )}
-
-        {/* Bulk Action Controls */}
-        {selectedIds.size > 0 && bulkActions.length > 0 && (
-          <div className="bulk-actions-wrapper">
-            <span className="selected-count">
-              {selectedIds.size} selected
-            </span>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {bulkActions.map((action, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    action.onClick(selectedItems);
-                    setSelectedIds(new Set()); // Reset selection
-                  }}
-                  className={`btn ${
-                    action.variant === 'danger'
-                      ? 'btn-danger'
-                      : action.variant === 'secondary'
-                      ? 'btn-secondary'
-                      : 'btn-primary'
-                  }`}
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
-                >
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="flex items-center gap-3 self-end md:self-auto">
+          <Button variant="outline" size="sm" onClick={() => handleExport('csv')} leftIcon={<FileSpreadsheet className="h-4 w-4 text-school-green" />}>
+            Export Excel
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => handleExport('pdf')} leftIcon={<FileText className="h-4 w-4 text-school-maroon" />}>
+            Export PDF
+          </Button>
+        </div>
       </div>
 
-      {/* Main Table Content */}
-      <div className="table-responsive">
-        <table className="sms-table">
+      {/* Table Container */}
+      <div className="w-full overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-premium">
+        <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr>
-              {bulkActions.length > 0 && (
-                <th style={{ width: '40px', textAlign: 'center' }}>
-                  <input
-                    type="checkbox"
-                    checked={paginatedData.length > 0 && selectedIds.size === paginatedData.length}
-                    onChange={handleSelectAll}
-                  />
-                </th>
-              )}
-              {columns.map((col) => (
+            <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 font-medium">
+              {columns.map((col, idx) => (
                 <th
-                  key={col.key}
-                  onClick={() => col.sortable && handleSort(col.key)}
-                  style={{ cursor: col.sortable ? 'pointer' : 'default' }}
+                  key={idx}
+                  onClick={() => col.sortable && col.sortKey && handleSort(col.sortKey)}
+                  className={`px-6 py-4 font-semibold ${
+                    col.sortable ? 'cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-850 transition-colors' : ''
+                  }`}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {col.title}
-                    {col.sortable && sortKey === col.key && (
-                      <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                  <div className="flex items-center gap-1">
+                    {col.header}
+                    {col.sortable && col.sortKey && sortKey === col.sortKey && (
+                      sortDirection === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
                     )}
                   </div>
                 </th>
               ))}
+              {actions && <th className="px-6 py-4 font-semibold text-right">Actions</th>}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-350">
             {paginatedData.length > 0 ? (
               paginatedData.map((row) => (
-                <tr
-                  key={row.id}
-                  onClick={() => onRowClick && onRowClick(row)}
-                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-                >
-                  {bulkActions.length > 0 && (
-                    <td style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.has(row.id)}
-                        onChange={(e) => {
-                          const newSelected = new Set(selectedIds);
-                          if (e.target.checked) {
-                            newSelected.add(row.id);
-                          } else {
-                            newSelected.delete(row.id);
-                          }
-                          setSelectedIds(newSelected);
-                        }}
-                      />
+                <tr key={row.id} className="hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors">
+                  {columns.map((col, cIdx) => {
+                    const content =
+                      typeof col.accessor === 'function'
+                        ? col.accessor(row)
+                        : (row[col.accessor] as React.ReactNode);
+                    return (
+                      <td key={cIdx} className="px-6 py-4 font-medium text-slate-850 dark:text-slate-200">
+                        {content}
+                      </td>
+                    );
+                  })}
+                  {actions && (
+                    <td className="px-6 py-4 text-right">
+                      {actions(row)}
                     </td>
                   )}
-                  {columns.map((col) => (
-                    <td key={col.key}>
-                      {col.render
-                        ? col.render((row as any)[col.key], row)
-                        : (row as any)[col.key] ?? '-'}
-                    </td>
-                  ))}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length + (bulkActions.length > 0 ? 1 : 0)} style={{ textAlign: 'center', padding: 'var(--space-xl)', color: 'var(--text-secondary)' }}>
-                  No records found.
+                <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-slate-400 dark:text-slate-500">
+                  No records found
                 </td>
               </tr>
             )}
@@ -248,130 +177,65 @@ export function DataTable<T extends { id: string | number }>({
         </table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination Footer */}
       {totalPages > 1 && (
-        <div className="table-pagination">
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Showing {(currentPage - 1) * rowsPerPage + 1} to {Math.min(currentPage * rowsPerPage, processedData.length)} of {processedData.length} records
-          </span>
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <button
-              className="btn btn-secondary"
-              style={{ padding: '0.4rem 0.8rem' }}
+        <div className="flex items-center justify-between mt-6">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500 dark:text-slate-400">Rows per page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="bg-transparent text-sm border border-slate-200 dark:border-slate-800 rounded-lg py-1 px-2 focus:outline-none dark:text-white"
+            >
+              {[5, 10, 20, 50].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            <span className="text-sm text-slate-500 dark:text-slate-400 ml-4">
+              Showing {(currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, processedData.length)} of {processedData.length} entries
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="px-3"
             >
-              Previous
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0 8px', fontSize: '0.85rem', fontWeight: 600 }}>
-              Page {currentPage} of {totalPages}
-            </div>
-            <button
-              className="btn btn-secondary"
-              style={{ padding: '0.4rem 0.8rem' }}
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? 'primary' : 'outline'}
+                  size="sm"
+                  onClick={() => setCurrentPage(pageNum)}
+                  className="px-3"
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+            <Button
+              variant="outline"
+              size="sm"
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="px-3"
             >
-              Next
-            </button>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       )}
-
-      <style>{`
-        .datatable-container {
-          background-color: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-md);
-          overflow: hidden;
-          width: 100%;
-        }
-        .table-toolbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: var(--space-md);
-          border-bottom: 1px solid var(--border-color);
-          background-color: rgba(var(--accent-primary-rgb), 0.01);
-          flex-wrap: wrap;
-          gap: var(--space-md);
-        }
-        .search-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        .search-icon {
-          position: absolute;
-          left: 12px;
-          color: var(--text-tertiary);
-          pointer-events: none;
-        }
-        .search-input {
-          padding: 0.55rem 0.8rem 0.55rem 2.2rem;
-          border: 1px solid var(--border-color);
-          background-color: var(--bg-primary);
-          color: var(--text-primary);
-          border-radius: var(--radius-md);
-          outline: none;
-          font-size: 0.875rem;
-          width: 250px;
-          transition: border-color var(--transition-fast);
-        }
-        .search-input:focus {
-          border-color: var(--accent-primary);
-        }
-        .bulk-actions-wrapper {
-          display: flex;
-          align-items: center;
-          gap: var(--space-md);
-        }
-        .selected-count {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: var(--accent-primary);
-        }
-        .table-responsive {
-          overflow-x: auto;
-          width: 100%;
-        }
-        .sms-table {
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-          font-size: 0.875rem;
-        }
-        .sms-table th {
-          background-color: rgba(var(--accent-primary-rgb), 0.02);
-          color: var(--text-secondary);
-          font-weight: 600;
-          padding: var(--space-md);
-          border-bottom: 1px solid var(--border-color);
-          user-select: none;
-        }
-        .sms-table td {
-          padding: var(--space-md);
-          border-bottom: 1px solid var(--border-color);
-          color: var(--text-primary);
-          white-space: nowrap;
-        }
-        .sms-table tbody tr {
-          transition: background-color var(--transition-fast);
-        }
-        .sms-table tbody tr:hover {
-          background-color: var(--bg-tertiary);
-        }
-        .table-pagination {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: var(--space-md);
-          background-color: rgba(var(--accent-primary-rgb), 0.01);
-          border-top: 1px solid var(--border-color);
-          flex-wrap: wrap;
-          gap: var(--space-md);
-        }
-      `}</style>
     </div>
   );
 }

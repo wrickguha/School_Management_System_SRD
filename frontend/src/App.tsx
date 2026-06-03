@@ -1,19 +1,30 @@
-import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
-import { AppRoutes } from './routes';
-import './styles/global.css';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from './store/AuthContext';
+import { ThemeProvider } from './store/ThemeContext';
+import { AppRoutes } from './routes/AppRoutes';
+
+// Create a client for React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </ThemeProvider>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

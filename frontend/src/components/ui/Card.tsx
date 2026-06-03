@@ -1,121 +1,58 @@
 import React from 'react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  variant?: 'default' | 'glass' | 'outlined';
-  interactive?: boolean;
-  onClick?: () => void;
-  style?: React.CSSProperties;
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  glass?: boolean;
+  hoverable?: boolean;
 }
 
-export const Card: React.FC<CardProps> & {
-  Header: React.FC<{ children: React.ReactNode; style?: React.CSSProperties; className?: string }>;
-  Body: React.FC<{ children: React.ReactNode; style?: React.CSSProperties; className?: string }>;
-  Footer: React.FC<{ children: React.ReactNode; style?: React.CSSProperties; className?: string }>;
-} = ({ children, className = '', variant = 'default', interactive = false, onClick, style }) => {
-  
-  const getCardClass = () => {
-    let classes = 'sms-card ';
-    if (variant === 'glass') {
-      classes += 'glass-card ';
-    } else if (variant === 'outlined') {
-      classes += 'outlined-card ';
-    } else {
-      classes += 'default-card ';
-    }
-
-    if (interactive) {
-      classes += 'glass-card-interactive ';
-    }
-    return classes + className;
-  };
-
+export const Card: React.FC<CardProps> = ({
+  children,
+  className,
+  glass = false,
+  hoverable = true,
+  ...props
+}) => {
   return (
-    <div 
-      className={getCardClass()} 
-      onClick={onClick} 
-      style={{
-        borderRadius: 'var(--radius-md)',
-        transition: 'all var(--transition-normal)',
-        ...style
-      }}
+    <div
+      className={twMerge(
+        clsx(
+          'rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-card p-6 shadow-premium transition-all duration-300',
+          {
+            'glass-card': glass,
+            'hover:shadow-cardHover hover:-translate-y-0.5': hoverable,
+          },
+          className
+        )
+      )}
+      {...props}
     >
       {children}
-      
-      <style>{`
-        .sms-card {
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          box-sizing: border-box;
-        }
-        .default-card {
-          background-color: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          box-shadow: var(--shadow-sm);
-        }
-        .default-card:hover {
-          box-shadow: var(--shadow-md);
-        }
-        .outlined-card {
-          background-color: transparent;
-          border: 1px solid var(--border-color);
-        }
-        .outlined-card:hover {
-          border-color: var(--text-tertiary);
-        }
-      `}</style>
     </div>
   );
 };
 
-// Card Header Subcomponent
-Card.Header = ({ children, style, className = '' }) => (
-  <div 
-    className={`card-header ${className}`} 
-    style={{
-      padding: 'var(--space-md) var(--space-lg)',
-      borderBottom: '1px solid var(--border-color)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      ...style
-    }}
-  >
+export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, ...props }) => (
+  <div className={twMerge('flex items-center justify-between mb-4', className)} {...props}>
     {children}
   </div>
 );
 
-// Card Body Subcomponent
-Card.Body = ({ children, style, className = '' }) => (
-  <div 
-    className={`card-body ${className}`} 
-    style={{
-      padding: 'var(--space-lg)',
-      flex: 1,
-      ...style
-    }}
-  >
+export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ children, className, ...props }) => (
+  <h3 className={twMerge('text-lg font-bold tracking-tight text-slate-900 dark:text-white', className)} {...props}>
     {children}
-  </div>
+  </h3>
 );
 
-// Card Footer Subcomponent
-Card.Footer = ({ children, style, className = '' }) => (
-  <div 
-    className={`card-footer ${className}`} 
-    style={{
-      padding: 'var(--space-md) var(--space-lg)',
-      borderTop: '1px solid var(--border-color)',
-      backgroundColor: 'rgba(var(--accent-primary-rgb), 0.01)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      gap: 'var(--space-sm)',
-      ...style
-    }}
-  >
+export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = ({ children, className, ...props }) => (
+  <p className={twMerge('text-sm text-slate-500 dark:text-slate-400', className)} {...props}>
+    {children}
+  </p>
+);
+
+export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, ...props }) => (
+  <div className={twMerge('relative', className)} {...props}>
     {children}
   </div>
 );
