@@ -92,3 +92,124 @@
   padding: 0;
   text-align: left;
 }
+
+/* Premium Animations */
+@keyframes orbit-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-y-reverse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes ping-glow {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+    box-shadow: 0 0 20px rgba(10, 77, 140, 0.4);
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+@keyframes scale-up-draw {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes arrow-flow {
+  0% {
+    stroke-dashoffset: 20;
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+}
+
+/* Helper Animation Classes */
+.animate-orbit-cw {
+  animation: orbit-cw 40s linear infinite;
+}
+
+.animate-orbit-cw-slow {
+  animation: orbit-cw 60s linear infinite;
+}
+
+.animate-orbit-ccw {
+  animation: orbit-ccw 40s linear infinite;
+}
+
+.animate-orbit-ccw-slow {
+  animation: orbit-ccw 60s linear infinite;
+}
+
+.animate-float-y {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+.animate-float-y-slow {
+  animation: float-y-slow 6s ease-in-out infinite;
+}
+
+.animate-float-y-reverse {
+  animation: float-y-reverse 5s ease-in-out infinite;
+}
+
+.animate-dash-move {
+  animation: dash 2s linear infinite;
+}
+
+.animate-ping-glow {
+  animation: ping-glow 3s ease-in-out infinite;
+}
+
+.animate-arrow-flow {
+  animation: arrow-flow 1.5s linear infinite;
+}
+
+/* Hover Pause Utilities */
+.hover-pause:hover * {
+  animation-play-state: paused !important;
+}
+
+
