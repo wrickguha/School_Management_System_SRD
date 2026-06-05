@@ -8,17 +8,15 @@ import { Card } from '../components/ui/Card';
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<UserRole>('Admin');
-  const [email, setEmail] = useState('admin.sterling@academic.edu');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
+  const [email, setEmail] = useState('admin.super@school.edu');
   const [password, setPassword] = useState('password');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
-    if (role === 'Admin') {
-      setEmail('admin.sterling@academic.edu');
-    } else if (role === 'Teacher') {
+    if (role === 'Teacher') {
       setEmail('sunita.rao@school.edu');
     } else if (role === 'Parent') {
       setEmail('ramesh.sharma@example.com');
@@ -91,7 +89,7 @@ export default function LoginPage() {
                   onChange={(e) => handleRoleSelect(e.target.value as UserRole)}
                   className="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 appearance-none transition-all cursor-pointer"
                 >
-                  {(['Super Admin', 'School Admin', 'Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
+                  {(['Super Admin', 'School Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
                     <option key={r} value={r} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 font-semibold">
                       {r} Profile
                     </option>

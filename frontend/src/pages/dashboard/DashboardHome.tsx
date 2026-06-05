@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Users, DollarSign, Activity, AlertCircle,
   FileSpreadsheet, ArrowUpRight, TrendingUp, Calendar, Megaphone,
-  BookOpen, CheckCircle, CreditCard
+  BookOpen, CheckCircle, CreditCard, Building, Clock, Server
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -49,7 +49,350 @@ export default function DashboardHome() {
   // ----------------------------------------------------
   // VIEW A: ADMIN PORTAL
   // ----------------------------------------------------
-  if (role === 'Admin' || role === 'Super Admin' || role === 'School Admin') {
+  // ----------------------------------------------------
+  // VIEW S: SUPER ADMIN PORTAL (SaaS Platform Dashboard)
+  // ----------------------------------------------------
+  if (role === 'Super Admin') {
+    // SaaS KPIs
+    const saasKpis = [
+      { title: 'Total Schools', value: '248', change: '+14 this month', icon: Building, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/20' },
+      { title: 'Total Students', value: '120,450', change: '+8.2% YoY', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Total Teachers', value: '5,840', change: '+5.1% YoY', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
+      { title: 'Total Parents', value: '98,200', change: '+7.8% YoY', icon: Users, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
+      { title: 'Total Revenue', value: '$2,412,000', change: '+15.4% YoY', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' },
+      { title: 'Active Subscriptions', value: '232', change: '93.5% renewal rate', icon: CheckCircle, color: 'text-teal-650 bg-teal-50 dark:bg-teal-950/20' },
+      { title: 'Expired Subscriptions', value: '16', change: '-4% from last quarter', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' },
+      { title: 'Pending Demo Requests', value: '24', change: '8 scheduled today', icon: Clock, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20' },
+      { title: 'Active Users Today', value: '14,850', change: 'Peak concurrent: 3.2k', icon: TrendingUp, color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/20' },
+      { title: 'System Health', value: '99.98%', change: 'Latency: 220ms • Online', icon: Server, color: 'text-violet-650 bg-violet-50 dark:bg-violet-950/20' },
+    ];
+
+    // Mock Data for Charts
+    const schoolGrowthData = [
+      { name: '2021', Schools: 45 },
+      { name: '2022', Schools: 82 },
+      { name: '2023', Schools: 135 },
+      { name: '2024', Schools: 182 },
+      { name: '2025', Schools: 220 },
+      { name: '2026', Schools: 248 }
+    ];
+
+    const monthlyRevenueData = [
+      { name: 'Jan', Subscriptions: 150000, Addons: 35000 },
+      { name: 'Feb', Subscriptions: 170000, Addons: 40000 },
+      { name: 'Mar', Subscriptions: 185000, Addons: 40000 },
+      { name: 'Apr', Subscriptions: 205000, Addons: 45000 },
+      { name: 'May', Subscriptions: 225000, Addons: 50000 },
+      { name: 'Jun', Subscriptions: 240000, Addons: 55000 }
+    ];
+
+    const userGrowthData = [
+      { name: 'Jan', MAU: 85000, DAU: 28000 },
+      { name: 'Feb', MAU: 92000, DAU: 31000 },
+      { name: 'Mar', MAU: 105000, DAU: 36000 },
+      { name: 'Apr', MAU: 112000, DAU: 39000 },
+      { name: 'May', MAU: 118000, DAU: 42000 },
+      { name: 'Jun', MAU: 120450, DAU: 45850 }
+    ];
+
+    const demoConversionData = [
+      { name: 'Jan', Requested: 40, Converted: 12 },
+      { name: 'Feb', Requested: 45, Converted: 15 },
+      { name: 'Mar', Requested: 50, Converted: 20 },
+      { name: 'Apr', Requested: 60, Converted: 22 },
+      { name: 'May', Requested: 55, Converted: 25 },
+      { name: 'Jun', Requested: 65, Converted: 32 }
+    ];
+
+    const subscriptionTierData = [
+      { name: 'Jan', Basic: 80, Pro: 50, Enterprise: 20 },
+      { name: 'Feb', Basic: 85, Pro: 60, Enterprise: 25 },
+      { name: 'Mar', Basic: 90, Pro: 72, Enterprise: 28 },
+      { name: 'Apr', Basic: 95, Pro: 80, Enterprise: 32 },
+      { name: 'May', Basic: 100, Pro: 92, Enterprise: 38 },
+      { name: 'Jun', Basic: 105, Pro: 102, Enterprise: 41 }
+    ];
+
+    // Interactive Demo Queue State Simulator
+    const [demoQueue, setDemoQueue] = useState([
+      { id: '1', school: 'Delhi Public School', rep: 'Rahul Sen', date: 'June 08, 2026', time: '10:00 AM', status: 'Pending Approval' },
+      { id: '2', school: 'Greenwood High International', rep: 'Sunita Roy', date: 'June 09, 2026', time: '02:00 PM', status: 'Approved' },
+      { id: '3', school: 'Stanford Academy (K-12)', rep: 'Unassigned', date: 'June 10, 2026', time: '11:00 AM', status: 'New Request' },
+      { id: '4', school: 'Calcutta Boys School', rep: 'Vikram Singh', date: 'June 11, 2026', time: '04:00 PM', status: 'Pending Approval' }
+    ]);
+
+    const handleApproveDemo = (id: string) => {
+      setDemoQueue(prev => prev.map(item => item.id === id ? { ...item, status: 'Approved' } : item));
+    };
+
+    const handleAssignRep = (id: string) => {
+      setDemoQueue(prev => prev.map(item => item.id === id ? { ...item, rep: 'Sarah Connor', status: 'Pending Approval' } : item));
+    };
+
+    return (
+      <div className="space-y-8 text-left">
+        {/* Welcome Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">SaaS Platform Control Panel</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Unified multi-tenant subscription analytics, platform statistics, and infrastructure monitor.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Opening tenant configuration panel...')}>
+              Configure Settings
+            </Button>
+            <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Registering new tenant school...')}>
+              Register New School
+            </Button>
+          </div>
+        </div>
+
+        {/* 10 KPIs Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {saasKpis.map((kpi) => {
+            const Icon = kpi.icon;
+            return (
+              <Card key={kpi.title} className="p-5 flex flex-col justify-between h-36 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:translate-y-[-2px] hover:shadow-lg transition-all duration-300">
+                <div className="flex justify-between items-start">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-normal">{kpi.title}</span>
+                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${kpi.color}`}>
+                    <Icon className="h-4.5 w-4.5" />
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <span className="block text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">{kpi.value}</span>
+                  <span className="text-[10px] font-bold text-slate-450 mt-1 flex items-center gap-1">
+                    <TrendingUp className="h-3.5 w-3.5 text-school-green" />
+                    {kpi.change}
+                  </span>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Row 1 Charts: School Growth & Monthly Revenue */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>School Growth Trends</CardTitle>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Platform Multi-Tenant Onboarding</span>
+              </div>
+              <span className="h-7 w-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-650">
+                <Building className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={schoolGrowthData}>
+                  <defs>
+                    <linearGradient id="colorSchoolsSaas" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="Schools" stroke="#4f46e5" strokeWidth={2.5} fillOpacity={1} fill="url(#colorSchoolsSaas)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Platform Monthly Revenue</CardTitle>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">SaaS Subscriptions vs Add-on Packages</span>
+              </div>
+              <span className="h-7 w-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600">
+                <DollarSign className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyRevenueData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <Tooltip />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Bar dataKey="Subscriptions" name="Core SaaS" fill="#0A4D8C" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Addons" name="SMS/Add-ons" fill="#138D75" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+
+        {/* Row 2 Charts: User Growth & Subscription Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>User Traffic Growth</CardTitle>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Monthly Active vs Daily Active Users</span>
+              </div>
+              <span className="h-7 w-7 rounded-lg bg-sky-50 dark:bg-sky-950/40 flex items-center justify-center text-sky-500">
+                <TrendingUp className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={userGrowthData}>
+                  <defs>
+                    <linearGradient id="colorMau" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorDau" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0A4D8C" stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor="#0A4D8C" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <Tooltip />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Area type="monotone" dataKey="MAU" name="Monthly Active (MAU)" stroke="#0ea5e9" strokeWidth={2} fillOpacity={1} fill="url(#colorMau)" />
+                  <Area type="monotone" dataKey="DAU" name="Daily Active (DAU)" stroke="#0A4D8C" strokeWidth={2} fillOpacity={1} fill="url(#colorDau)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Subscription Analytics</CardTitle>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Tenant Subscriptions Tier Distribution</span>
+              </div>
+              <span className="h-7 w-7 rounded-lg bg-violet-50 dark:bg-violet-950/40 flex items-center justify-center text-violet-650">
+                <CheckCircle className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={subscriptionTierData}>
+                  <defs>
+                    <linearGradient id="colorBasic" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorPro" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorEnt" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <Tooltip />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Area type="monotone" stackId="1" dataKey="Basic" name="Basic Plan" stroke="#0ea5e9" strokeWidth={2} fillOpacity={1} fill="url(#colorBasic)" />
+                  <Area type="monotone" stackId="1" dataKey="Pro" name="Pro Plan" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorPro)" />
+                  <Area type="monotone" stackId="1" dataKey="Enterprise" name="Enterprise Plan" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorEnt)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+
+        {/* Row 3: Demo Conversion Rate & Interactive Demo Queue */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Demo Conversion Rate</CardTitle>
+                <span className="text-[10px] text-slate-405 text-slate-400 font-bold uppercase tracking-wider block mt-1">Requested vs Converted Demos</span>
+              </div>
+              <span className="h-7 w-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-500">
+                <Clock className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={demoConversionData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <Tooltip />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Bar dataKey="Requested" name="Demos Requested" fill="#94A3B8" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                  <Bar dataKey="Converted" name="Converted Clients" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          {/* Pending Demo Requests Queue */}
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+              <CardHeader className="mb-4">
+                <CardTitle className="text-md flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-indigo-650" />
+                  <span>Pending Demo Requests Queue</span>
+                </CardTitle>
+              </CardHeader>
+              <div className="space-y-4">
+                {demoQueue.map((item) => (
+                  <div key={item.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="text-xs font-extrabold block text-slate-900 dark:text-white">{item.school}</span>
+                      <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">
+                        Scheduled: {item.date} at {item.time} • Rep: <span className="text-slate-500 font-bold">{item.rep}</span>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
+                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                        item.status === 'Approved' 
+                          ? 'bg-school-greenLight text-school-green' 
+                          : item.status === 'New Request'
+                          ? 'bg-blue-50 text-blue-650 dark:bg-blue-950/20 dark:text-blue-400'
+                          : 'bg-amber-50 text-amber-650 dark:bg-amber-950/20 dark:text-amber-400'
+                      }`}>
+                        {item.status}
+                      </span>
+                      {item.status === 'New Request' && (
+                        <Button variant="outline" size="sm" onClick={() => handleAssignRep(item.id)}>
+                          Assign Rep
+                        </Button>
+                      )}
+                      {item.status === 'Pending Approval' && (
+                        <Button variant="accent" size="sm" onClick={() => handleApproveDemo(item.id)}>
+                          Approve
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="w-full" onClick={() => alert('[Demo Mode] Redirecting to demo management book...')}>
+                View All Historical Demos
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW A: SCHOOL ADMIN PORTAL (School-level Dashboard)
+  // ----------------------------------------------------
+  if (role === 'School Admin') {
     const totalStudents = students?.length || 0;
     const totalTeachers = teachers?.length || 0;
     const totalRevenue = transactions?.reduce((acc, t) => acc + t.amount, 0) || 0;

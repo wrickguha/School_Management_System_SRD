@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'Admin' | 'Teacher' | 'Parent' | 'Student' | 'Faculty' | 'Librarian' | 'Super Admin' | 'School Admin' | 'Principal' | 'Accountant' | 'HR';
+export type UserRole = 'Super Admin' | 'School Admin' | 'Principal' | 'Teacher' | 'Faculty' | 'Librarian' | 'Parent' | 'Student' | 'Accountant' | 'HR';
 
 interface User {
   name: string;
@@ -31,23 +31,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedRole = localStorage.getItem('erp_auth_role');
     const savedAuth = localStorage.getItem('erp_auth_status');
 
-    if (savedAuth === 'true' && savedUser && savedRole) {
+    // Make sure the saved role is still valid (not 'Admin')
+    if (savedAuth === 'true' && savedUser && savedRole && savedRole !== 'Admin') {
       setUser(JSON.parse(savedUser));
       setRole(savedRole as UserRole);
       setIsAuthenticated(true);
     } else {
-      // Default initial state (for instant demo explore)
+      // Default initial state (defaulting to Super Admin for demo)
       const defaultUser: User = {
-        name: 'Alexander Sterling',
-        email: 'admin.sterling@academic.edu',
-        role: 'Admin',
+        name: 'Alexander Sterling (Super Admin)',
+        email: 'admin.super@school.edu',
+        role: 'Super Admin',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
       };
       setUser(defaultUser);
-      setRole('Admin');
+      setRole('Super Admin');
       setIsAuthenticated(true);
       localStorage.setItem('erp_auth_user', JSON.stringify(defaultUser));
-      localStorage.setItem('erp_auth_role', 'Admin');
+      localStorage.setItem('erp_auth_role', 'Super Admin');
       localStorage.setItem('erp_auth_status', 'true');
     }
   }, []);
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    let name = 'Alexander Sterling';
+    let name = 'Alexander Sterling (Super Admin)';
     let avatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
 
     if (selectedRole === 'Teacher') {
@@ -121,8 +122,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const switchRole = (newRole: UserRole) => {
     if (!user) return;
     
-    let name = 'Alexander Sterling';
-    let email = 'admin.sterling@academic.edu';
+    let name = 'Alexander Sterling (Super Admin)';
+    let email = 'admin.super@school.edu';
     let avatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
 
     if (newRole === 'Teacher') {
