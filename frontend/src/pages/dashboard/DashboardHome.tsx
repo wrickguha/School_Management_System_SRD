@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 
 export default function DashboardHome() {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const queryClient = useQueryClient();
 
   // Queries
@@ -261,7 +261,7 @@ export default function DashboardHome() {
   // ----------------------------------------------------
   // VIEW B: TEACHER PORTAL
   // ----------------------------------------------------
-  if (role === 'Teacher') {
+  if (role === 'Teacher' || role === 'Faculty') {
     const classPerfData = [
       { name: 'UT-I', Physics: 78, Math: 82 },
       { name: 'UT-II', Physics: 84, Math: 85 },
@@ -271,9 +271,11 @@ export default function DashboardHome() {
     return (
       <div className="space-y-8 text-left">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Teacher Command Portal</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+            {role === 'Faculty' ? 'Faculty Command Portal' : 'Teacher Command Portal'}
+          </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-            Welcome back, Dr. Sunita Rao. You have 2 classes scheduled today.
+            Welcome back, {user?.name}. You have 2 classes scheduled today.
           </p>
         </div>
 
@@ -536,6 +538,200 @@ export default function DashboardHome() {
             </form>
           )}
         </Modal>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW D: STUDENT PORTAL
+  // ----------------------------------------------------
+  if (role === 'Student') {
+    const aarav = students?.find(s => s.name === 'Aarav Sharma') || { pendingFees: 0, attendanceRate: 94.5, academicPerformance: 88.5 };
+
+    return (
+      <div className="space-y-8 text-left">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Student Command Center</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Welcome back, {user?.name} (Grade 10-A). Track your classes, grades, and schedules.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">My Average GPA</span>
+            <span className="block text-3xl font-extrabold text-school-green mt-2">{aarav.academicPerformance}%</span>
+            <span className="text-[9px] font-bold text-slate-400 block mt-1">Class Rank: 4th</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">My Attendance Rate</span>
+            <span className="block text-3xl font-extrabold text-school-blue mt-2">{aarav.attendanceRate}%</span>
+            <span className="text-[9px] font-bold text-slate-400 block mt-1">2 Excused Absences</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Outstanding Fees Status</span>
+            <span className={`block text-3xl font-extrabold mt-2 ${aarav.pendingFees > 0 ? 'text-school-maroon' : 'text-school-green'}`}>
+              {aarav.pendingFees > 0 ? `$${aarav.pendingFees.toLocaleString()}` : 'Cleared'}
+            </span>
+            <span className="text-[9px] font-bold text-slate-400 block mt-1">
+              {aarav.pendingFees > 0 ? 'Payment due by Parent' : 'All clear for Term II'}
+            </span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Library Book Checked Out</span>
+            <span className="block text-3xl font-extrabold text-slate-900 dark:text-white mt-2">1 Copy</span>
+            <span className="text-[9px] font-bold text-slate-400 block mt-1">Concepts of Physics Vol 1</span>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-md flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-school-blue" />
+                <span>My Active Assignments</span>
+              </CardTitle>
+            </CardHeader>
+            <div className="space-y-4">
+              {[
+                { id: '1', title: 'Calculus Derivatives Problems', subject: 'Math', date: 'Due June 08', status: 'Pending' },
+                { id: '2', title: 'Kinematics lab writeup report', subject: 'Physics', date: 'Due June 06', status: 'Submitted' }
+              ].map((hw) => (
+                <div key={hw.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">{hw.title}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{hw.subject} • {hw.date}</span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                    hw.status === 'Submitted' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-650'
+                  }`}>
+                    {hw.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-md flex items-center gap-2">
+                <Megaphone className="h-5 w-5 text-school-maroon" />
+                <span>Student Bulletins & Notices</span>
+              </CardTitle>
+            </CardHeader>
+            <div className="space-y-4">
+              {announcements?.filter(a => a.target === 'All' || a.target === 'Students').map(ann => (
+                <div key={ann.id} className="p-3 bg-slate-50 dark:bg-slate-950 border border-slate-150 dark:border-slate-850 rounded-xl space-y-1">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white block">{ann.title}</span>
+                  <p className="text-[11px] text-slate-550 dark:text-slate-400 leading-relaxed">{ann.content}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW E: LIBRARIAN PORTAL
+  // ----------------------------------------------------
+  if (role === 'Librarian') {
+    const libraryActivities = [
+      { id: '1', book: 'Concepts of Physics Vol 1', student: 'Aarav Sharma', type: 'Checkout', date: 'Today, 10:15 AM' },
+      { id: '2', book: 'Introduction to Algorithms', student: 'Priya Patel', type: 'Return', date: 'Today, 09:30 AM' },
+      { id: '3', book: 'Organic Chemistry Part II', student: 'Rohan Gupta', type: 'Checkout', date: 'Yesterday, 04:00 PM' }
+    ];
+
+    return (
+      <div className="space-y-8 text-left">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Librarian Command Portal</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Welcome back, {user?.name}. Manage book records, checkouts, and student library catalog access.
+            </p>
+          </div>
+          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Opening book catalog addition form...')}>
+            Catalog New Title
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Total Volumes</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">14,250</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">450 new this semester</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Active Checkouts</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">184</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">12 issues today</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Overdue Books</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">12</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Reminders dispatched</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Reservations</span>
+            <span className="block text-2xl font-extrabold text-slate-900 dark:text-white mt-2">8</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">On hold at counter</span>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-md flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-school-blue" />
+                <span>Recent Library Operations</span>
+              </CardTitle>
+            </CardHeader>
+            <div className="space-y-4">
+              {libraryActivities.map((act) => (
+                <div key={act.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">{act.book}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">Student: {act.student} • {act.date}</span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                    act.type === 'Return' ? 'bg-school-greenLight text-school-green' : 'bg-school-blueLight text-school-blue'
+                  }`}>
+                    {act.type}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+              <CardHeader className="mb-4">
+                <CardTitle>Counter Desk Quick Actions</CardTitle>
+              </CardHeader>
+              <div className="space-y-3">
+                <div className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">Issue book to student</span>
+                    <span className="text-[10px] text-slate-400">Barcode scanner simulation</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Launching issue book checkout...')}>Issue</Button>
+                </div>
+                <div className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">Process return ledger</span>
+                    <span className="text-[10px] text-slate-400">Scan book return cover</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Processing book return checklist...')}>Return</Button>
+                </div>
+              </div>
+            </div>
+            <div className="h-6" />
+          </Card>
+        </div>
       </div>
     );
   }

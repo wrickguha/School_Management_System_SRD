@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
-import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, Users, ArrowLeft, Shield, GraduationCap, BookOpen, Library } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
@@ -22,6 +22,12 @@ export default function LoginPage() {
       setEmail('sunita.rao@school.edu');
     } else if (role === 'Parent') {
       setEmail('ramesh.sharma@example.com');
+    } else if (role === 'Student') {
+      setEmail('aarav.sharma@school.edu');
+    } else if (role === 'Faculty') {
+      setEmail('dr.singh@faculty.edu');
+    } else if (role === 'Librarian') {
+      setEmail('rahul.library@school.edu');
     }
   };
 
@@ -69,21 +75,34 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-3">Login Profile</label>
               <div className="grid grid-cols-3 gap-3">
-                {(['Admin', 'Teacher', 'Parent'] as UserRole[]).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => handleRoleSelect(r)}
-                    className={`flex flex-col items-center gap-2 p-3.5 rounded-2xl border transition-all ${
-                      selectedRole === r
-                        ? 'border-school-blue bg-school-blue/5 text-school-blue font-bold shadow-sm'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500'
-                    }`}
-                  >
-                    <Users className="h-5 w-5" />
-                    <span className="text-xs">{r}</span>
-                  </button>
-                ))}
+                {(['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] as UserRole[]).map((r) => {
+                  const getRoleIcon = () => {
+                    switch (r) {
+                      case 'Admin': return <Shield className="h-5 w-5" />;
+                      case 'Teacher': return <BookOpen className="h-5 w-5" />;
+                      case 'Parent': return <Users className="h-5 w-5" />;
+                      case 'Student': return <GraduationCap className="h-5 w-5" />;
+                      case 'Faculty': return <BookOpen className="h-5 w-5" />;
+                      case 'Librarian': return <Library className="h-5 w-5" />;
+                      default: return <Users className="h-5 w-5" />;
+                    }
+                  };
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => handleRoleSelect(r)}
+                      className={`flex flex-col items-center gap-2 p-3.5 rounded-2xl border transition-all ${
+                        selectedRole === r
+                          ? 'border-school-blue bg-school-blue/5 text-school-blue font-bold shadow-sm'
+                          : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500'
+                      }`}
+                    >
+                      {getRoleIcon()}
+                      <span className="text-xs">{r}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

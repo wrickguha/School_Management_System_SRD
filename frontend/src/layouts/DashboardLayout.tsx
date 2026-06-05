@@ -18,22 +18,22 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Teacher', 'Parent'] },
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] },
   { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Admin'] },
-  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Admin', 'Teacher'] },
+  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Admin', 'Teacher', 'Faculty'] },
   { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Admin'] },
   { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Admin'] },
-  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Admin', 'Teacher', 'Parent'] },
+  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
   { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Admin', 'Parent'] },
-  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Admin', 'Teacher', 'Parent'] },
+  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student'] },
+  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
   { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Admin'] },
-  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Admin', 'Teacher', 'Parent'] },
-  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Admin', 'Teacher', 'Parent'] },
+  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian'] },
+  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian'] },
+  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian'] },
 ];
 
 export const DashboardLayout: React.FC = () => {
@@ -219,7 +219,7 @@ export const DashboardLayout: React.FC = () => {
                     <div className="px-3 py-2 text-[10px] font-bold text-slate-450 uppercase tracking-widest border-b border-slate-150 dark:border-slate-800 mb-1">
                       Choose demo portal
                     </div>
-                    {(['Admin', 'Teacher', 'Parent'] as UserRole[]).map((r) => (
+                    {(['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] as UserRole[]).map((r) => (
                       <button
                         key={r}
                         onClick={() => handleRoleChange(r)}

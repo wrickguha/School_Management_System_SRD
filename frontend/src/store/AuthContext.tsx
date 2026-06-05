@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'Admin' | 'Teacher' | 'Parent';
+export type UserRole = 'Admin' | 'Teacher' | 'Parent' | 'Student' | 'Faculty' | 'Librarian';
 
 interface User {
   name: string;
@@ -65,6 +65,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (selectedRole === 'Parent') {
       name = 'Ramesh Sharma (Parent of Aarav)';
       avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Student') {
+      name = 'Aarav Sharma';
+      avatar = 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Faculty') {
+      name = 'Dr. Vikram Singh';
+      avatar = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Librarian') {
+      name = 'Rahul Mehta';
+      avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
     }
 
     const userData: User = {
@@ -109,6 +118,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name = 'Ramesh Sharma';
       email = 'ramesh.sharma@example.com';
       avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Student') {
+      name = 'Aarav Sharma';
+      email = 'aarav.sharma@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Faculty') {
+      name = 'Dr. Vikram Singh';
+      email = 'dr.singh@faculty.edu';
+      avatar = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Librarian') {
+      name = 'Rahul Mehta';
+      email = 'rahul.library@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
     }
 
     const updatedUser: User = {
