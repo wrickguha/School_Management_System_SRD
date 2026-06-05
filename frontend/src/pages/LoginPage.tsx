@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
-import { Lock, Mail, Users, ArrowLeft, Shield, GraduationCap, BookOpen, Library } from 'lucide-react';
+import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
@@ -28,6 +28,16 @@ export default function LoginPage() {
       setEmail('dr.singh@faculty.edu');
     } else if (role === 'Librarian') {
       setEmail('rahul.library@school.edu');
+    } else if (role === 'Super Admin') {
+      setEmail('admin.super@school.edu');
+    } else if (role === 'School Admin') {
+      setEmail('admin.school@school.edu');
+    } else if (role === 'Principal') {
+      setEmail('principal.desk@school.edu');
+    } else if (role === 'Accountant') {
+      setEmail('finance.officer@school.edu');
+    } else if (role === 'HR') {
+      setEmail('hr.officer@school.edu');
     }
   };
 
@@ -71,38 +81,27 @@ export default function LoginPage() {
         <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 shadow-premium">
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* Role Selectors Cards */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-3">Login Profile</label>
-              <div className="grid grid-cols-3 gap-3">
-                {(['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] as UserRole[]).map((r) => {
-                  const getRoleIcon = () => {
-                    switch (r) {
-                      case 'Admin': return <Shield className="h-5 w-5" />;
-                      case 'Teacher': return <BookOpen className="h-5 w-5" />;
-                      case 'Parent': return <Users className="h-5 w-5" />;
-                      case 'Student': return <GraduationCap className="h-5 w-5" />;
-                      case 'Faculty': return <BookOpen className="h-5 w-5" />;
-                      case 'Librarian': return <Library className="h-5 w-5" />;
-                      default: return <Users className="h-5 w-5" />;
-                    }
-                  };
-                  return (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => handleRoleSelect(r)}
-                      className={`flex flex-col items-center gap-2 p-3.5 rounded-2xl border transition-all ${
-                        selectedRole === r
-                          ? 'border-school-blue bg-school-blue/5 text-school-blue font-bold shadow-sm'
-                          : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500'
-                      }`}
-                    >
-                      {getRoleIcon()}
-                      <span className="text-xs">{r}</span>
-                    </button>
-                  );
-                })}
+            {/* Role Selectors Dropdown */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-450 uppercase tracking-widest block mb-1">Login Profile / Role</label>
+              <div className="relative">
+                <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+                <select
+                  value={selectedRole}
+                  onChange={(e) => handleRoleSelect(e.target.value as UserRole)}
+                  className="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 appearance-none transition-all cursor-pointer"
+                >
+                  {(['Super Admin', 'School Admin', 'Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
+                    <option key={r} value={r} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 font-semibold">
+                      {r} Profile
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center text-slate-450">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
 

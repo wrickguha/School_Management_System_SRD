@@ -18,22 +18,22 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] },
-  { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Admin'] },
-  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Admin', 'Teacher', 'Faculty'] },
-  { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Admin'] },
-  { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Admin'] },
-  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
-  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
-  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
-  { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Admin', 'Parent'] },
-  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
-  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student'] },
-  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student'] },
-  { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Admin'] },
-  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian'] },
-  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian'] },
-  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian'] },
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Admin', 'Super Admin', 'School Admin'] },
+  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Admin', 'Teacher', 'Faculty', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Admin', 'Super Admin', 'School Admin', 'HR'] },
+  { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Admin', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Admin', 'Parent', 'Super Admin', 'School Admin', 'Principal', 'Accountant'] },
+  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Admin', 'Super Admin', 'School Admin', 'Accountant', 'HR'] },
+  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Admin', 'Teacher', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Admin', 'Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
 ];
 
 export const DashboardLayout: React.FC = () => {
@@ -215,11 +215,11 @@ export const DashboardLayout: React.FC = () => {
               {showRoleSwapper && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowRoleSwapper(false)} />
-                  <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-premium z-50 p-2 space-y-1">
-                    <div className="px-3 py-2 text-[10px] font-bold text-slate-450 uppercase tracking-widest border-b border-slate-150 dark:border-slate-800 mb-1">
+                  <div className="absolute right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-premium z-50 p-2 space-y-1 scrollbar-thin">
+                    <div className="px-3 py-2 text-[10px] font-bold text-slate-455 uppercase tracking-widest border-b border-slate-150 dark:border-slate-800 mb-1 sticky top-0 bg-white dark:bg-slate-900 z-10">
                       Choose demo portal
                     </div>
-                    {(['Admin', 'Teacher', 'Parent', 'Student', 'Faculty', 'Librarian'] as UserRole[]).map((r) => (
+                    {(['Super Admin', 'School Admin', 'Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
                       <button
                         key={r}
                         onClick={() => handleRoleChange(r)}

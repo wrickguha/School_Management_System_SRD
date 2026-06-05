@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'Admin' | 'Teacher' | 'Parent' | 'Student' | 'Faculty' | 'Librarian';
+export type UserRole = 'Admin' | 'Teacher' | 'Parent' | 'Student' | 'Faculty' | 'Librarian' | 'Super Admin' | 'School Admin' | 'Principal' | 'Accountant' | 'HR';
 
 interface User {
   name: string;
@@ -74,6 +74,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (selectedRole === 'Librarian') {
       name = 'Rahul Mehta';
       avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Super Admin') {
+      name = 'Alexander Sterling (Super Admin)';
+      avatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'School Admin') {
+      name = 'Sarah Connor (School Admin)';
+      avatar = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Principal') {
+      name = 'Dr. Robert Vance';
+      avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'Accountant') {
+      name = 'Ramesh Sharma';
+      avatar = 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80';
+    } else if (selectedRole === 'HR') {
+      name = 'Sunita Rao';
+      avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
     }
 
     const userData: User = {
@@ -129,6 +144,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (newRole === 'Librarian') {
       name = 'Rahul Mehta';
       email = 'rahul.library@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Super Admin') {
+      name = 'Alexander Sterling (Super Admin)';
+      email = 'admin.super@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'School Admin') {
+      name = 'Sarah Connor (School Admin)';
+      email = 'admin.school@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Principal') {
+      name = 'Dr. Robert Vance';
+      email = 'principal.desk@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'Accountant') {
+      name = 'Ramesh Sharma';
+      email = 'finance.officer@school.edu';
+      avatar = 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80';
+    } else if (newRole === 'HR') {
+      name = 'Sunita Rao';
+      email = 'hr.officer@school.edu';
       avatar = 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80';
     }
 

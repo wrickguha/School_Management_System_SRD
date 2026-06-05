@@ -49,7 +49,7 @@ export default function DashboardHome() {
   // ----------------------------------------------------
   // VIEW A: ADMIN PORTAL
   // ----------------------------------------------------
-  if (role === 'Admin') {
+  if (role === 'Admin' || role === 'Super Admin' || role === 'School Admin') {
     const totalStudents = students?.length || 0;
     const totalTeachers = teachers?.length || 0;
     const totalRevenue = transactions?.reduce((acc, t) => acc + t.amount, 0) || 0;
@@ -726,6 +726,305 @@ export default function DashboardHome() {
                     <span className="text-[10px] text-slate-400">Scan book return cover</span>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Processing book return checklist...')}>Return</Button>
+                </div>
+              </div>
+            </div>
+            <div className="h-6" />
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW F: PRINCIPAL PORTAL
+  // ----------------------------------------------------
+  if (role === 'Principal') {
+    const classGPAData = [
+      { name: 'Grade 6', GPA: 3.25 },
+      { name: 'Grade 7', GPA: 3.42 },
+      { name: 'Grade 8', GPA: 3.58 },
+      { name: 'Grade 9', GPA: 3.65 },
+      { name: 'Grade 10', GPA: 3.88 }
+    ];
+
+    return (
+      <div className="space-y-8 text-left">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Principal Command Console</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+            Welcome back, {user?.name}. Global campus performance metrics and oversight logs.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Total Enrollment</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">2,549</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">+12% increase this year</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Class Attendance</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">91.5%</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Daily average attendance</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Active Faculty</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">74</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Teaching staff rosters</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Term Cash Flow</span>
+            <span className="block text-2xl font-extrabold text-slate-900 dark:text-white mt-2">94.2%</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Fee collection rate</span>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle>Academic GPA Distribution</CardTitle>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={classGPAData}>
+                  <defs>
+                    <linearGradient id="colorGpa" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#138D75" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#138D75" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
+                  <YAxis stroke="#94A3B8" fontSize={11} domain={[0, 4.0]} />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="GPA" stroke="#138D75" fill="url(#colorGpa)" strokeWidth={2.5} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+              <CardHeader className="mb-4">
+                <CardTitle>Academic Advisories & Decisions</CardTitle>
+              </CardHeader>
+              <div className="space-y-4">
+                {[
+                  { id: '1', title: 'Syllabus alignment board review', detail: 'Class 10 Board prep schedules.', date: 'June 10' },
+                  { id: '2', title: 'PTM slots allocations approval', detail: 'Check and finalize time cards.', date: 'June 12' }
+                ].map((act) => (
+                  <div key={act.id} className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl space-y-1">
+                    <span className="text-xs font-bold block">{act.title}</span>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{act.detail}</p>
+                    <span className="text-[9px] font-bold text-slate-400 block">{act.date}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="h-4" />
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW G: ACCOUNTANT PORTAL
+  // ----------------------------------------------------
+  if (role === 'Accountant') {
+    const revenueData = [
+      { name: 'Jan', Revenue: 45000, Collection: 40000 },
+      { name: 'Feb', Revenue: 55000, Collection: 52000 },
+      { name: 'Mar', Revenue: 60000, Collection: 58000 },
+      { name: 'Apr', Revenue: 75000, Collection: 70000 },
+      { name: 'May', Revenue: 95000, Collection: 92000 },
+      { name: 'Jun', Revenue: 110000, Collection: 104000 }
+    ];
+
+    const financeLogs = [
+      { id: '1', item: 'Aarav Sharma - Term II fee payment', amount: '$1,250', status: 'Cleared', date: 'Today, 10:15 AM' },
+      { id: '2', item: 'Rohan Gupta - Bus Route 4 outstanding', amount: '$450', status: 'Pending', date: 'Today, 08:30 AM' },
+      { id: '3', item: 'Administrative Office - Supplies cost', amount: '$820', status: 'Cleared', date: 'Yesterday, 04:00 PM' }
+    ];
+
+    return (
+      <div className="space-y-8 text-left">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Finance Command Center</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Welcome back, {user?.name}. Review transactions, generate invoices, and audit outstanding dues.
+            </p>
+          </div>
+          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Launching custom fee invoice generator...')}>
+            Issue Fee Invoice
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Term Revenue</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">$412,000</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Projected collection target</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Realized Collections</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">$391,500</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">95% completion rate</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Collections</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">$20,500</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">4 student accounts flagged</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Expense Audits</span>
+            <span className="block text-2xl font-extrabold text-slate-900 dark:text-white mt-2">Cleared</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">All vendor logs certified</span>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle>Cash Flow Trend Analysis</CardTitle>
+            </CardHeader>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
+                  <YAxis stroke="#94A3B8" fontSize={11} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="Revenue" fill="#0A4D8C" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Collection" fill="#138D75" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+              <CardHeader className="mb-4">
+                <CardTitle>Recent Payment Ledger</CardTitle>
+              </CardHeader>
+              <div className="space-y-4">
+                {financeLogs.map((log) => (
+                  <div key={log.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold block">{log.item}</span>
+                      <span className="text-[10px] text-slate-400 font-semibold">{log.amount} • {log.date}</span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                      log.status === 'Cleared' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-650'
+                    }`}>
+                      {log.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="h-4" />
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW H: HR PORTAL
+  // ----------------------------------------------------
+  if (role === 'HR') {
+    const hrLogs = [
+      { id: '1', staff: 'Dr. Sunita Rao (Teacher)', action: 'Calculus course timesheet submitted', status: 'Approved', date: 'Today, 11:30 AM' },
+      { id: '2', staff: 'Mr. Rajesh Sharma (Staff)', action: 'Medical leave request - 2 Days', status: 'Pending', date: 'Today, 08:45 AM' },
+      { id: '3', staff: 'Rahul Mehta (Librarian)', action: 'Monthly counter log completed', status: 'Approved', date: 'Yesterday, 05:00 PM' }
+    ];
+
+    return (
+      <div className="space-y-8 text-left">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">HR Command Portal</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Welcome back, {user?.name}. Monitor active rosters, timesheets, and leave allocations.
+            </p>
+          </div>
+          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Opening staff leave evaluation forms...')}>
+            Review Leave Requests
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Active Staff Roster</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">94</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Includes admin & transport staff</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Teaching Faculty</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">74</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">2 new hires this semester</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Staff Attendance</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">96.8%</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Daily timesheet averages</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Timesheets</span>
+            <span className="block text-2xl font-extrabold text-slate-900 dark:text-white mt-2">5</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">Awaiting approval</span>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Recent checkout activities */}
+          <Card className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-md flex items-center gap-2">
+                <Users className="h-5 w-5 text-school-blue" />
+                <span>Recent Staff & HR Activities</span>
+              </CardTitle>
+            </CardHeader>
+            <div className="space-y-4">
+              {hrLogs.map((log) => (
+                <div key={log.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">{log.staff}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{log.action} • {log.date}</span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                    log.status === 'Approved' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-650'
+                  }`}>
+                    {log.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+              <CardHeader className="mb-4">
+                <CardTitle>HR Staff Management Actions</CardTitle>
+              </CardHeader>
+              <div className="space-y-3">
+                <div className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">Audit staff timesheets</span>
+                    <span className="text-[10px] text-slate-400">Review hours logged</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Processing timesheet ledger...')}>Audit</Button>
+                </div>
+                <div className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold block">Process monthly payroll</span>
+                    <span className="text-[10px] text-slate-400">Dispatch payment files</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Generating bank payment drafts...')}>Dispatch</Button>
                 </div>
               </div>
             </div>
