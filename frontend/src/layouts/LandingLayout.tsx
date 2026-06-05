@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { GraduationCap, Phone, Mail, MapPin, Award, CheckCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Award, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 
@@ -36,13 +36,7 @@ export const LandingLayout: React.FC = () => {
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-school-blue flex items-center justify-center text-white shadow-md">
-              <GraduationCap className="h-6 w-6" />
-            </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-school-blue dark:text-white">Aegis</span>
-              <span className="text-xl font-light tracking-tight text-slate-400">ERP</span>
-            </div>
+            <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-10 w-auto object-contain rounded-lg" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -74,11 +68,8 @@ export const LandingLayout: React.FC = () => {
       <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-school-blue flex items-center justify-center text-white shadow-md">
-                <GraduationCap className="h-6 w-6" />
-              </div>
-              <span className="text-xl font-extrabold tracking-tight text-white">Aegis ERP</span>
+            <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl inline-block max-w-max">
+              <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-8 w-auto object-contain" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering global schools with premium, enterprise-grade academic administration, financial operations, and real-time learning analytics.
@@ -101,17 +92,17 @@ export const LandingLayout: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Contact & Info</h4>
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Contact Us</h4>
             <ul className="space-y-3 text-sm text-slate-400">
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-school-blue" /> +1 (800) 555-0199
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-school-blue" /> sales@aegiserp.com
-              </li>
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-school-blue mt-0.5" /> 
-                <span>100 Enterprise Way,<br />Suite 500, New York, NY</span>
+                <MapPin className="h-4 w-4 text-school-blue mt-0.5 shrink-0" />
+                <span>SRD Technologies, Kulsum Complex,<br />Bagdogra, West Bengal</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-school-blue" /> +91 7478727864
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-school-blue" /> info@subhraedu.com
               </li>
             </ul>
           </div>
@@ -128,7 +119,7 @@ export const LandingLayout: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© 2026 Aegis ERP SaaS Inc. All rights reserved.</p>
+          <p>© 2026 SUBHRAEDU. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

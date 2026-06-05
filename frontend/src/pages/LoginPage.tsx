@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
-import { GraduationCap, Lock, Mail, Users, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
@@ -53,10 +53,10 @@ export default function LoginPage() {
 
       <div className="w-full max-w-lg space-y-6">
         <div className="text-center space-y-3">
-          <div className="mx-auto h-12 w-12 rounded-2xl bg-school-blue flex items-center justify-center text-white shadow-md">
-            <GraduationCap className="h-7 w-7" />
+          <div className="mx-auto bg-white p-1.5 rounded-2xl inline-block shadow-md">
+            <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-16 w-auto object-contain" />
           </div>
-          <h2 className="text-3xl font-extrabold tracking-tight">Access Aegis Portal</h2>
+          <h2 className="text-3xl font-extrabold tracking-tight">Access SUBHRAEDU Portal</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
             Select your administrative profile card to authenticate.
           </p>

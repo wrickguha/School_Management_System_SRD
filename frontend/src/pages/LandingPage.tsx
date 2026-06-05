@@ -582,7 +582,7 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed font-semibold max-w-2xl"
             >
-              Ditch slow on-premise servers. Aegis ERP empowers modern academies with institutional analytics, paperless admissions, dynamic gradebooks, and automated fee collections.
+              Ditch slow on-premise servers. SUBHRAEDU empowers modern academies with institutional analytics, paperless admissions, dynamic gradebooks, and automated fee collections.
             </motion.p>
 
             <motion.div
@@ -649,7 +649,7 @@ export default function LandingPage() {
                     <span className="h-2 w-2 rounded-full bg-yellow-400" />
                     <span className="h-2 w-2 rounded-full bg-green-400" />
                   </div>
-                  <span className="text-[8px] font-extrabold text-slate-450">admin.aegis_erp</span>
+                  <span className="text-[8px] font-extrabold text-slate-450">admin.subhraedu</span>
                 </div>
                 
                 <div className="my-2 space-y-1.5">
@@ -859,7 +859,7 @@ export default function LandingPage() {
                 ) : (
                   <div className="space-y-3">
                     <GraduationCap className="h-10 w-10 text-school-blue mx-auto animate-bounce" />
-                    <h4 className="text-sm font-extrabold tracking-tight">Aegis ERP Platform</h4>
+                    <h4 className="text-sm font-extrabold tracking-tight">SUBHRAEDU Platform</h4>
                     <p className="text-[11px] text-slate-455 font-semibold px-4">Hover over any module orbiting around the core platform to view active data flows</p>
                   </div>
                 )}
@@ -1195,7 +1195,7 @@ export default function LandingPage() {
             <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Success Records</span>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Evaluations by Directors</h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Read how principals and administrative board heads value their ERP migration to Aegis.
+              Read how principals and administrative board heads value their ERP migration to SUBHRAEDU.
             </p>
           </div>
 
@@ -1498,7 +1498,7 @@ const testimonials = [
   {
     name: 'Dr. Arthur Sterling',
     role: 'Board President, Sterling Academies',
-    text: 'Aegis ERP transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
+    text: 'SUBHRAEDU transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
     rating: 5
   },
   {
@@ -1510,14 +1510,14 @@ const testimonials = [
   {
     name: 'Mr. David Cho',
     role: 'Chief Administrator, Horizon Global School',
-    text: 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. Aegis looks premium, runs lightning-fast, and their API structure is highly scalable.',
+    text: 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. SUBHRAEDU looks premium, runs lightning-fast, and their API structure is highly scalable.',
     rating: 5
   }
 ];
 
 const faqs = [
-  { q: 'How long does the ERP migration and setup take?', a: 'Setting up your customized Aegis instance takes 5 to 7 business days, including migrating student rosters, historical grade books, and teacher database profiles.' },
+  { q: 'How long does the ERP migration and setup take?', a: 'Setting up your customized SUBHRAEDU instance takes 5 to 7 business days, including migrating student rosters, historical grade books, and teacher database profiles.' },
   { q: 'Is our student records database secure?', a: 'Absolutely. We enforce end-to-end data encryption in transit and at rest. Our infrastructure runs on dedicated enterprise cloud servers following strict safety compliance standards.' },
-  { q: 'Can we configure custom permissions for departments?', a: 'Yes. Aegis supports role-based permissions access. You can define distinct restrictions for finance officers, academic coordinators, registrar admins, and transport drivers.' },
-  { q: 'Does Aegis integrate with hardware systems like RFID?', a: 'Yes. We support RFID smartgate scanners, biometric staff timesheets, and global SMS gateways for real-time alerts.' }
+  { q: 'Can we configure custom permissions for departments?', a: 'Yes. SUBHRAEDU supports role-based permissions access. You can define distinct restrictions for finance officers, academic coordinators, registrar admins, and transport drivers.' },
+  { q: 'Does SUBHRAEDU integrate with hardware systems like RFID?', a: 'Yes. We support RFID smartgate scanners, biometric staff timesheets, and global SMS gateways for real-time alerts.' }
 ];

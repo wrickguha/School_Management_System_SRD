@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
 import { useTheme } from '../store/ThemeContext';
 import {
-  GraduationCap, LayoutDashboard, UserCheck, Users, ShieldAlert,
+  LayoutDashboard, UserCheck, Users, ShieldAlert,
   ClipboardList, BookOpen, CreditCard, Bus,
   Library as LibraryIcon, Home as HomeIcon, Award, MessageSquare,
   FileBarChart, Settings, LogOut, Sun, Moon, Bell, Search,
@@ -70,13 +70,13 @@ export const DashboardLayout: React.FC = () => {
         {/* Sidebar Header Logo */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 dark:border-slate-800/80">
           <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden">
-            <div className="h-10 w-10 shrink-0 rounded-xl bg-school-blue flex items-center justify-center text-white shadow-md">
-              <GraduationCap className="h-6 w-6" />
-            </div>
-            {!isSidebarCollapsed && (
-              <div className="flex flex-col">
-                <span className="font-extrabold tracking-tight text-school-blue dark:text-white">Aegis</span>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">ERP System</span>
+            {isSidebarCollapsed ? (
+              <div className="h-10 w-10 shrink-0 overflow-hidden flex items-start justify-center rounded-lg bg-white p-0.5">
+                <img src="/subhraedu_logo.png" alt="SUBHRAEDU" className="w-10 h-auto max-w-none object-top object-contain" />
+              </div>
+            ) : (
+              <div className="bg-white p-1 rounded-lg">
+                <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-12 w-auto object-contain" />
               </div>
             )}
           </Link>
@@ -139,11 +139,8 @@ export const DashboardLayout: React.FC = () => {
         }`}
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-school-blue flex items-center justify-center text-white shadow-md">
-              <GraduationCap className="h-6 w-6" />
-            </div>
-            <span className="font-extrabold text-lg text-school-blue dark:text-white">Aegis ERP</span>
+          <div className="flex items-center gap-3 bg-white p-1 rounded-lg">
+            <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-12 w-auto object-contain" />
           </div>
           <button onClick={() => setIsMobileOpen(false)} className="p-1 text-slate-400 hover:text-slate-600">
             <ChevronLeft className="h-6 w-6" />
