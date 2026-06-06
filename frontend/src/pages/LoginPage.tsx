@@ -9,7 +9,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
-  const [email, setEmail] = useState('admin.super@school.edu');
+  const [email, setEmail] = useState('superadmin@subhraedu.com');
   const [password, setPassword] = useState('password');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -17,25 +17,25 @@ export default function LoginPage() {
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
     if (role === 'Teacher') {
-      setEmail('sunita.rao@school.edu');
+      setEmail('teacher@greenwood.edu');
     } else if (role === 'Parent') {
-      setEmail('ramesh.sharma@example.com');
+      setEmail('parent@greenwood.edu');
     } else if (role === 'Student') {
-      setEmail('aarav.sharma@school.edu');
+      setEmail('student@greenwood.edu');
     } else if (role === 'Faculty') {
-      setEmail('dr.singh@faculty.edu');
+      setEmail('faculty@greenwood.edu');
     } else if (role === 'Librarian') {
-      setEmail('rahul.library@school.edu');
+      setEmail('librarian@greenwood.edu');
     } else if (role === 'Super Admin') {
-      setEmail('admin.super@school.edu');
+      setEmail('superadmin@subhraedu.com');
     } else if (role === 'School Admin') {
-      setEmail('admin.school@school.edu');
+      setEmail('admin@greenwood.edu');
     } else if (role === 'Principal') {
-      setEmail('principal.desk@school.edu');
+      setEmail('principal@greenwood.edu');
     } else if (role === 'Accountant') {
-      setEmail('finance.officer@school.edu');
+      setEmail('accountant@greenwood.edu');
     } else if (role === 'HR') {
-      setEmail('hr.officer@school.edu');
+      setEmail('hr@greenwood.edu');
     }
   };
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const success = await login(email, selectedRole);
+      const success = await login(email, selectedRole, password);
       if (success) {
         navigate('/dashboard');
       } else {
