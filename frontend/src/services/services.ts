@@ -70,3 +70,26 @@ export const activityService = {
     return res.data;
   }
 };
+
+export interface DemoRequest {
+  id: number;
+  schoolName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  studentCount: string;
+  status: 'new' | 'contacted' | 'converted' | 'rejected';
+  notes?: string;
+  createdAt: string;
+}
+
+export const demoService = {
+  getAll: async () => {
+    const res = await apiClient.get<DemoRequest[]>('/admin/demo-requests');
+    return res.data;
+  },
+  updateStatus: async (id: number, data: { status: string; notes?: string }) => {
+    const res = await apiClient.patch<DemoRequest>(`/admin/demo-requests/${id}`, data);
+    return res.data;
+  }
+};

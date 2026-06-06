@@ -16,10 +16,12 @@ use App\Http\Controllers\TransportController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\Admin\DemoRequestController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ───────────────────────────────────────────────────────────
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/demo/request', [DemoRequestController::class, 'store']);
 
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'app' => 'SUBHRAEDU API']);
@@ -128,4 +130,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:school_admin,principal,accountant,hr');
     Route::post('/reports/generate', [ReportController::class, 'store'])
         ->middleware('role:school_admin,principal,accountant,hr');
+
+    // Demo Requests (Super Admin)
+    Route::get('/admin/demo-requests', [DemoRequestController::class, 'index'])
+        ->middleware('role:super_admin');
+    Route::patch('/admin/demo-requests/{id}', [DemoRequestController::class, 'update'])
+        ->middleware('role:super_admin');
 });

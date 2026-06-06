@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, teacherService, financeService, announcementService, activityService } from '../../services/services';
+import { studentService, teacherService, financeService, announcementService, activityService, demoService } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -25,6 +25,11 @@ export default function DashboardHome() {
   const { data: transactions, isLoading: loadingFinance } = useQuery({ queryKey: ['transactions'], queryFn: financeService.getTransactions });
   const { data: announcements } = useQuery({ queryKey: ['announcements'], queryFn: announcementService.getAll });
   const { data: activities } = useQuery({ queryKey: ['activities'], queryFn: activityService.getAll });
+  const { data: demoRequests, refetch: refetchDemos } = useQuery({
+    queryKey: ['demoRequests'],
+    queryFn: demoService.getAll,
+    enabled: role === 'Super Admin'
+  });
 
   // Parent specific states
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
@@ -113,20 +118,29 @@ export default function DashboardHome() {
       { name: 'Jun', Basic: 105, Pro: 102, Enterprise: 41 }
     ];
 
-    // Interactive Demo Queue State Simulator
-    const [demoQueue, setDemoQueue] = useState([
-      { id: '1', school: 'Delhi Public School', rep: 'Rahul Sen', date: 'June 08, 2026', time: '10:00 AM', status: 'Pending Approval' },
-      { id: '2', school: 'Greenwood High International', rep: 'Sunita Roy', date: 'June 09, 2026', time: '02:00 PM', status: 'Approved' },
-      { id: '3', school: 'Stanford Academy (K-12)', rep: 'Unassigned', date: 'June 10, 2026', time: '11:00 AM', status: 'New Request' },
-      { id: '4', school: 'Calcutta Boys School', rep: 'Vikram Singh', date: 'June 11, 2026', time: '04:00 PM', status: 'Pending Approval' }
-    ]);
-
-    const handleApproveDemo = (id: string) => {
-      setDemoQueue(prev => prev.map(item => item.id === id ? { ...item, status: 'Approved' } : item));
+    const handleApproveDemo = async (id: number) => {
+      try {
+        await demoService.updateStatus(id, { status: 'converted', notes: 'Converted to client' });
+        refetchDemos();
+      } catch (err) {
+        console.error(err);
+      }
     };
 
-    const handleAssignRep = (id: string) => {
-      setDemoQueue(prev => prev.map(item => item.id === id ? { ...item, rep: 'Sarah Connor', status: 'Pending Approval' } : item));
+    const handleAssignRep = async (id: number) => {
+      try {
+        await demoService.updateStatus(id, { status: 'contacted', notes: 'Assigned to Sarah Connor' });
+        refetchDemos();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const getStatusLabel = (status: string) => {
+      if (status === 'new') return 'New Request';
+      if (status === 'contacted') return 'Pending Approval';
+      if (status === 'converted') return 'Approved';
+      return 'Rejected';
     };
 
     return (
@@ -345,30 +359,35 @@ export default function DashboardHome() {
                 </CardTitle>
               </CardHeader>
               <div className="space-y-4">
-                {demoQueue.map((item) => (
+                {(demoRequests || []).map((item) => (
                   <div key={item.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <span className="text-xs font-extrabold block text-slate-900 dark:text-white">{item.school}</span>
+                      <span className="text-xs font-extrabold block text-slate-900 dark:text-white">{item.schoolName}</span>
                       <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">
-                        Scheduled: {item.date} at {item.time} • Rep: <span className="text-slate-500 font-bold">{item.rep}</span>
+                        Contact: {item.contactName} • Email: {item.email} {item.phone ? `• Phone: ${item.phone}` : ''}
                       </span>
+                      {item.notes && (
+                        <span className="text-[10px] text-school-blue font-bold block mt-1">
+                          Log: {item.notes}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
                       <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
-                        item.status === 'Approved' 
+                        item.status === 'converted' 
                           ? 'bg-school-greenLight text-school-green' 
-                          : item.status === 'New Request'
+                          : item.status === 'new'
                           ? 'bg-blue-50 text-blue-650 dark:bg-blue-950/20 dark:text-blue-400'
                           : 'bg-amber-50 text-amber-650 dark:bg-amber-950/20 dark:text-amber-400'
                       }`}>
-                        {item.status}
+                        {getStatusLabel(item.status)}
                       </span>
-                      {item.status === 'New Request' && (
+                      {item.status === 'new' && (
                         <Button variant="outline" size="sm" onClick={() => handleAssignRep(item.id)}>
                           Assign Rep
                         </Button>
                       )}
-                      {item.status === 'Pending Approval' && (
+                      {item.status === 'contacted' && (
                         <Button variant="accent" size="sm" onClick={() => handleApproveDemo(item.id)}>
                           Approve
                         </Button>
@@ -376,6 +395,11 @@ export default function DashboardHome() {
                     </div>
                   </div>
                 ))}
+                {(demoRequests || []).length === 0 && (
+                  <div className="text-center py-6 text-xs text-slate-400 font-bold">
+                    No pending demo requests.
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-4">

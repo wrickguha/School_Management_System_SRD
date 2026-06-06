@@ -3,6 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Award, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import apiClient from '../services/apiClient';
 
 export const LandingLayout: React.FC = () => {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -16,18 +17,29 @@ export const LandingLayout: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleDemoSubmit = (e: React.FormEvent) => {
+  const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await apiClient.post('/demo/request', {
+        schoolName: demoForm.schoolName,
+        contactName: demoForm.contactName,
+        email: demoForm.email,
+        phone: demoForm.phone,
+        studentCount: demoForm.studentCount
+      });
       setSubmitted(true);
       setTimeout(() => {
         setIsDemoModalOpen(false);
         setSubmitted(false);
         setDemoForm({ schoolName: '', contactName: '', email: '', phone: '', studentCount: '100-500' });
       }, 2000);
-    }, 1500);
+    } catch (err) {
+      console.error('Failed to submit demo request:', err);
+      alert('Failed to submit demo request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
