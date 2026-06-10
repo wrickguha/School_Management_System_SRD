@@ -1,0 +1,26 @@
+# IDE and editor settings
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.fleet/
+.nova/
+.zed/
+
+# OS-generated files
+Thumbs.db
+.DS_Store
+
+# Package manager and output files (in case they appear at root)
+node_modules/
+dist/
+build/
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
