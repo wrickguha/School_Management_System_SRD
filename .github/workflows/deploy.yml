@@ -51,25 +51,24 @@ jobs:
           composer install --no-dev --optimize-autoloader
         working-directory: ./backend
 
-      # 7. Upload Combined App to GoDaddy via FTP (EXCLUDING the massive vendor/ folder)
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          local-dir: ./backend/
-          server-dir: /
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            vendor/**
-            vendor
-            .env
-            tests/
-            database/database.sqlite
+      # 7. Upload Combined App to GoDaddy via FTP (EXCLUDING the massive vendor/ folder) using LFTP
+      - name: Deploy via FTP (lftp)
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "
+            set ftp:ssl-allow no;
+            open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' '${{ secrets.FTP_SERVER }}';
+            mirror -R \
+              --exclude-glob .git/ \
+              --exclude-glob .github/ \
+              --exclude-glob node_modules/ \
+              --exclude-glob vendor/ \
+              --exclude-glob .env \
+              --exclude-glob tests/ \
+              --exclude-glob database/database.sqlite \
+              --verbose \
+              ./backend/ /
+          "
 
       # 8. Trigger Remote Laravel Setup & Migrations
       - name: Trigger Remote Database Migrations & Cache Clear
