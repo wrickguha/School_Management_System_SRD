@@ -24,27 +24,12 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     if (!$action) {
         return response()->json([
             'message' => 'Deploy utility is active.',
-            'available_actions' => ['unzip', 'migrate', 'db-seed', 'storage-link', 'clear-cache', 'optimize']
+            'available_actions' => ['migrate', 'db-seed', 'storage-link', 'clear-cache', 'optimize']
         ]);
     }
 
     try {
         switch ($action) {
-            case 'unzip':
-                $zipFile = base_path('release.zip');
-                if (!file_exists($zipFile)) {
-                    return response()->json(['error' => 'release.zip not found in backend root.'], 404);
-                }
-                $zip = new \ZipArchive;
-                if ($zip->open($zipFile) === TRUE) {
-                    $zip->extractTo(base_path());
-                    $zip->close();
-                    unlink($zipFile); // Free up space immediately
-                    return response()->json(['message' => 'release.zip extracted successfully.']);
-                } else {
-                    return response()->json(['error' => 'Failed to open release.zip.'], 500);
-                }
-
             case 'migrate':
                 \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
                 $output = \Illuminate\Support\Facades\Artisan::output();

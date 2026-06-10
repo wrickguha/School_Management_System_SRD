@@ -45,20 +45,14 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, mysql, zip
           coverage: none
 
-      # 6. Build Backend Dependencies
+      # 6. Build Backend Dependencies (Locally in Runner to ensure correct lock files)
       - name: Install Composer Dependencies
         run: |
           composer install --no-dev --optimize-autoloader
         working-directory: ./backend
 
-      # 7. Create ZIP archive of the backend folder (which includes vendor and frontend public assets)
-      - name: Create Release ZIP
-        run: |
-          zip -qy -r release.zip .
-        working-directory: ./backend
-
-      # 8. Upload ONLY the release.zip file to GoDaddy via FTP
-      - name: Deploy release.zip via FTP
+      # 7. Upload Combined App to GoDaddy via FTP (EXCLUDING the massive vendor/ folder)
+      - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -67,36 +61,20 @@ jobs:
           port: 21
           local-dir: ./backend/
           server-dir: ./
-          # Exclude all folders/files so only the release.zip is uploaded
           exclude: |
-            app/**
-            bootstrap/**
-            config/**
-            database/**
-            public/**
-            resources/**
-            routes/**
-            storage/**
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
             vendor/**
-            artisan
-            composer.json
-            composer.lock
-            package.json
-            phpunit.xml
-            vite.config.js
-            README.md
-            .editorconfig
-            .gitattributes
-            .gitignore
-            .phpunit.result.cache
+            vendor
+            .env
+            tests/
+            database/database.sqlite
 
-      # 9. Trigger Remote Laravel Setup & Extraction
-      - name: Trigger Remote Extraction, Migrations & Cache Clear
+      # 8. Trigger Remote Laravel Setup & Migrations
+      - name: Trigger Remote Database Migrations & Cache Clear
         run: |
-          echo "Extracting release.zip on server..."
-          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=unzip"
           echo "Running remote migrations..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
           echo "Clearing remote cache and optimizing..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"
-
