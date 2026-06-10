@@ -69,7 +69,7 @@ jobs:
               --exclude-glob tests/ \
               --exclude-glob database/database.sqlite \
               --verbose \
-              ./backend/ public_html/subhraedu.com
+              ./backend/ .
           "
 
       # 8. Trigger Remote Laravel Setup & Migrations
