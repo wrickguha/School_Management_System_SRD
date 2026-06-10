@@ -57,8 +57,10 @@ jobs:
           sudo apt-get update && sudo apt-get install -y lftp
           lftp -c "
             set ftp:ssl-allow no;
+            set ftp:use-site-chmod no;
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' '${{ secrets.FTP_SERVER }}';
             mirror -R \
+              --no-perms \
               --exclude-glob .git/ \
               --exclude-glob .github/ \
               --exclude-glob node_modules/ \
@@ -67,7 +69,7 @@ jobs:
               --exclude-glob tests/ \
               --exclude-glob database/database.sqlite \
               --verbose \
-              ./backend/ /
+              ./backend/ .
           "
 
       # 8. Trigger Remote Laravel Setup & Migrations
