@@ -74,8 +74,10 @@ jobs:
 
       # 8. Trigger Remote Laravel Setup & Migrations
       - name: Trigger Remote Database Migrations & Cache Clear
+        continue-on-error: true
         run: |
           echo "Running remote migrations..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
           echo "Clearing remote cache and optimizing..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"
+
