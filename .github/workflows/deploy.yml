@@ -1,0 +1,80 @@
+name: Deploy to GoDaddy Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout codebase
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+
+      # 3. Build React Frontend
+      - name: Install Frontend Dependencies & Build
+        run: |
+          npm ci
+          npm run build
+        working-directory: ./frontend
+        env:
+          VITE_API_URL: https://subhraedu.com/api
+
+      # 4. Integrate Frontend Assets into Laravel Public Folder
+      - name: Copy Frontend Assets to Laravel Public
+        run: |
+          cp -r ./frontend/dist/* ./backend/public/
+
+      # 5. Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, mysql, zip
+          coverage: none
+
+      # 6. Build Backend Dependencies
+      - name: Install Composer Dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+        working-directory: ./backend
+
+      # 7. Upload Combined App to GoDaddy via FTP
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ./backend/
+          # Important: Set to the sub-folder on your GoDaddy server where your domain is pointed.
+          # If your domain is pointed to the root public_html directory, set this to './' or '/'
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .env
+            tests/
+            database/database.sqlite
+
+      # 8. Trigger Remote Laravel Setup & Migrations
+      - name: Trigger Remote Database Migrations & Cache Clear
+        run: |
+          echo "Running remote migrations..."
+          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
+          echo "Clearing remote cache and optimizing..."
+          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"

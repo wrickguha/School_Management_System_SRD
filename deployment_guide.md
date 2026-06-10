@@ -138,6 +138,27 @@ Make sure the following directories on GoDaddy are writeable by the web server (
 
 ---
 
+## Step 8: Continuous Deployment with GitHub Actions (Auto-Deploy on Push)
+
+We have created an automated deployment workflow file at `.github/workflows/deploy.yml`. Every time you push to the `main` branch, GitHub will automatically compile the React app, compile Laravel composer dependencies, package them together, upload them to GoDaddy, and trigger migrations.
+
+### How to set up GitHub Secrets:
+1. Go to your repository on GitHub: `https://github.com/wrickguha/School_Management_System_SRD`.
+2. Click on the **Settings** tab.
+3. In the left sidebar, click on **Secrets and variables** > **Actions**.
+4. Click on the **New repository secret** button for each of the following:
+
+| Secret Name | Value | Description |
+|---|---|---|
+| `FTP_SERVER` | e.g. `ftp.subhraedu.com` | Your GoDaddy FTP Hostname / IP address |
+| `FTP_USERNAME` | e.g. `subhraedu_ftp` | Your GoDaddy FTP Username |
+| `FTP_PASSWORD` | `YourFTPPassword` | Your GoDaddy FTP Password |
+| `DEPLOY_SECRET` | `A_Strong_Random_String` | The secret key matching `DEPLOY_SECRET` in your GoDaddy Laravel `.env` |
+
+5. Once these are set, simply push your code to the `main` branch. You can monitor the real-time build and upload logs under the **Actions** tab on your GitHub repository page.
+
+---
+
 ## Troubleshooting
 
 ### CORS Errors
@@ -147,3 +168,4 @@ If you run frontend on `https://subhraedu.com` and backend on `https://api.subhr
 
 ### 404 on Refresh (React Router)
 If refreshing pages like `/dashboard` returns a 404, verify that the `.htaccess` file created in `frontend/public/.htaccess` was copied to the document root of the frontend.
+
