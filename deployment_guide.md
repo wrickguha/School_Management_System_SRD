@@ -110,23 +110,29 @@ Since GoDaddy shared hosting rarely has SSH access or allows running Composer co
 
 ---
 
-## Step 6: Initializing the Application (No SSH Needed)
+## Step 6: Extracting & Initializing the Application (No SSH Needed)
 
-Because you cannot access the command line easily, use the secure deploy route we added:
+Because you cannot access the command line easily on GoDaddy shared hosting, use the secure deploy utility route we added:
 
-1. **Run Database Migrations:**
+1. **Extract the uploaded `release.zip` file:**
+   In your browser, visit:
+   `https://subhraedu.com/deploy-utility?secret=YOUR_CHOSEN_LONG_SECRET_KEY_MIN_8_CHARS&action=unzip`
+   *(Note: This is automatically executed by the GitHub Actions pipeline, but you can run it manually if needed)*
+
+2. **Run Database Migrations:**
    In your browser, visit:
    `https://subhraedu.com/deploy-utility?secret=YOUR_CHOSEN_LONG_SECRET_KEY_MIN_8_CHARS&action=migrate`
    This will run `php artisan migrate --force` and return the terminal output in your browser!
 
-2. **Seed Initial Database Data (If required):**
+3. **Seed Initial Database Data (If required):**
    `https://subhraedu.com/deploy-utility?secret=YOUR_CHOSEN_LONG_SECRET_KEY_MIN_8_CHARS&action=db-seed`
 
-3. **Create the Storage Link:**
+4. **Create the Storage Link:**
    `https://subhraedu.com/deploy-utility?secret=YOUR_CHOSEN_LONG_SECRET_KEY_MIN_8_CHARS&action=storage-link`
 
-4. **Cache Configurations and Routes for speed:**
+5. **Cache Configurations and Routes for speed:**
    `https://subhraedu.com/deploy-utility?secret=YOUR_CHOSEN_LONG_SECRET_KEY_MIN_8_CHARS&action=optimize`
+
 
 ---
 
@@ -168,4 +174,11 @@ If you run frontend on `https://subhraedu.com` and backend on `https://api.subhr
 
 ### 404 on Refresh (React Router)
 If refreshing pages like `/dashboard` returns a 404, verify that the `.htaccess` file created in `frontend/public/.htaccess` was copied to the document root of the frontend.
+
+### FTP Error 553: Disk Quota Exceeded
+If you get a `Disk quota exceeded` error during deployment:
+1. Open your **GoDaddy cPanel File Manager**.
+2. Go to your domain's folder (e.g. `public_html` or the folder you are deploying to) and **delete the old `vendor/` folder**. 
+3. *Why?* The previous deployment attempt tried to upload ~15,000 separate PHP files inside `vendor/`. This consumes a massive number of inodes (file counts) and overhead. Deleting it immediately frees up your server quota so that the single `release.zip` can be uploaded and extracted cleanly.
+
 

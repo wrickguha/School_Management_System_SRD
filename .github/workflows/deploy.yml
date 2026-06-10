@@ -51,8 +51,14 @@ jobs:
           composer install --no-dev --optimize-autoloader
         working-directory: ./backend
 
-      # 7. Upload Combined App to GoDaddy via FTP
-      - name: Deploy via FTP
+      # 7. Create ZIP archive of the backend folder (which includes vendor and frontend public assets)
+      - name: Create Release ZIP
+        run: |
+          zip -qy -r release.zip .
+        working-directory: ./backend
+
+      # 8. Upload ONLY the release.zip file to GoDaddy via FTP
+      - name: Deploy release.zip via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -60,21 +66,37 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./backend/
-          # Important: Set to the sub-folder on your GoDaddy server where your domain is pointed.
-          # If your domain is pointed to the root public_html directory, set this to './' or '/'
           server-dir: ./
+          # Exclude all folders/files so only the release.zip is uploaded
           exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .env
-            tests/
-            database/database.sqlite
+            app/**
+            bootstrap/**
+            config/**
+            database/**
+            public/**
+            resources/**
+            routes/**
+            storage/**
+            vendor/**
+            artisan
+            composer.json
+            composer.lock
+            package.json
+            phpunit.xml
+            vite.config.js
+            README.md
+            .editorconfig
+            .gitattributes
+            .gitignore
+            .phpunit.result.cache
 
-      # 8. Trigger Remote Laravel Setup & Migrations
-      - name: Trigger Remote Database Migrations & Cache Clear
+      # 9. Trigger Remote Laravel Setup & Extraction
+      - name: Trigger Remote Extraction, Migrations & Cache Clear
         run: |
+          echo "Extracting release.zip on server..."
+          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=unzip"
           echo "Running remote migrations..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
           echo "Clearing remote cache and optimizing..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"
+
