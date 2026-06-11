@@ -24,6 +24,7 @@ use App\Models\LibraryIssuance;
 use App\Models\HostelRoom;
 use App\Models\PayrollRecord;
 use App\Models\DemoRequest;
+use App\Models\Testimonial;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -523,6 +524,28 @@ class DatabaseSeeder extends Seeder
             'phone' => '+1-555-7462',
             'student_count' => '500-1000',
             'status' => 'contacted',
+        ]);
+
+        // 19. Testimonials
+        Testimonial::create([
+            'name' => 'Dr. Arthur Sterling',
+            'role' => 'Board President, Sterling Academies',
+            'text' => 'SubhraEdu transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
+            'rating' => 5
+        ]);
+
+        Testimonial::create([
+            'name' => 'Mrs. Rebecca Mercer',
+            'role' => 'Principal, Greenfield Prep School',
+            'text' => 'The Parent Portal is incredible. Late fees dropped by 45% because parents can checkout outstanding balances in 3 clicks. The teachers love the automated gradecard publisher.',
+            'rating' => 5
+        ]);
+
+        Testimonial::create([
+            'name' => 'Mr. David Cho',
+            'role' => 'Chief Administrator, Horizon Global School',
+            'text' => 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. SubhraEdu looks premium, runs lightning-fast, and their API structure is highly scalable.',
+            'rating' => 5
         ]);
     }
 }

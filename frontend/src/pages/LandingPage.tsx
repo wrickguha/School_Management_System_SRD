@@ -10,6 +10,7 @@ import {
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
+import apiClient from '../services/apiClient';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -522,15 +523,30 @@ export default function LandingPage() {
   const [hoveredEco, setHoveredEco] = useState<typeof ecosystemModules[0] | null>(ecosystemModules[0]);
   const [selectedEco, setSelectedEco] = useState<typeof ecosystemModules[0] | null>(null);
 
-  // Auto testimonial rotation
+  // Testimonials state fetched from backend
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<typeof testimonials>(testimonials);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   useEffect(() => {
+    apiClient.get('/testimonials')
+      .then((res) => {
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setDynamicTestimonials(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load testimonials from backend:', err);
+      });
+  }, []);
+
+  // Auto testimonial rotation
+  useEffect(() => {
+    if (dynamicTestimonials.length === 0) return;
     const timer = setInterval(() => {
-      setTestimonialIndex((p) => (p + 1) % testimonials.length);
+      setTestimonialIndex((p) => (p + 1) % dynamicTestimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [dynamicTestimonials]);
 
   return (
     <div className="relative overflow-x-hidden min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
@@ -1210,29 +1226,29 @@ export default function LandingPage() {
               >
                 <div className="space-y-4">
                   <div className="flex gap-1">
-                    {Array.from({ length: testimonials[testimonialIndex].rating }).map((_, i) => (
+                    {Array.from({ length: dynamicTestimonials[testimonialIndex]?.rating || 5 }).map((_, i) => (
                       <Star key={i} className="h-4.5 w-4.5 fill-yellow-400 text-yellow-400 shrink-0" />
                     ))}
                   </div>
                   <p className="text-slate-700 dark:text-slate-300 text-sm md:text-base italic leading-relaxed font-medium">
-                    "{testimonials[testimonialIndex].text}"
+                    "{dynamicTestimonials[testimonialIndex]?.text || ''}"
                   </p>
                 </div>
 
                 <div className="border-t border-slate-100 dark:border-slate-850 pt-5 mt-8 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-school-blue/10 text-school-blue dark:text-school-blueLight flex items-center justify-center text-xs font-bold uppercase shrink-0">
-                      {testimonials[testimonialIndex].name.slice(0, 2)}
+                      {dynamicTestimonials[testimonialIndex]?.name?.slice(0, 2) || ''}
                     </div>
                     <div>
-                      <h4 className="text-sm font-extrabold text-slate-855 dark:text-white leading-tight">{testimonials[testimonialIndex].name}</h4>
-                      <span className="text-[10px] font-bold text-slate-400">{testimonials[testimonialIndex].role}</span>
+                      <h4 className="text-sm font-extrabold text-slate-855 dark:text-white leading-tight">{dynamicTestimonials[testimonialIndex]?.name || ''}</h4>
+                      <span className="text-[10px] font-bold text-slate-400">{dynamicTestimonials[testimonialIndex]?.role || ''}</span>
                     </div>
                   </div>
                   
                   {/* Slider controllers */}
                   <div className="flex gap-2">
-                    {testimonials.map((_, i) => (
+                    {dynamicTestimonials.map((_, i) => (
                       <button
                         key={i}
                         onClick={() => setTestimonialIndex(i)}

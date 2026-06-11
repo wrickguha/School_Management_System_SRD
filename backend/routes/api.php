@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 // ── Public Routes ───────────────────────────────────────────────────────────
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/demo/request', [DemoRequestController::class, 'store']);
+Route::get('/testimonials', [\App\Http\Controllers\TestimonialController::class, 'index']);
 
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'app' => 'SubhraEdu API']);
