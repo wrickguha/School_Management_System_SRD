@@ -68,16 +68,16 @@ export const DashboardLayout: React.FC = () => {
         }`}
       >
         {/* Sidebar Header Logo */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 dark:border-slate-800/80">
-          <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden">
+        <div className={`h-20 flex items-center border-b border-slate-200/60 dark:border-slate-800/80 transition-all duration-300 ${
+          isSidebarCollapsed ? 'justify-center px-4' : 'justify-between px-6'
+        }`}>
+          <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden group">
             {isSidebarCollapsed ? (
-              <div className="h-10 w-10 shrink-0 overflow-hidden flex items-start justify-center rounded-lg bg-white p-0.5">
-                <img src="/subhraedu_logo.png" alt="SUBHRAEDU" className="w-10 h-auto max-w-none object-top object-contain" />
+              <div className="h-12 w-12 shrink-0 overflow-hidden flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300">
+                <img src="/subhraedu_logo.png" alt="SUBHRAEDU" className="h-10 w-auto max-w-none object-left object-contain" />
               </div>
             ) : (
-              <div className="bg-white p-1 rounded-lg">
-                <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-12 w-auto object-contain" />
-              </div>
+              <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-14 w-auto object-contain hover:scale-[1.03] active:scale-95 transition-all duration-300" />
             )}
           </Link>
         </div>
@@ -139,9 +139,7 @@ export const DashboardLayout: React.FC = () => {
         }`}
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
-          <div className="flex items-center gap-3 bg-white p-1 rounded-lg">
-            <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-12 w-auto object-contain" />
-          </div>
+          <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-14 w-auto object-contain" />
           <button onClick={() => setIsMobileOpen(false)} className="p-1 text-slate-400 hover:text-slate-600">
             <ChevronLeft className="h-6 w-6" />
           </button>
