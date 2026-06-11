@@ -16,7 +16,7 @@ export const LandingLayout: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [activeMega, setActiveMega] = useState<'solutions' | 'modules' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'platforms' | 'schoolOptimisation' | 'successStories' | 'insights' | 'aboutUs' | null>(null);
 
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +47,7 @@ export const LandingLayout: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
       
       {/* Top Utility Bar */}
-      <div className="hidden lg:block w-full bg-[#e6f4fc] dark:bg-slate-950/80 border-b border-sky-100 dark:border-slate-800 text-[11px] font-semibold text-slate-650 dark:text-slate-400 py-2.5 px-6">
+      <div className="hidden lg:block w-full bg-[#e6f4fc] dark:bg-slate-950/80 border-b border-sky-100 dark:border-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 py-2.5 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
@@ -96,7 +96,7 @@ export const LandingLayout: React.FC = () => {
       {/* Header */}
       <header 
         className="sticky top-0 z-45 w-full border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md"
-        onMouseLeave={() => setActiveMega(null)}
+        onMouseLeave={() => setActiveDropdown(null)}
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group">
@@ -105,51 +105,180 @@ export const LandingLayout: React.FC = () => {
 
           {/* Navigation Links with dropdown indicators */}
           <nav className="hidden md:flex items-center gap-7 h-full">
+            {/* Platforms */}
             <div 
-              className="h-full flex items-center"
-              onMouseEnter={() => setActiveMega('solutions')}
+              className="relative h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown('platforms')}
             >
-              <button className="flex items-center gap-1.5 text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors cursor-pointer py-4">
+              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'platforms' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
                 <span>Platforms</span>
-                <ChevronDown className={`h-3 w-3 transition-transform duration-305 ${activeMega === 'solutions' ? 'rotate-180 text-school-blue' : ''}`} />
+                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'platforms' ? 'rotate-180' : ''}`} />
               </button>
+
+              {activeDropdown === 'platforms' && (
+                <div 
+                  className="absolute left-0 top-[100%] -mt-1 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
+                  onMouseEnter={() => setActiveDropdown('platforms')}
+                >
+                  {[
+                    { label: 'Entab One', href: '#features' },
+                    { label: 'CampusCare 10X', href: '#features' },
+                    { label: 'Mobile Apps', href: '#features' },
+                    { label: 'Experiential Learning', href: '#features' },
+                    { label: 'Pre-School Management', href: '#features' }
+                  ].map((item, idx) => (
+                    <a 
+                      key={idx}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
+            {/* School Optimisation */}
             <div 
-              className="h-full flex items-center"
-              onMouseEnter={() => setActiveMega('modules')}
+              className="relative h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown('schoolOptimisation')}
             >
-              <button className="flex items-center gap-1.5 text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors cursor-pointer py-4">
+              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'schoolOptimisation' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
                 <span>School Optimisation</span>
-                <ChevronDown className={`h-3 w-3 transition-transform duration-305 ${activeMega === 'modules' ? 'rotate-180 text-school-blue' : ''}`} />
+                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'schoolOptimisation' ? 'rotate-180' : ''}`} />
               </button>
+
+              {activeDropdown === 'schoolOptimisation' && (
+                <div 
+                  className="absolute left-0 top-[100%] -mt-1 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
+                  onMouseEnter={() => setActiveDropdown('schoolOptimisation')}
+                >
+                  {[
+                    { label: 'Administration', href: '#features' },
+                    { label: 'Finance', href: '#features' },
+                    { label: 'Learning', href: '#features' },
+                    { label: 'Academics', href: '#features' },
+                    { label: 'Intelligence', href: '#features' },
+                    { label: 'Logistics', href: '#features' },
+                    { label: 'Leadership / Management', href: '#features' },
+                    { label: 'Enterprise Features', href: '#features' },
+                    { label: 'Communication', href: '#features' },
+                    { label: 'Human Resources', href: '#features' }
+                  ].map((item, idx) => (
+                    <a 
+                      key={idx}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="h-full flex items-center">
-              <a href="#testimonials" className="flex items-center gap-1.5 text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors py-4">
+            {/* Success Stories */}
+            <div 
+              className="relative h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown('successStories')}
+            >
+              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'successStories' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
                 <span>Success Stories</span>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
-              </a>
+                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'successStories' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {activeDropdown === 'successStories' && (
+                <div 
+                  className="absolute left-0 top-[100%] -mt-1 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
+                  onMouseEnter={() => setActiveDropdown('successStories')}
+                >
+                  {[
+                    { label: 'Case Studies', href: '#testimonials' }
+                  ].map((item, idx) => (
+                    <a 
+                      key={idx}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="h-full flex items-center">
-              <a href="#case-studies" className="flex items-center gap-1.5 text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors py-4">
+            {/* Insights */}
+            <div 
+              className="relative h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown('insights')}
+            >
+              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'insights' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
                 <span>Insights</span>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
-              </a>
+                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'insights' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {activeDropdown === 'insights' && (
+                <div 
+                  className="absolute left-0 top-[100%] -mt-1 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
+                  onMouseEnter={() => setActiveDropdown('insights')}
+                >
+                  {[
+                    { label: 'Coverage', href: '#case-studies' },
+                    { label: 'Video', href: '#case-studies' },
+                    { label: 'Ed Talks', href: '#case-studies' },
+                    { label: 'Newsletter', href: '#case-studies' },
+                    { label: 'Student Zone', href: '#case-studies' },
+                    { label: 'Educator Zone', href: '#case-studies' },
+                    { label: 'Educators Article', href: '#case-studies' }
+                  ].map((item, idx) => (
+                    <a 
+                      key={idx}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="h-full flex items-center">
-              <a href="#footer" className="flex items-center gap-1.5 text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors py-4">
+            {/* About Us */}
+            <div 
+              className="relative h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown('aboutUs')}
+            >
+              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'aboutUs' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
                 <span>About Us</span>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
-              </a>
+                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'aboutUs' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {activeDropdown === 'aboutUs' && (
+                <div 
+                  className="absolute left-0 top-[100%] -mt-1 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
+                  onMouseEnter={() => setActiveDropdown('aboutUs')}
+                >
+                  {[
+                    { label: 'Our Story', href: '#footer' }
+                  ].map((item, idx) => (
+                    <a 
+                      key={idx}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
+            {/* Contact Us */}
             <div className="h-full flex items-center">
               <button 
                 onClick={() => setIsDemoModalOpen(true)}
-                className="text-sm font-bold text-slate-750 dark:text-slate-300 hover:text-[#0A4D8C] dark:hover:text-sky-400 transition-colors cursor-pointer py-4"
+                className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-school-green transition-colors cursor-pointer py-4"
               >
                 Contact Us
               </button>
@@ -169,112 +298,6 @@ export const LandingLayout: React.FC = () => {
               REGISTER FOR DEMO
             </Button>
           </div>
-
-          {/* Mega Menu Dropdowns */}
-          {activeMega === 'solutions' && (
-            <div 
-              className="absolute left-0 right-0 top-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-premium transition-all duration-300 z-50 p-8 grid grid-cols-3 gap-8"
-              onMouseEnter={() => setActiveMega('solutions')}
-            >
-              <div className="space-y-4">
-                <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">By Institution Role</h4>
-                <div className="space-y-3">
-                  <Link to="/login" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <span className="text-lg">🎓</span>
-                    <div>
-                      <span className="text-xs font-bold block text-slate-800 dark:text-white">Principal View</span>
-                      <span className="text-[10px] text-slate-450 block">Oversight, audits, trends, calendar checks</span>
-                    </div>
-                  </Link>
-                  <Link to="/login" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <span className="text-lg">✍️</span>
-                    <div>
-                      <span className="text-xs font-bold block text-slate-800 dark:text-white">Teacher Command Portal</span>
-                      <span className="text-[10px] text-slate-450 block">Quick attendance checks, marks uploads, homework posting</span>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">For Families</h4>
-                <div className="space-y-3">
-                  <Link to="/login" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <span className="text-lg">🏡</span>
-                    <div>
-                      <span className="text-xs font-bold block text-slate-800 dark:text-white">Parent Portal</span>
-                      <span className="text-[10px] text-slate-450 block">Grade review checks, 3-click fee checks, live bus alerts</span>
-                    </div>
-                  </Link>
-                  <Link to="/login" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <span className="text-lg">🎒</span>
-                    <div>
-                      <span className="text-xs font-bold block text-slate-800 dark:text-white">Student Hub</span>
-                      <span className="text-[10px] text-slate-450 block">Assignment logs, exam calendars, report card archives</span>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">Core SaaS Infrastructure</h4>
-                <div className="space-y-3">
-                  <div className="p-3 bg-school-blue/5 rounded-2xl border border-school-blue/10 space-y-2">
-                    <span className="text-[10px] font-bold text-school-blue uppercase tracking-wider block">Enterprise Grade Cloud</span>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-semibold text-left">
-                      SubhraEdu leverages robust microservices to support multiple tenant campus schools with 99.98% SLA and unified central databases.
-                    </p>
-                    <button onClick={() => setIsDemoModalOpen(true)} className="text-[10px] font-extrabold text-school-blue hover:underline cursor-pointer block">
-                      Schedule Guided Tour →
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Modules Showcase Mega Menu */}
-          {activeMega === 'modules' && (
-            <div 
-              className="absolute left-0 right-0 top-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-premium transition-all duration-300 z-50 p-8 grid grid-cols-4 gap-6 text-left"
-              onMouseEnter={() => setActiveMega('modules')}
-            >
-              <div className="space-y-3">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block border-b border-slate-100 dark:border-slate-800 pb-1.5">Academics</span>
-                <ul className="space-y-2 text-xs font-bold">
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">📚 Student Profiles (SIS)</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">📅 Attendance Tracker</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">📝 Homework Planners</a></li>
-                </ul>
-              </div>
-              
-              <div className="space-y-3">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block border-b border-slate-100 dark:border-slate-800 pb-1.5">Administration</span>
-                <ul className="space-y-2 text-xs font-bold">
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">🏫 Online Admissions</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">💳 Fee & Bills Portal</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">💼 HR & Staff Payroll</a></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block border-b border-slate-100 dark:border-slate-800 pb-1.5">Campus Services</span>
-                <ul className="space-y-2 text-xs font-bold">
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">🚌 Fleet Route Trackers</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">📖 Smart Library shelf</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">🏠 Hostels & Housing</a></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block border-b border-slate-100 dark:border-slate-800 pb-1.5">Analytics & Comms</span>
-                <ul className="space-y-2 text-xs font-bold">
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">📊 AI Analytics diagnostics</a></li>
-                  <li><a href="#features" className="hover:text-school-blue flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/40">💬 Announcement Center</a></li>
-                </ul>
-              </div>
-            </div>
-          )}
         </div>
       </header>
 
