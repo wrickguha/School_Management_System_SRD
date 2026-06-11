@@ -48,14 +48,13 @@ export const LandingLayout: React.FC = () => {
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-14 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+            <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-14 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-medium hover:text-school-blue transition-colors">Features</a>
             <a href="#why-choose-us" className="text-sm font-medium hover:text-school-blue transition-colors">Why Us</a>
             <a href="#modules" className="text-sm font-medium hover:text-school-blue transition-colors">Modules</a>
-            <a href="#pricing" className="text-sm font-medium hover:text-school-blue transition-colors">Pricing</a>
             <a href="#faqs" className="text-sm font-medium hover:text-school-blue transition-colors">FAQs</a>
           </nav>
 
@@ -81,7 +80,7 @@ export const LandingLayout: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-4">
             <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-premium border border-slate-100 hover:scale-[1.03] transition-all duration-300 inline-block max-w-max">
-              <img src="/subhraedu_logo.png" alt="SUBHRAEDU Logo" className="h-12 w-auto object-contain" />
+              <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-12 w-auto object-contain" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering global schools with premium, enterprise-grade academic administration, financial operations, and real-time learning analytics.
@@ -98,7 +97,6 @@ export const LandingLayout: React.FC = () => {
             <ul className="space-y-3 text-sm">
               <li><a href="#features" className="hover:text-white transition-colors">Core Features</a></li>
               <li><a href="#modules" className="hover:text-white transition-colors">All Modules</a></li>
-              <li><a href="#pricing" className="hover:text-white transition-colors">Pricing Plans</a></li>
               <li><Link to="/login" className="hover:text-white transition-colors">ERP Dashboard Login</Link></li>
             </ul>
           </div>
@@ -108,7 +106,7 @@ export const LandingLayout: React.FC = () => {
             <ul className="space-y-3 text-sm text-slate-400">
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-school-blue mt-0.5 shrink-0" />
-                <span>SRD Technologies, Kulsum Complex,<br />Bagdogra, West Bengal</span>
+                <span>SRD Technologies India, Kulsum Complex,<br />Bagdogra, West Bengal</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-school-blue" /> +91 7478727864
@@ -131,7 +129,7 @@ export const LandingLayout: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© 2026 SUBHRAEDU. All rights reserved.</p>
+          <p>© 2026 SubhraEdu. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

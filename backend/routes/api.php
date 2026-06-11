@@ -24,7 +24,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/demo/request', [DemoRequestController::class, 'store']);
 
 Route::get('/health', function () {
-    return response()->json(['status' => 'ok', 'app' => 'SUBHRAEDU API']);
+    return response()->json(['status' => 'ok', 'app' => 'SubhraEdu API']);
 });
 
 // ── Protected Routes (Sanctum) ────────────────────────────────────────────────

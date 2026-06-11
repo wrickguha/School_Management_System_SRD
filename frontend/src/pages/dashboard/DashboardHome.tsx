@@ -843,7 +843,7 @@ export default function DashboardHome() {
           ) : (
             <form onSubmit={handlePayCheckout} className="space-y-4 text-left">
               <p className="text-xs text-slate-500">
-                Authorized SUBHRAEDU payments are secured with AES-256 bank encryption.
+                Authorized SubhraEdu payments are secured with AES-256 bank encryption.
               </p>
 
               <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-150 dark:border-slate-850 flex justify-between items-center text-xs font-bold">

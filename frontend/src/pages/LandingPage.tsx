@@ -582,7 +582,7 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed font-semibold max-w-2xl"
             >
-              Ditch slow on-premise servers. SUBHRAEDU empowers modern academies with institutional analytics, paperless admissions, dynamic gradebooks, and automated fee collections.
+              Ditch slow on-premise servers. SubhraEdu empowers modern academies with institutional analytics, paperless admissions, dynamic gradebooks, and automated fee collections.
             </motion.p>
 
             <motion.div
@@ -859,7 +859,7 @@ export default function LandingPage() {
                 ) : (
                   <div className="space-y-3">
                     <GraduationCap className="h-10 w-10 text-school-blue mx-auto animate-bounce" />
-                    <h4 className="text-sm font-extrabold tracking-tight">SUBHRAEDU Platform</h4>
+                    <h4 className="text-sm font-extrabold tracking-tight">SubhraEdu Platform</h4>
                     <p className="text-[11px] text-slate-455 font-semibold px-4">Hover over any module orbiting around the core platform to view active data flows</p>
                   </div>
                 )}
@@ -1195,7 +1195,7 @@ export default function LandingPage() {
             <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Success Records</span>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Evaluations by Directors</h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Read how principals and administrative board heads value their ERP migration to SUBHRAEDU.
+              Read how principals and administrative board heads value their ERP migration to SubhraEdu.
             </p>
           </div>
 
@@ -1248,93 +1248,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------
-          9. PREMIUM PRICING GRID (Highlight Professional Card)
-          --------------------------------------------------------- */}
-      <section id="pricing" className="py-24 border-t border-slate-100 dark:border-slate-900">
-        <div className="max-w-7xl mx-auto px-6 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold text-school-maroon uppercase tracking-widest bg-school-maroon/10 px-3.5 py-1.5 rounded-full border border-school-maroon/20">Institutional Budget</span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Flat, Transparent Licensing</h2>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Select the plan matching your active student registry. No setup fees or hidden migration costs.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
-            
-            {/* Plan 1 */}
-            <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8 flex flex-col justify-between text-left rounded-2xl shadow-premium hover:shadow-cardHover transition-all">
-              <div className="space-y-6">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Starter Tier</span>
-                  <span className="text-3xl font-extrabold text-slate-800 dark:text-white mt-2 block">$149<span className="text-sm font-semibold text-slate-400">/mo</span></span>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">Tailored for early academies or small private learning institutions.</p>
-                <div className="border-t border-slate-100 dark:border-slate-855 pt-4">
-                  <ul className="space-y-3.5">
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Up to 250 Students</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Student Profile Directory</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> RFID Attendance Logging</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Basic Billing Ledger</li>
-                  </ul>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full mt-8 cursor-pointer" onClick={openDemoModal}>Request Starter Setup</Button>
-            </Card>
-
-            {/* Plan 2: HIGHLIGHTED (Maroon accents, border, glow elevation) */}
-            <motion.div
-              whileHover={{ y: -6 }}
-              className="relative h-full"
-            >
-              <Card className="h-full bg-white dark:bg-slate-900 border-2 border-school-maroon p-8 flex flex-col justify-between text-left relative rounded-2xl shadow-premium hover:shadow-[0_20px_50px_rgba(123,30,58,0.15)] ring-4 ring-school-maroon/5 transition-all">
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-school-maroon to-school-maroonDark text-white px-4 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest shadow-md">
-                  RECOMMENDED
-                </span>
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-[10px] font-bold text-school-maroon uppercase tracking-widest block">Professional Plan</span>
-                    <span className="text-3.5xl font-extrabold text-slate-800 dark:text-white mt-2 block">$299<span className="text-sm font-semibold text-slate-400">/mo</span></span>
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">Perfect for expanding campuses demanding complete grades, billing, and GPS trackers.</p>
-                  <div className="border-t border-slate-100 dark:border-slate-855 pt-4">
-                    <ul className="space-y-3.5">
-                      <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Up to 1,000 Students</li>
-                      <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Everything in Starter</li>
-                      <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Custom Grade card Publisher</li>
-                      <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> GPS Bus tracker maps</li>
-                      <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Mobile app portal access</li>
-                    </ul>
-                  </div>
-                </div>
-                <Button variant="accent" className="w-full mt-8 cursor-pointer shadow-lg hover:shadow-school-maroon/20" onClick={openDemoModal}>Request Professional Setup</Button>
-              </Card>
-            </motion.div>
-
-            {/* Plan 3 */}
-            <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8 flex flex-col justify-between text-left rounded-2xl shadow-premium hover:shadow-cardHover transition-all">
-              <div className="space-y-6">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Enterprise Tier</span>
-                  <span className="text-3xl font-extrabold text-slate-800 dark:text-white mt-2 block">Custom Quote</span>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">Designed for district systems, multi-campuses, or high-volume colleges.</p>
-                <div className="border-t border-slate-100 dark:border-slate-855 pt-4">
-                  <ul className="space-y-3.5">
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Unlimited Student Capacity</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Multi-Campus Admin Console</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Dedicated Cloud Instance</li>
-                    <li className="flex items-center gap-2.5 text-xs font-bold text-slate-655 dark:text-slate-350"><Check className="h-4 w-4 text-school-green shrink-0" /> Custom Laravel REST APIs</li>
-                  </ul>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full mt-8 cursor-pointer" onClick={openDemoModal}>Contact Enterprise Team</Button>
-            </Card>
-
-          </div>
-        </div>
-      </section>
 
       {/* ---------------------------------------------------------
           10. REQUEST DEMO CTA (Animated Background & Floating Icons)
@@ -1498,7 +1412,7 @@ const testimonials = [
   {
     name: 'Dr. Arthur Sterling',
     role: 'Board President, Sterling Academies',
-    text: 'SUBHRAEDU transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
+    text: 'SubhraEdu transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
     rating: 5
   },
   {
@@ -1510,14 +1424,14 @@ const testimonials = [
   {
     name: 'Mr. David Cho',
     role: 'Chief Administrator, Horizon Global School',
-    text: 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. SUBHRAEDU looks premium, runs lightning-fast, and their API structure is highly scalable.',
+    text: 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. SubhraEdu looks premium, runs lightning-fast, and their API structure is highly scalable.',
     rating: 5
   }
 ];
 
 const faqs = [
-  { q: 'How long does the ERP migration and setup take?', a: 'Setting up your customized SUBHRAEDU instance takes 5 to 7 business days, including migrating student rosters, historical grade books, and teacher database profiles.' },
+  { q: 'How long does the ERP migration and setup take?', a: 'Setting up your customized SubhraEdu instance takes 5 to 7 business days, including migrating student rosters, historical grade books, and teacher database profiles.' },
   { q: 'Is our student records database secure?', a: 'Absolutely. We enforce end-to-end data encryption in transit and at rest. Our infrastructure runs on dedicated enterprise cloud servers following strict safety compliance standards.' },
-  { q: 'Can we configure custom permissions for departments?', a: 'Yes. SUBHRAEDU supports role-based permissions access. You can define distinct restrictions for finance officers, academic coordinators, registrar admins, and transport drivers.' },
-  { q: 'Does SUBHRAEDU integrate with hardware systems like RFID?', a: 'Yes. We support RFID smartgate scanners, biometric staff timesheets, and global SMS gateways for real-time alerts.' }
+  { q: 'Can we configure custom permissions for departments?', a: 'Yes. SubhraEdu supports role-based permissions access. You can define distinct restrictions for finance officers, academic coordinators, registrar admins, and transport drivers.' },
+  { q: 'Does SubhraEdu integrate with hardware systems like RFID?', a: 'Yes. We support RFID smartgate scanners, biometric staff timesheets, and global SMS gateways for real-time alerts.' }
 ];
