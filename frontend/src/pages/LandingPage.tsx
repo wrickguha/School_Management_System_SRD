@@ -948,7 +948,6 @@ export default function LandingPage() {
                   <span className="h-3.5 w-3.5 rounded-full bg-yellow-400" />
                   <span className="h-3 w-3 rounded-full bg-green-400" />
                 </div>
-                <span className="text-xs font-bold text-slate-400 tracking-wider">aegis-dashboard-preview-v4.1</span>
               </div>
               <div className="px-3 py-1 rounded-full bg-school-blue/10 text-school-blue dark:text-school-blueLight text-[10px] font-bold border border-school-blue/15 animate-pulse">
                 Dynamic Mode
