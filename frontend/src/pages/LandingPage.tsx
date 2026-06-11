@@ -518,6 +518,7 @@ export default function LandingPage() {
   const { openDemoModal } = useOutletContext<LandingContext>();
   const [activeTab, setActiveTab] = useState<'admissions' | 'academics' | 'finance' | 'analytics'>('admissions');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [selectedRoleSolution, setSelectedRoleSolution] = useState<'Principal' | 'Teacher' | 'Parent' | 'Student'>('Principal');
 
   // Large Interactive Ecosystem states
   const [hoveredEco, setHoveredEco] = useState<typeof ecosystemModules[0] | null>(ecosystemModules[0]);
@@ -1116,6 +1117,253 @@ export default function LandingPage() {
       </section>
 
       {/* ---------------------------------------------------------
+          5.1 ROLE-BASED SOLUTIONS SECTION
+          --------------------------------------------------------- */}
+      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900/40">
+        <div className="max-w-7xl mx-auto px-6 space-y-16">
+          <div className="text-center space-y-4 max-w-2xl mx-auto">
+            <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Solutions by Role</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Tailored Portal Workspaces</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">
+              Every member of your academic community receives a secure, specialized workspace designed for their daily operational workflows.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
+            {/* Left selector */}
+            <div className="lg:col-span-5 space-y-3 text-left">
+              {[
+                { role: 'Principal' as const, desc: 'Global campus oversight, performance trends, and administrative audits.', icon: '🎓' },
+                { role: 'Teacher' as const, desc: 'Classroom gradebooks, daily attendance entry, and homework dispatch.', icon: '✍️' },
+                { role: 'Parent' as const, desc: 'Secure online tuition payment, live bus route tracking, and grade reports.', icon: '🏡' },
+                { role: 'Student' as const, desc: 'Timetables, active assignments, and exam hall ticket downloads.', icon: '🎒' }
+              ].map((item) => (
+                <button
+                  key={item.role}
+                  onClick={() => setSelectedRoleSolution(item.role)}
+                  className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-4 cursor-pointer ${
+                    selectedRoleSolution === item.role
+                      ? 'bg-school-blue border-school-blue text-white shadow-lg shadow-school-blue/15'
+                      : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className="text-2xl">{item.icon}</span>
+                  <div>
+                    <span className="text-sm font-bold block">{item.role} Workspace</span>
+                    <span className={`text-[10px] block mt-0.5 ${selectedRoleSolution === item.role ? 'text-blue-100' : 'text-slate-405 dark:text-slate-400'}`}>
+                      {item.desc}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Right details display card */}
+            <div className="lg:col-span-7">
+              <Card className="border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 p-8 shadow-premium rounded-3xl min-h-[380px] flex flex-col justify-between text-left">
+                <div className="space-y-6">
+                  <div className="inline-block px-3 py-1 bg-school-blue/10 text-school-blue rounded text-[10px] font-bold">
+                    ROLE PORTAL PREVIEW
+                  </div>
+                  <h3 className="text-2xl font-extrabold tracking-tight">
+                    {selectedRoleSolution} Portal Workspace
+                  </h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-semibold">
+                    {roleSolutionsData[selectedRoleSolution].extendedDesc}
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    {roleSolutionsData[selectedRoleSolution].bullets.map((b, i) => (
+                      <div key={i} className="flex items-center gap-2.5 text-xs font-bold text-slate-805 dark:text-slate-200">
+                        <Check className="h-4 w-4 text-school-green shrink-0" />
+                        <span>{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-slate-150 dark:border-slate-850 flex items-center justify-between">
+                  <span className="text-[10px] font-extrabold text-school-blue uppercase">{roleSolutionsData[selectedRoleSolution].metric}</span>
+                  <Button variant="outline" size="sm" onClick={openDemoModal}>Demo Workspace</Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------
+          5.2 MOBILE APP SHOWCASE
+          --------------------------------------------------------- */}
+      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-slate-50/55 dark:bg-slate-955/20">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          
+          {/* Left Description */}
+          <div className="lg:col-span-6 space-y-8 text-left">
+            <span className="text-xs font-bold text-school-green uppercase tracking-widest bg-school-green/10 px-3.5 py-1.5 rounded-full border border-school-green/20">Mobile Connectivity</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Parent & Teacher Apps</h2>
+            <p className="text-slate-550 dark:text-slate-405 text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+              Stay connected on the move. Parents receive real-time push alerts the moment their child checks in via RFID smartgates, can review grade cards, and clear fees instantly. Teachers can submit attendance sheets directly from the classroom.
+            </p>
+            <div className="grid grid-cols-2 gap-6">
+              {[
+                { title: 'RFID Alerts', desc: 'Instant push alerts on entry/exit check-ins.' },
+                { title: '3-Click Pay', desc: 'Secure mobile checkout for school fee statements.' },
+                { title: 'Direct Messages', desc: 'Private messaging lines with classroom teachers.' },
+                { title: 'Offline Storage', desc: 'Synchronizes grade reports offline automatically.' }
+              ].map((item, i) => (
+                <div key={i} className="space-y-1.5">
+                  <span className="text-xs font-bold block text-slate-805 dark:text-white">✓ {item.title}</span>
+                  <span className="text-[11px] text-slate-450 block font-semibold leading-normal">{item.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Mobile Screen Mockup */}
+          <div className="lg:col-span-6 flex justify-center items-center">
+            <div className="relative w-[280px] h-[540px] rounded-[36px] bg-slate-900 border-[8px] border-slate-800 shadow-glass relative flex flex-col justify-between p-4 overflow-hidden text-left text-white">
+              {/* Speaker & camera notch */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-800 rounded-full z-20 flex items-center justify-center">
+                <span className="h-1 w-6 bg-slate-750 rounded-full" />
+              </div>
+
+              {/* Status bar */}
+              <div className="flex justify-between items-center text-[8px] font-bold text-slate-400 pt-2 px-2 z-10">
+                <span>09:41 AM</span>
+                <div className="flex gap-1">
+                  <span>📶</span>
+                  <span>🔋</span>
+                </div>
+              </div>
+
+              {/* App Area */}
+              <div className="flex-1 mt-4 space-y-4 overflow-y-auto scrollbar-none">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                  <div>
+                    <span className="text-[8px] text-slate-400 uppercase tracking-wider block">Greenwood App</span>
+                    <span className="text-xs font-bold block">Parent Dashboard</span>
+                  </div>
+                  <span className="text-lg">🔔</span>
+                </div>
+
+                {/* RFID Alert Banner */}
+                <div className="p-3 bg-school-blue/80 rounded-2xl border border-white/10 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[8px] font-bold text-blue-100 uppercase tracking-widest">RFID Smartgate log</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-school-green animate-ping" />
+                  </div>
+                  <span className="text-[10px] font-bold block">Alice Checked In</span>
+                  <span className="text-[8px] text-blue-100 block">Today, 08:02 AM • Main Gate 1</span>
+                </div>
+
+                {/* Grade performance widget */}
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2">
+                  <span className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">Alice Miller (Grade 10-A)</span>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-xs font-extrabold block">Term-I GPA</span>
+                      <span className="text-[9px] text-slate-350 block mt-0.5">88.5% Grade A</span>
+                    </div>
+                    <span className="text-lg">📊</span>
+                  </div>
+                </div>
+
+                {/* Fee alert widget */}
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center">
+                  <div>
+                    <span className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">Due Tuition Balance</span>
+                    <span className="text-xs font-extrabold text-school-maroon block mt-0.5">$1,500.00</span>
+                  </div>
+                  <button onClick={openDemoModal} className="px-3 py-1 bg-school-green hover:bg-school-greenDark text-[9px] font-bold rounded-lg transition-colors">
+                    Pay Bill
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------
+          5.3 PRODUCT COMPARISON SECTION
+          --------------------------------------------------------- */}
+      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900/40">
+        <div className="max-w-7xl mx-auto px-6 space-y-16 text-center">
+          <div className="space-y-4 max-w-2xl mx-auto">
+            <span className="text-xs font-bold text-school-maroon uppercase tracking-widest bg-school-maroon/10 px-3.5 py-1.5 rounded-full border border-school-maroon/20">Feature Matrix</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">How SubhraEdu Compares</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">
+              We leverage cloud architecture and high-performance design to outperform traditional legacy on-premise systems.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-premium">
+            <table className="w-full text-left border-collapse text-xs md:text-sm">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-900 text-slate-450 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-bold uppercase tracking-wider">
+                  <th className="p-5 font-bold">Operational Standard</th>
+                  <th className="p-5 text-school-blue font-extrabold">SubhraEdu Next-Gen</th>
+                  <th className="p-5 font-bold">Legacy On-Prem ERPs</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-150 dark:divide-slate-850 font-semibold text-slate-700 dark:text-slate-300">
+                {[
+                  { name: 'Database Syncing', ours: 'Real-Time Sync (REST & Sanctum)', theirs: 'Manual Batch Syncing / Local files' },
+                  { name: 'Mobile Application', ours: 'Integrated Parent & Teacher Portals', theirs: 'Requires expensive standalone addons' },
+                  { name: 'Live GPS Fleet Tracking', ours: 'Live Simulated SVG GPS Mapping', theirs: 'Static bus roster tables only' },
+                  { name: 'Role Permission Model', ours: '10 Distinct Roles with tailored views', theirs: 'Coarse admin/teacher permissions' },
+                  { name: 'Deployment Time', ours: '5 to 7 Business Days', theirs: '3 to 6 Months setup cycle' },
+                  { name: 'Server Reliability SLA', ours: '99.98% Cloud Uptime Guarantee', theirs: 'Unpredictable local hardware down times' }
+                ].map((row, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+                    <td className="p-5 font-extrabold">{row.name}</td>
+                    <td className="p-5 text-school-blue dark:text-school-blueLight font-extrabold">✓ {row.ours}</td>
+                    <td className="p-5 text-slate-450">{row.theirs}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------
+          5.4 SCHOOL SUCCESS STORIES / CASE STUDIES
+          --------------------------------------------------------- */}
+      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-slate-50/50 dark:bg-slate-955/20">
+        <div className="max-w-7xl mx-auto px-6 space-y-16">
+          <div className="text-center space-y-4 max-w-2xl mx-auto">
+            <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Operational Outcomes</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Institutional Success Stories</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">
+              Read how academic institutes optimized their registration, revenue, and payroll cycles post-migration.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              { school: 'Greenwood Prep', metric: '45% Defaulter Reduction', desc: 'Automated 3-click fee links via parent app decreased late invoice collections from months to hours.', color: 'border-school-green text-school-green' },
+              { school: 'Sterling District', metric: '15+ Hours Saved Weekly', desc: 'Digital gradebooks and attendance checkers eliminated physical log registers for 140+ faculty members.', color: 'border-school-blue text-school-blue' },
+              { school: 'Horizon Global', metric: '85% Faster Admissions', desc: 'Multi-step online seat forms and document upload modules eliminated campus onboarding queues.', color: 'border-school-maroon text-school-maroon' }
+            ].map((story, i) => (
+              <Card key={i} className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850 hover:border-school-blue/20 hover:shadow-cardHover transition-all text-left space-y-4 rounded-2xl flex flex-col justify-between">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold text-slate-455 dark:text-slate-400 uppercase tracking-widest block">{story.school}</span>
+                  <h4 className={`text-lg font-extrabold block ${story.color.split(' ')[1]}`}>{story.metric}</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">{story.desc}</p>
+                </div>
+                <button onClick={openDemoModal} className="text-[10px] font-bold text-school-blue hover:underline cursor-pointer text-left self-start mt-2">
+                  Read Case Study →
+                </button>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------
           6. TRUST / STATISTICS (SCROLL COUNTERS)
           --------------------------------------------------------- */}
       <section className="py-20 bg-gradient-to-r from-school-blue to-school-blueDark text-white relative overflow-hidden">
@@ -1450,3 +1698,27 @@ const faqs = [
   { q: 'Can we configure custom permissions for departments?', a: 'Yes. SubhraEdu supports role-based permissions access. You can define distinct restrictions for finance officers, academic coordinators, registrar admins, and transport drivers.' },
   { q: 'Does SubhraEdu integrate with hardware systems like RFID?', a: 'Yes. We support RFID smartgate scanners, biometric staff timesheets, and global SMS gateways for real-time alerts.' }
 ];
+
+const roleSolutionsData = {
+  Principal: {
+    extendedDesc: 'Principals gain real-time visibility into overall institutional indicators, teacher timesheets, class progress curves, and multi-campus balance registers.',
+    bullets: ['Central KPI oversight panels', 'Syllabus alignment audits', 'Multi-tenant settings access', 'Direct broadcast bulletins'],
+    metric: '99.4% Performance Confidence'
+  },
+  Teacher: {
+    extendedDesc: 'Teachers save an average of 15+ hours weekly. Record daily attendance sheets, publish marksheets, and post homework tasks directly from the classroom dashboard.',
+    bullets: ['Quick mobile checklist attendance', 'One-click term mark lists', 'Interactive syllabus planners', 'Conflict-free calendars mapping'],
+    metric: '15+ Hours Saved / Week'
+  },
+  Parent: {
+    extendedDesc: 'Parents enjoy transparent communications and payments. Settle tuition balances in 3 clicks, verify daily attendance check-ins, and review active report cards.',
+    bullets: ['Secure UPI/Card bill clearings', 'Instant RFID gate alert flags', 'Direct teacher messenger lines', 'Academic progress timelines'],
+    metric: '45% Defaulter Reductions'
+  },
+  Student: {
+    extendedDesc: 'Students log in to a unified workspace where they can track active homework, download exam hall tickets, review class schedules, and inspect grade reports.',
+    bullets: ['Sleek homework checklist cards', 'Digital marks card vaulting', 'Roster timetables', 'AI grade improvement guides'],
+    metric: '98% Student Engagement'
+  }
+};
+

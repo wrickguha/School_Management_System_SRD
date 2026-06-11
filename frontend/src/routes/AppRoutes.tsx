@@ -31,8 +31,16 @@ const FeeModule = lazy(() => import('../pages/dashboard/FeeModule'));
 const ReportsModule = lazy(() => import('../pages/dashboard/ReportsModule'));
 const SettingsModule = lazy(() => import('../pages/dashboard/SettingsModule'));
 
-// Fallback Module sandbox for additional requested modules
-const SandboxModule = lazy(() => import('../pages/dashboard/SandboxModule'));
+// Newly Integrated Modules
+const AdmissionsModule = lazy(() => import('../pages/dashboard/AdmissionsModule'));
+const TeachersModule = lazy(() => import('../pages/dashboard/TeachersModule'));
+const ParentsModule = lazy(() => import('../pages/dashboard/ParentsModule'));
+const HomeworkModule = lazy(() => import('../pages/dashboard/HomeworkModule'));
+const TransportModule = lazy(() => import('../pages/dashboard/TransportModule'));
+const LibraryModule = lazy(() => import('../pages/dashboard/LibraryModule'));
+const HostelModule = lazy(() => import('../pages/dashboard/HostelModule'));
+const PayrollModule = lazy(() => import('../pages/dashboard/PayrollModule'));
+const CommunicationModule = lazy(() => import('../pages/dashboard/CommunicationModule'));
 
 // Auth Guard
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -67,16 +75,16 @@ export const AppRoutes: React.FC = () => {
           <Route path="reports" element={<ReportsModule />} />
           <Route path="settings" element={<SettingsModule />} />
           
-          {/* Universal Sandboxed Modules for remaining modules */}
-          <Route path="admissions" element={<SandboxModule moduleName="Admissions Management" />} />
-          <Route path="teachers" element={<SandboxModule moduleName="Teachers Directory" />} />
-          <Route path="parents" element={<SandboxModule moduleName="Parents Registry" />} />
-          <Route path="homework" element={<SandboxModule moduleName="Homework & Tasks" />} />
-          <Route path="transport" element={<SandboxModule moduleName="Transport Fleet" />} />
-          <Route path="library" element={<SandboxModule moduleName="Library Catalog" />} />
-          <Route path="hostel" element={<SandboxModule moduleName="Hostel Rooms" />} />
-          <Route path="payroll" element={<SandboxModule moduleName="HR & Payroll Ledger" />} />
-          <Route path="communication" element={<SandboxModule moduleName="Global Announcements & SMS" />} />
+          {/* Custom Integrated Modules */}
+          <Route path="admissions" element={<AdmissionsModule />} />
+          <Route path="teachers" element={<TeachersModule />} />
+          <Route path="parents" element={<ParentsModule />} />
+          <Route path="homework" element={<HomeworkModule />} />
+          <Route path="transport" element={<TransportModule />} />
+          <Route path="library" element={<LibraryModule />} />
+          <Route path="hostel" element={<HostelModule />} />
+          <Route path="payroll" element={<PayrollModule />} />
+          <Route path="communication" element={<CommunicationModule />} />
           
           {/* Wildcard redirect inside Dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

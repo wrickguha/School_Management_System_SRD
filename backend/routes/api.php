@@ -49,6 +49,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('students', StudentController::class)->except(['index'])
         ->middleware('role:school_admin,principal');
 
+    // Admission Enquiries
+    Route::apiResource('admissions/enquiries', \App\Http\Controllers\Student\AdmissionEnquiryController::class)
+        ->middleware('role:school_admin,principal');
+
     // Teachers
     Route::get('/teachers', [TeacherController::class, 'index'])
         ->middleware('role:school_admin,principal,hr');

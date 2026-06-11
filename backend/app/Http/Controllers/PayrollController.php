@@ -49,4 +49,27 @@ class PayrollController extends Controller
 
         return response()->json($record, 201);
     }
+
+    public function update(Request $request, PayrollRecord $payroll): JsonResponse
+    {
+        $data = $request->validate([
+            'status' => 'required|string|in:Pending,Disbursed,Hold',
+        ]);
+
+        $payroll->update(array_merge($data, [
+            'paid_at' => ($data['status'] === 'Disbursed') ? now() : null,
+        ]));
+
+        // Log Activity
+        ActivityLog::create([
+            'school_id' => $payroll->school_id,
+            'user_id' => auth()->id(),
+            'action' => 'Payroll Updated',
+            'description' => "Updated payroll record #{$payroll->id} status to {$payroll->status}",
+            'model_type' => PayrollRecord::class,
+            'model_id' => $payroll->id,
+        ]);
+
+        return response()->json($payroll);
+    }
 }
