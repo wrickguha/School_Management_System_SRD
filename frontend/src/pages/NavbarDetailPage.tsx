@@ -9,6 +9,7 @@ import {
 import { navbarPagesData, type PageMetric, type PageFeature } from '../data/navbarPagesData';
 import { Button } from '../components/ui/Button';
 import SubhraEduOnePage from './SubhraEduOnePage';
+import MobileAppsPage from './MobileAppsPage';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -2049,6 +2050,10 @@ export default function NavbarDetailPage() {
 
   if (slug === 'subhraedu-one') {
     return <SubhraEduOnePage openDemoModal={openDemoModal} />;
+  }
+
+  if (slug === 'mobile-apps') {
+    return <MobileAppsPage openDemoModal={openDemoModal} />;
   }
 
   if (!page) {
