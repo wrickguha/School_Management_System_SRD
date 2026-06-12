@@ -12,6 +12,7 @@ import SubhraEduOnePage from './SubhraEduOnePage';
 import MobileAppsPage from './MobileAppsPage';
 import ExperientialLearningPage from './ExperientialLearningPage';
 import PreSchoolManagementPage from './PreSchoolManagementPage';
+import CaseStudiesPage from './CaseStudiesPage';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -2064,6 +2065,10 @@ export default function NavbarDetailPage() {
 
   if (slug === 'pre-school-management') {
     return <PreSchoolManagementPage openDemoModal={openDemoModal} />;
+  }
+
+  if (slug === 'case-studies') {
+    return <CaseStudiesPage openDemoModal={openDemoModal} />;
   }
 
   if (!page) {
