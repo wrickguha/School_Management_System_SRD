@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { navbarPagesData, type PageMetric, type PageFeature } from '../data/navbarPagesData';
 import { Button } from '../components/ui/Button';
+import SubhraEduOnePage from './SubhraEduOnePage';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -2045,6 +2046,10 @@ export default function NavbarDetailPage() {
       window.scrollTo(0, 0);
     }
   }, [page]);
+
+  if (slug === 'subhraedu-one') {
+    return <SubhraEduOnePage openDemoModal={openDemoModal} />;
+  }
 
   if (!page) {
     return <Navigate to="/" replace />;
