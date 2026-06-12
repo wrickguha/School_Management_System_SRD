@@ -10,6 +10,7 @@ import { navbarPagesData, type PageMetric, type PageFeature } from '../data/navb
 import { Button } from '../components/ui/Button';
 import SubhraEduOnePage from './SubhraEduOnePage';
 import MobileAppsPage from './MobileAppsPage';
+import ExperientialLearningPage from './ExperientialLearningPage';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -2054,6 +2055,10 @@ export default function NavbarDetailPage() {
 
   if (slug === 'mobile-apps') {
     return <MobileAppsPage openDemoModal={openDemoModal} />;
+  }
+
+  if (slug === 'experiential-learning') {
+    return <ExperientialLearningPage openDemoModal={openDemoModal} />;
   }
 
   if (!page) {
