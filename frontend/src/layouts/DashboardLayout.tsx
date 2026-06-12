@@ -175,7 +175,7 @@ export const DashboardLayout: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         {/* Sticky Top Nav Bar */}
-        <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800/85 px-6 flex items-center justify-between shrink-0 relative z-25">
+        <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800/85 px-6 flex items-center justify-between shrink-0 relative z-20">
           
           {/* Menu triggers */}
           <div className="flex items-center gap-4">
