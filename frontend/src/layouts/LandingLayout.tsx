@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Award, CheckCircle, ChevronDown } from 'lucide-react';
+import { Phone, Mail, MapPin, Award, CheckCircle, ChevronDown, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import apiClient from '../services/apiClient';
@@ -17,6 +18,12 @@ export const LandingLayout: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<'platforms' | 'schoolOptimisation' | 'successStories' | 'insights' | 'aboutUs' | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedMobileSection, setExpandedMobileSection] = useState<'platforms' | 'schoolOptimisation' | 'successStories' | 'insights' | 'aboutUs' | null>(null);
+
+  const toggleMobileSection = (section: 'platforms' | 'schoolOptimisation' | 'successStories' | 'insights' | 'aboutUs') => {
+    setExpandedMobileSection(prev => prev === section ? null : section);
+  };
 
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +54,7 @@ export const LandingLayout: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
       
       {/* Top Utility Bar */}
-      <div className="hidden lg:block w-full bg-[#e6f4fc] dark:bg-slate-950/80 border-b border-sky-100 dark:border-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 py-2.5 px-6">
+      <div className="hidden lg:block w-full bg-[#e6f4fc] dark:bg-slate-955/80 border-b border-sky-100 dark:border-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 py-2.5 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
@@ -285,20 +292,231 @@ export const LandingLayout: React.FC = () => {
             </div>
           </nav>
 
-          <div className="flex items-center gap-4">
-            <Link to="/login">
+          <div className="flex items-center gap-2 md:gap-4">
+            <Link to="/login" className="hidden sm:inline-block">
               <Button variant="ghost" size="sm" className="font-bold text-slate-700 dark:text-slate-300">Sign In</Button>
             </Link>
             <Button 
               variant="primary" 
               size="sm" 
               onClick={() => setIsDemoModalOpen(true)} 
-              className="font-bold bg-[#0A4D8C] hover:bg-[#083D70] border-none text-white text-[11px] tracking-wider rounded-lg px-5 py-2.5 uppercase transition-all"
+              className="hidden md:inline-block font-bold bg-[#0A4D8C] hover:bg-[#083D70] border-none text-white text-[11px] tracking-wider rounded-lg px-5 py-2.5 uppercase transition-all"
             >
               REGISTER FOR DEMO
             </Button>
+            
+            {/* Mobile Menu Toggle Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-850 transition-colors focus:outline-none cursor-pointer"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="md:hidden w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-xl overflow-y-auto max-h-[calc(100vh-5rem)]"
+            >
+              <div className="px-6 py-6 space-y-4">
+                {/* Platforms Accordion */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => toggleMobileSection('platforms')}
+                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    <span>Platforms</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'platforms' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expandedMobileSection === 'platforms' && (
+                    <div className="pl-4 pt-2 space-y-2.5">
+                      {[
+                        { label: 'SubhraEdu One', to: '/platforms/subhraedu-one' },
+                        { label: 'CampusCloud 10X', to: '/platforms/campuscloud-10x' },
+                        { label: 'Mobile Apps', to: '/platforms/mobile-apps' },
+                        { label: 'Experiential Learning', to: '/platforms/experiential-learning' },
+                        { label: 'Pre-School Management', to: '/platforms/pre-school-management' }
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* School Optimisation Accordion */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => toggleMobileSection('schoolOptimisation')}
+                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    <span>School Optimisation</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'schoolOptimisation' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expandedMobileSection === 'schoolOptimisation' && (
+                    <div className="pl-4 pt-2 space-y-2.5 max-h-60 overflow-y-auto">
+                      {[
+                        { label: 'Administration', to: '/optimisation/administration' },
+                        { label: 'Finance', to: '/optimisation/finance' },
+                        { label: 'Learning', to: '/optimisation/learning' },
+                        { label: 'Academics', to: '/optimisation/academics' },
+                        { label: 'Intelligence', to: '/optimisation/intelligence' },
+                        { label: 'Logistics', to: '/optimisation/logistics' },
+                        { label: 'Leadership / Management', to: '/optimisation/leadership-management' },
+                        { label: 'Enterprise Features', to: '/optimisation/enterprise-features' },
+                        { label: 'Communication', to: '/optimisation/communication' },
+                        { label: 'Human Resources', to: '/optimisation/human-resources' }
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Success Stories Accordion */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => toggleMobileSection('successStories')}
+                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    <span>Success Stories</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'successStories' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expandedMobileSection === 'successStories' && (
+                    <div className="pl-4 pt-2 space-y-2.5">
+                      {[
+                        { label: 'Case Studies', to: '/success-stories/case-studies' }
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Insights Accordion */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => toggleMobileSection('insights')}
+                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    <span>Insights</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'insights' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expandedMobileSection === 'insights' && (
+                    <div className="pl-4 pt-2 space-y-2.5">
+                      {[
+                        { label: 'Coverage', to: '/insights/coverage' },
+                        { label: 'Video', to: '/insights/video' },
+                        { label: 'Ed Talks', to: '/insights/ed-talks' },
+                        { label: 'Newsletter', to: '/insights/newsletter' },
+                        { label: 'Student Zone', to: '/insights/student-zone' },
+                        { label: 'Educator Zone', to: '/insights/educator-zone' },
+                        { label: 'Educators Article', to: '/insights/educators-article' }
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* About Us Accordion */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => toggleMobileSection('aboutUs')}
+                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    <span>About Us</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'aboutUs' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expandedMobileSection === 'aboutUs' && (
+                    <div className="pl-4 pt-2 space-y-2.5">
+                      {[
+                        { label: 'Our Story', to: '/about/our-story' }
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.to}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Contact Us Direct Link */}
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsDemoModalOpen(true);
+                    }}
+                    className="w-full text-left text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+
+                {/* Mobile CTA Actions */}
+                <div className="pt-4 flex flex-col gap-3">
+                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
+                    <Button variant="ghost" size="md" className="w-full font-bold border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsDemoModalOpen(true);
+                    }}
+                    className="w-full font-bold bg-[#0A4D8C] hover:bg-[#083D70] border-none text-white uppercase text-xs tracking-wider"
+                  >
+                    REGISTER FOR DEMO
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Main Content Area */}
