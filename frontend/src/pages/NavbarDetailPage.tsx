@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button';
 import SubhraEduOnePage from './SubhraEduOnePage';
 import MobileAppsPage from './MobileAppsPage';
 import ExperientialLearningPage from './ExperientialLearningPage';
+import PreSchoolManagementPage from './PreSchoolManagementPage';
 
 interface LandingContext {
   openDemoModal: () => void;
@@ -2059,6 +2060,10 @@ export default function NavbarDetailPage() {
 
   if (slug === 'experiential-learning') {
     return <ExperientialLearningPage openDemoModal={openDemoModal} />;
+  }
+
+  if (slug === 'pre-school-management') {
+    return <PreSchoolManagementPage openDemoModal={openDemoModal} />;
   }
 
   if (!page) {
