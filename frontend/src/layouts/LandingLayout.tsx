@@ -121,19 +121,19 @@ export const LandingLayout: React.FC = () => {
                   onMouseEnter={() => setActiveDropdown('platforms')}
                 >
                   {[
-                    { label: 'Entab One', href: '#features' },
-                    { label: 'CampusCare 10X', href: '#features' },
-                    { label: 'Mobile Apps', href: '#features' },
-                    { label: 'Experiential Learning', href: '#features' },
-                    { label: 'Pre-School Management', href: '#features' }
+                    { label: 'SubhraEdu One', to: '/platforms/subhraedu-one' },
+                    { label: 'CampusCloud 10X', to: '/platforms/campuscloud-10x' },
+                    { label: 'Mobile Apps', to: '/platforms/mobile-apps' },
+                    { label: 'Experiential Learning', to: '/platforms/experiential-learning' },
+                    { label: 'Pre-School Management', to: '/platforms/pre-school-management' }
                   ].map((item, idx) => (
-                    <a 
+                    <Link 
                       key={idx}
-                      href={item.href}
+                      to={item.to}
                       className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -155,24 +155,24 @@ export const LandingLayout: React.FC = () => {
                   onMouseEnter={() => setActiveDropdown('schoolOptimisation')}
                 >
                   {[
-                    { label: 'Administration', href: '#features' },
-                    { label: 'Finance', href: '#features' },
-                    { label: 'Learning', href: '#features' },
-                    { label: 'Academics', href: '#features' },
-                    { label: 'Intelligence', href: '#features' },
-                    { label: 'Logistics', href: '#features' },
-                    { label: 'Leadership / Management', href: '#features' },
-                    { label: 'Enterprise Features', href: '#features' },
-                    { label: 'Communication', href: '#features' },
-                    { label: 'Human Resources', href: '#features' }
+                    { label: 'Administration', to: '/optimisation/administration' },
+                    { label: 'Finance', to: '/optimisation/finance' },
+                    { label: 'Learning', to: '/optimisation/learning' },
+                    { label: 'Academics', to: '/optimisation/academics' },
+                    { label: 'Intelligence', to: '/optimisation/intelligence' },
+                    { label: 'Logistics', to: '/optimisation/logistics' },
+                    { label: 'Leadership / Management', to: '/optimisation/leadership-management' },
+                    { label: 'Enterprise Features', to: '/optimisation/enterprise-features' },
+                    { label: 'Communication', to: '/optimisation/communication' },
+                    { label: 'Human Resources', to: '/optimisation/human-resources' }
                   ].map((item, idx) => (
-                    <a 
+                    <Link 
                       key={idx}
-                      href={item.href}
+                      to={item.to}
                       className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -194,15 +194,15 @@ export const LandingLayout: React.FC = () => {
                   onMouseEnter={() => setActiveDropdown('successStories')}
                 >
                   {[
-                    { label: 'Case Studies', href: '#testimonials' }
+                    { label: 'Case Studies', to: '/success-stories/case-studies' }
                   ].map((item, idx) => (
-                    <a 
+                    <Link 
                       key={idx}
-                      href={item.href}
+                      to={item.to}
                       className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -224,21 +224,21 @@ export const LandingLayout: React.FC = () => {
                   onMouseEnter={() => setActiveDropdown('insights')}
                 >
                   {[
-                    { label: 'Coverage', href: '#case-studies' },
-                    { label: 'Video', href: '#case-studies' },
-                    { label: 'Ed Talks', href: '#case-studies' },
-                    { label: 'Newsletter', href: '#case-studies' },
-                    { label: 'Student Zone', href: '#case-studies' },
-                    { label: 'Educator Zone', href: '#case-studies' },
-                    { label: 'Educators Article', href: '#case-studies' }
+                    { label: 'Coverage', to: '/insights/coverage' },
+                    { label: 'Video', to: '/insights/video' },
+                    { label: 'Ed Talks', to: '/insights/ed-talks' },
+                    { label: 'Newsletter', to: '/insights/newsletter' },
+                    { label: 'Student Zone', to: '/insights/student-zone' },
+                    { label: 'Educator Zone', to: '/insights/educator-zone' },
+                    { label: 'Educators Article', to: '/insights/educators-article' }
                   ].map((item, idx) => (
-                    <a 
+                    <Link 
                       key={idx}
-                      href={item.href}
+                      to={item.to}
                       className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -260,15 +260,15 @@ export const LandingLayout: React.FC = () => {
                   onMouseEnter={() => setActiveDropdown('aboutUs')}
                 >
                   {[
-                    { label: 'Our Story', href: '#footer' }
+                    { label: 'Our Story', to: '/about/our-story' }
                   ].map((item, idx) => (
-                    <a 
+                    <Link 
                       key={idx}
-                      href={item.href}
+                      to={item.to}
                       className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}

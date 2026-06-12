@@ -42,6 +42,9 @@ const HostelModule = lazy(() => import('../pages/dashboard/HostelModule'));
 const PayrollModule = lazy(() => import('../pages/dashboard/PayrollModule'));
 const CommunicationModule = lazy(() => import('../pages/dashboard/CommunicationModule'));
 
+// Dynamic Navbar Detail Sub-Pages
+const NavbarDetailPage = lazy(() => import('../pages/NavbarDetailPage'));
+
 // Auth Guard
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -55,6 +58,11 @@ export const AppRoutes: React.FC = () => {
         {/* Public Routes */}
         <Route path="/" element={<LandingLayout />}>
           <Route index element={<LandingPage />} />
+          <Route path="platforms/:slug" element={<NavbarDetailPage />} />
+          <Route path="optimisation/:slug" element={<NavbarDetailPage />} />
+          <Route path="success-stories/:slug" element={<NavbarDetailPage />} />
+          <Route path="insights/:slug" element={<NavbarDetailPage />} />
+          <Route path="about/:slug" element={<NavbarDetailPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
 
