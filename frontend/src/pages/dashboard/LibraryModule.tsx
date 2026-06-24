@@ -144,7 +144,7 @@ export default function LibraryModule() {
       header: 'Accrued Fine',
       accessor: (r: Issuance) => (
         <span className={Number(r.fine_amount) > 0 ? 'text-red-500 font-bold' : 'text-slate-400 font-semibold'}>
-          ${r.fine_amount}
+          ₹{r.fine_amount}
         </span>
       )
     }
@@ -201,7 +201,7 @@ export default function LibraryModule() {
         {[
           { label: 'Total Volumes', val: books?.reduce((acc, b) => acc + b.total_copies, 0) || 0 },
           { label: 'Checked Out', val: issuances?.filter(i => !i.returned_at).length || 0 },
-          { label: 'Fine Accrued', val: `$${issuances?.reduce((acc, i) => acc + Number(i.fine_amount), 0) || 0}` }
+          { label: 'Fine Accrued', val: `₹${issuances?.reduce((acc, i) => acc + Number(i.fine_amount), 0) || 0}` }
         ].map((stat, idx) => (
           <Card key={idx} className="p-5 flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <div>

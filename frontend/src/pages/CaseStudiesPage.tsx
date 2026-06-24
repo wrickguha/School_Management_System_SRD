@@ -40,7 +40,7 @@ export default function CaseStudiesPage({ openDemoModal }: CaseStudiesPageProps)
   // 3. Calculator States
   const [studentCount, setStudentCount] = useState(1200);
   const [avgTuition, setAvgTuition] = useState(150);
-  const [currency, setCurrency] = useState<'USD' | 'INR'>('USD');
+  const [currency, setCurrency] = useState<'USD' | 'INR'>('INR');
 
   // Video Simulator Clock Logic
   useEffect(() => {

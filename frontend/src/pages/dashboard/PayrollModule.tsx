@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, DollarSign, Users, Eye, AlertCircle } from 'lucide-react';
+import { Plus, IndianRupee, Users, Eye, AlertCircle } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
@@ -197,7 +197,7 @@ export default function PayrollModule() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: 'Total Base Payroll', val: `₹${totalBase.toLocaleString()}`, icon: DollarSign, color: 'text-school-blue' },
+          { label: 'Total Base Payroll', val: `₹${totalBase.toLocaleString()}`, icon: IndianRupee, color: 'text-school-blue' },
           { label: 'Net Disbursed / Period', val: `₹${totalNet.toLocaleString()}`, icon: Users, color: 'text-school-green' },
           { label: 'Pending Disbursals', val: `${pendingCount} Slips`, icon: AlertCircle, color: 'text-rose-500' }
         ].map((stat, idx) => {

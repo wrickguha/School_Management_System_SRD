@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Users, DollarSign, Activity, AlertCircle,
+  Users, IndianRupee, Activity, AlertCircle,
   FileSpreadsheet, ArrowUpRight, TrendingUp, Calendar, Megaphone,
   BookOpen, CheckCircle, CreditCard, Building, Clock, Server
 } from 'lucide-react';
@@ -64,7 +64,7 @@ export default function DashboardHome() {
       { title: 'Total Students', value: '120,450', change: '+8.2% YoY', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
       { title: 'Total Teachers', value: '5,840', change: '+5.1% YoY', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
       { title: 'Total Parents', value: '98,200', change: '+7.8% YoY', icon: Users, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
-      { title: 'Total Revenue', value: '$2,412,000', change: '+15.4% YoY', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' },
+      { title: 'Total Revenue', value: '₹2,412,000', change: '+15.4% YoY', icon: IndianRupee, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' },
       { title: 'Active Subscriptions', value: '232', change: '93.5% renewal rate', icon: CheckCircle, color: 'text-teal-650 bg-teal-50 dark:bg-teal-950/20' },
       { title: 'Expired Subscriptions', value: '16', change: '-4% from last quarter', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' },
       { title: 'Pending Demo Requests', value: '24', change: '8 scheduled today', icon: Clock, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20' },
@@ -225,7 +225,7 @@ export default function DashboardHome() {
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">SaaS Subscriptions vs Add-on Packages</span>
               </div>
               <span className="h-7 w-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600">
-                <DollarSign className="h-4 w-4" />
+                <IndianRupee className="h-4 w-4" />
               </span>
             </CardHeader>
             <div className="h-72">
@@ -444,9 +444,9 @@ export default function DashboardHome() {
     const kpis = [
       { title: 'Total Students', value: loadingStudents ? '...' : totalStudents + 2475, change: '+12% from last term', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
       { title: 'Total Teachers', value: loadingTeachers ? '...' : totalTeachers + 74, change: 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
-      { title: 'Total Revenue', value: loadingFinance ? '...' : `$${(totalRevenue + 412000).toLocaleString()}`, change: '+8% collections rate', icon: DollarSign, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
+      { title: 'Total Revenue', value: loadingFinance ? '...' : `₹${(totalRevenue + 412000).toLocaleString()}`, change: '+8% collections rate', icon: IndianRupee, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
       { title: 'Attendance Rate', value: `${attendanceRate}%`, change: '+1.5% average', icon: Activity, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Defaulter Fees', value: loadingStudents ? '...' : `$${pendingPayments.toLocaleString()}`, change: '4 students pending', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
+      { title: 'Defaulter Fees', value: loadingStudents ? '...' : `₹${pendingPayments.toLocaleString()}`, change: '4 students pending', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
     ];
 
     return (
@@ -523,7 +523,7 @@ export default function DashboardHome() {
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Revenue Stream vs Cash Collection</span>
               </div>
               <span className="h-7 w-7 rounded-lg bg-school-green/10 flex items-center justify-center text-school-green">
-                <DollarSign className="h-4 w-4" />
+                <IndianRupee className="h-4 w-4" />
               </span>
             </CardHeader>
             <div className="h-72">
@@ -940,7 +940,7 @@ export default function DashboardHome() {
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Outstanding Fees Status</span>
             <span className={`block text-3xl font-extrabold mt-2 ${aarav.pendingFees > 0 ? 'text-school-maroon' : 'text-school-green'}`}>
-              {aarav.pendingFees > 0 ? `$${aarav.pendingFees.toLocaleString()}` : 'Cleared'}
+              {aarav.pendingFees > 0 ? `₹${aarav.pendingFees.toLocaleString()}` : 'Cleared'}
             </span>
             <span className="text-[9px] font-bold text-slate-400 block mt-1">
               {aarav.pendingFees > 0 ? 'Payment due by Parent' : 'All clear for Term II'}
@@ -1210,9 +1210,9 @@ export default function DashboardHome() {
     ];
 
     const financeLogs = [
-      { id: '1', item: 'Aarav Sharma - Term II fee payment', amount: '$1,250', status: 'Cleared', date: 'Today, 10:15 AM' },
-      { id: '2', item: 'Rohan Gupta - Bus Route 4 outstanding', amount: '$450', status: 'Pending', date: 'Today, 08:30 AM' },
-      { id: '3', item: 'Administrative Office - Supplies cost', amount: '$820', status: 'Cleared', date: 'Yesterday, 04:00 PM' }
+      { id: '1', item: 'Aarav Sharma - Term II fee payment', amount: '₹1,250', status: 'Cleared', date: 'Today, 10:15 AM' },
+      { id: '2', item: 'Rohan Gupta - Bus Route 4 outstanding', amount: '₹450', status: 'Pending', date: 'Today, 08:30 AM' },
+      { id: '3', item: 'Administrative Office - Supplies cost', amount: '₹820', status: 'Cleared', date: 'Yesterday, 04:00 PM' }
     ];
 
     return (
@@ -1232,17 +1232,17 @@ export default function DashboardHome() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Term Revenue</span>
-            <span className="block text-2xl font-extrabold text-school-blue mt-2">$412,000</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">₹412,000</span>
             <span className="text-[10px] text-slate-405 font-bold block mt-1">Projected collection target</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Realized Collections</span>
-            <span className="block text-2xl font-extrabold text-school-green mt-2">$391,500</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">₹391,500</span>
             <span className="text-[10px] text-slate-405 font-bold block mt-1">95% completion rate</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Collections</span>
-            <span className="block text-2xl font-extrabold text-school-maroon mt-2">$20,500</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">₹20,500</span>
             <span className="text-[10px] text-slate-405 font-bold block mt-1">4 student accounts flagged</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">

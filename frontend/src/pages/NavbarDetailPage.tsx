@@ -237,7 +237,7 @@ function InvoiceBuilder() {
               onChange={() => setTransport(!transport)}
               className="rounded text-school-green border-slate-350 focus:ring-school-green"
             />
-            <span>Add Transport Allowance (+$80.00)</span>
+            <span>Add Transport Allowance (+₹80.00)</span>
           </label>
 
           <label className="flex items-center gap-2.5 text-xs font-bold text-slate-605 dark:text-slate-400 cursor-pointer">
@@ -247,7 +247,7 @@ function InvoiceBuilder() {
               onChange={() => setExams(!exams)}
               className="rounded text-school-green border-slate-350 focus:ring-school-green"
             />
-            <span>Add Term Exams Charge (+$30.00)</span>
+            <span>Add Term Exams Charge (+₹30.00)</span>
           </label>
         </div>
       </div>
@@ -258,7 +258,7 @@ function InvoiceBuilder() {
           <span className="text-[10px] text-slate-400 font-extrabold uppercase">Calculated Invoiced Slip</span>
           <span className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Tx ID: #SUB-LIVE-749</span>
         </div>
-        <span className="text-2xl font-black text-slate-855 dark:text-white">${total.toFixed(2)}</span>
+        <span className="text-2xl font-black text-slate-855 dark:text-white">₹{total.toFixed(2)}</span>
       </div>
     </div>
   );
@@ -1048,7 +1048,7 @@ function BeakerSimulatorWrapper({ slug, activeFeatureIdx }: { slug: string; acti
                       <CreditCard className="h-5 w-5 text-school-blue" />
                       <span className="text-xs text-white font-bold">Online Checkout</span>
                     </div>
-                    <span className="text-xs text-school-green font-extrabold animate-bounce">+$480.00</span>
+                    <span className="text-xs text-school-green font-extrabold animate-bounce">+₹480.00</span>
                   </div>
                   <div className="text-[9px] text-slate-500 flex justify-between">
                     <span>Trans ID: #TXN-9482</span>
@@ -1127,8 +1127,8 @@ function BeakerSimulatorWrapper({ slug, activeFeatureIdx }: { slug: string; acti
                     <span className="text-school-maroon bg-school-maroon/10 px-2 py-0.5 rounded text-[10px]">Overdue</span>
                   </div>
                   <div className="text-[10px] text-slate-400 flex justify-between">
-                    <span>Original: $400.00</span>
-                    <span className="text-white">+ Late Penalty $20.00</span>
+                    <span>Original: ₹400.00</span>
+                    <span className="text-white">+ Late Penalty ₹20.00</span>
                   </div>
                 </div>
                 <div className="text-[10px] text-slate-400 font-bold text-center">AI Outstanding Reminders Sent Out Automatically</div>
@@ -1542,15 +1542,15 @@ function OptimisationLayout({ page, openDemoModal }: { page: any; openDemoModal:
             <div className="space-y-2 text-xs font-bold text-slate-805 dark:text-white">
               <div className="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-850">
                 <span>Dr. Sandeep Sen (Principal)</span>
-                <span className="text-[10px] text-slate-400">Active • $4,500/mo</span>
+                <span className="text-[10px] text-slate-400">Active • ₹4,500/mo</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-855">
                 <span>Sister Mary D\'Souza (Coordinator)</span>
-                <span className="text-[10px] text-slate-400">Active • $2,800/mo</span>
+                <span className="text-[10px] text-slate-400">Active • ₹2,800/mo</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span>Mr. Rajat Bose (Admissions Head)</span>
-                <span className="text-[10px] text-slate-400">Active • $2,600/mo</span>
+                <span className="text-[10px] text-slate-400">Active • ₹2,600/mo</span>
               </div>
             </div>
           </div>

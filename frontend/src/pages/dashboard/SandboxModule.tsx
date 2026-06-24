@@ -137,9 +137,9 @@ export default function SandboxModule({ moduleName }: SandboxModuleProps) {
             { header: 'Fine Accrued', accessor: (r: any) => <span className="text-red-500 font-bold">{r.fine}</span> }
           ],
           data: [
-            { id: 'LIB-0941', title: 'Introduction to Algorithms', author: 'Cormen, Leiserson', issued: 'Aarav Sharma (G10)', fine: '$0.00' },
-            { id: 'LIB-0942', title: 'Concepts of Physics Vol 1', author: 'Dr. H.C. Verma', issued: 'Ananya Iyer (G10)', fine: '$5.00' },
-            { id: 'LIB-0943', title: 'High School English Grammar', author: 'Wren & Martin', issued: 'None (Available)', fine: '$0.00' }
+            { id: 'LIB-0941', title: 'Introduction to Algorithms', author: 'Cormen, Leiserson', issued: 'Aarav Sharma (G10)', fine: '₹0.00' },
+            { id: 'LIB-0942', title: 'Concepts of Physics Vol 1', author: 'Dr. H.C. Verma', issued: 'Ananya Iyer (G10)', fine: '₹5.00' },
+            { id: 'LIB-0943', title: 'High School English Grammar', author: 'Wren & Martin', issued: 'None (Available)', fine: '₹0.00' }
           ],
           formFields: ['Book Title', 'ISBN Code', 'Author Name', 'Rack Allocation Code']
         };
@@ -168,7 +168,7 @@ export default function SandboxModule({ moduleName }: SandboxModuleProps) {
         return {
           stats: [
             { label: 'Registered Employees', val: '124' },
-            { label: 'Salary Ledger Out', val: '$84,500' },
+            { label: 'Salary Ledger Out', val: '₹84,500' },
             { label: 'Unpaid Slips', val: '0' }
           ],
           columns: [
@@ -179,9 +179,9 @@ export default function SandboxModule({ moduleName }: SandboxModuleProps) {
             { header: 'Payout Status', accessor: () => <span className="px-2 py-0.5 bg-school-greenLight dark:bg-school-green/10 text-school-green rounded-full text-[10px] font-bold uppercase">Disbursed</span> }
           ],
           data: [
-            { id: 'EMP001', name: 'Dr. Sunita Rao', role: 'Sr. Lecturer', salary: '$65,000 /yr' },
-            { id: 'EMP002', name: 'Mr. Rajesh Verma', role: 'Lecturer', salary: '$58,000 /yr' },
-            { id: 'EMP003', name: 'Mrs. Priya Sen', role: 'Lecturer', salary: '$55,000 /yr' }
+            { id: 'EMP001', name: 'Dr. Sunita Rao', role: 'Sr. Lecturer', salary: '₹65,000 /yr' },
+            { id: 'EMP002', name: 'Mr. Rajesh Verma', role: 'Lecturer', salary: '₹58,000 /yr' },
+            { id: 'EMP003', name: 'Mrs. Priya Sen', role: 'Lecturer', salary: '₹55,000 /yr' }
           ],
           formFields: ['Full Name', 'Role Title', 'Bank Account Number', 'Base Monthly Salary']
         };

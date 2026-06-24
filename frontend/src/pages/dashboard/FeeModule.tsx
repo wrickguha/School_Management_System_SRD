@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { financeService, studentService } from '../../services/services';
-import { CreditCard, DollarSign, Calendar, AlertCircle, Plus, CheckCircle } from 'lucide-react';
+import { CreditCard, IndianRupee, Calendar, AlertCircle, Plus, CheckCircle } from 'lucide-react';
 
 export default function FeeModule() {
   const queryClient = useQueryClient();
@@ -88,17 +88,17 @@ export default function FeeModule() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-bold text-slate-450 uppercase">Total Collected</span>
-            <span className="block text-2xl font-extrabold text-school-green mt-1">${(totalCollected + 117000).toLocaleString()}</span>
+            <span className="text-[10px] font-bold text-slate-455 uppercase">Total Collected</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-1">₹{(totalCollected + 117000).toLocaleString()}</span>
           </div>
           <div className="h-10 w-10 rounded-xl bg-school-greenLight dark:bg-school-green/10 text-school-green flex items-center justify-center shrink-0">
-            <DollarSign className="h-5 w-5" />
+            <IndianRupee className="h-5 w-5" />
           </div>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-bold text-slate-450 uppercase">Outstanding Dues</span>
-            <span className="block text-2xl font-extrabold text-school-maroon mt-1">${totalPending.toLocaleString()}</span>
+            <span className="text-[10px] font-bold text-slate-455 uppercase">Outstanding Dues</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-1">₹{totalPending.toLocaleString()}</span>
           </div>
           <div className="h-10 w-10 rounded-xl bg-school-maroonLight dark:bg-school-maroon/10 text-school-maroon flex items-center justify-center shrink-0">
             <AlertCircle className="h-5 w-5" />
@@ -144,7 +144,7 @@ export default function FeeModule() {
                 { header: 'Receipt No', accessor: 'receiptNo' },
                 { header: 'Student Name', accessor: 'studentName', sortable: true, sortKey: 'studentName' },
                 { header: 'Grade', accessor: 'grade' },
-                { header: 'Amount', accessor: (r) => <span className="font-extrabold text-slate-850 dark:text-slate-105">${r.amount.toLocaleString()}</span> },
+                { header: 'Amount', accessor: (r) => <span className="font-extrabold text-slate-850 dark:text-slate-105">₹{r.amount.toLocaleString()}</span> },
                 { header: 'Payment Mode', accessor: 'paymentMode' },
                 { header: 'Date', accessor: 'date' },
                 {
@@ -182,7 +182,7 @@ export default function FeeModule() {
                 { header: 'Student Name', accessor: 'name', sortable: true, sortKey: 'name' },
                 { header: 'Grade', accessor: (r) => `${r.grade}-${r.section}` },
                 { header: 'Parent Phone', accessor: 'parentPhone' },
-                { header: 'Pending Amount', accessor: (r) => <span className="font-extrabold text-school-maroon">${r.pendingFees.toLocaleString()}</span> }
+                { header: 'Pending Amount', accessor: (r) => <span className="font-extrabold text-school-maroon">₹{r.pendingFees.toLocaleString()}</span> }
               ]}
               data={defaulters}
               searchKey="name"
@@ -227,7 +227,7 @@ export default function FeeModule() {
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white font-bold"
               >
                 {students?.map(s => (
-                  <option key={s.id} value={s.name}>{s.name} ({s.grade} - Dues: ${s.pendingFees})</option>
+                  <option key={s.id} value={s.name}>{s.name} ({s.grade} - Dues: ₹{s.pendingFees})</option>
                 ))}
               </select>
             </div>
@@ -243,7 +243,7 @@ export default function FeeModule() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Collection Amount ($)</label>
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Collection Amount (₹)</label>
                 <input
                   type="number"
                   required

@@ -54,7 +54,7 @@ export default function HostelModule() {
     { header: 'Room No', accessor: 'room_no', sortable: true, sortKey: 'room_no' },
     { header: 'Hostel Block', accessor: 'block', sortable: true, sortKey: 'block' },
     { header: 'Room Type', accessor: 'type' },
-    { header: 'Rent Charge / Term', accessor: (r: HostelRoom) => `$${r.rent_per_term}` },
+    { header: 'Rent Charge / Term', accessor: (r: HostelRoom) => `₹${r.rent_per_term}` },
     { header: 'Capacity / Occupancy', accessor: (r: HostelRoom) => `${r.occupied} / ${r.capacity} Beds` },
     {
       header: 'Vacancy Status',
@@ -172,7 +172,7 @@ export default function HostelModule() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Rent Per Term ($)</label>
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Rent Per Term (₹)</label>
               <input
                 type="number"
                 required

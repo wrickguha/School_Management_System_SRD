@@ -147,7 +147,7 @@ function FeeIllustration() {
       </div>
       <div className="flex items-center justify-between bg-white dark:bg-slate-900 rounded-lg p-2 border border-slate-100 dark:border-slate-850">
         <span className="text-[10px] font-bold text-slate-440">Total Invoiced</span>
-        <span className="text-xs font-extrabold text-school-blue animate-pulse">$482,900</span>
+        <span className="text-xs font-extrabold text-school-blue animate-pulse">₹482,900</span>
       </div>
     </div>
   );
@@ -671,7 +671,7 @@ export default function LandingPage() {
                 
                 <div className="my-2 space-y-1.5">
                   <span className="text-[7px] font-bold text-slate-450 uppercase tracking-widest block">St. Jude Academy</span>
-                  <span className="text-xl font-extrabold text-slate-800 dark:text-white block">$148,250</span>
+                  <span className="text-xl font-extrabold text-slate-800 dark:text-white block">₹148,250</span>
                   <div className="w-full bg-slate-150 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
                     <div className="bg-school-green h-full rounded-full" style={{ width: '84%' }} />
                   </div>
@@ -981,7 +981,7 @@ export default function LandingPage() {
                   <CreditCard className="h-4 w-4 text-school-green" />
                 </div>
                 <div className="my-6">
-                  <span className="text-2xl font-extrabold text-slate-900 dark:text-white">$324,800</span>
+                  <span className="text-2xl font-extrabold text-slate-900 dark:text-white">₹324,800</span>
                   <span className="text-[9px] block text-school-green font-bold mt-1">+12.4% vs Last Term</span>
                 </div>
                 <div className="h-16 flex items-end gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-900">
@@ -1273,7 +1273,7 @@ export default function LandingPage() {
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center">
                   <div>
                     <span className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">Due Tuition Balance</span>
-                    <span className="text-xs font-extrabold text-school-maroon block mt-0.5">$1,500.00</span>
+                    <span className="text-xs font-extrabold text-school-maroon block mt-0.5">₹1,500.00</span>
                   </div>
                   <button onClick={openDemoModal} className="px-3 py-1 bg-school-green hover:bg-school-greenDark text-[9px] font-bold rounded-lg transition-colors">
                     Pay Bill
@@ -1622,7 +1622,7 @@ const heroModules = [
   { name: 'Parents', icon: Users, color: '#7B1E3A', preview: '1.2K Checkout Statements' },
   { name: 'Attendance', icon: Calendar, color: '#0A4D8C', preview: '96.8% Average Checked In' },
   { name: 'Examination', icon: Award, color: '#138D75', preview: 'Term-I Report Cards Published' },
-  { name: 'Fees', icon: CreditCard, color: '#7B1E3A', preview: '$184K Collected This Month' },
+  { name: 'Fees', icon: CreditCard, color: '#7B1E3A', preview: '₹184K Collected This Month' },
   { name: 'Transport', icon: Bus, color: '#0A4D8C', preview: '8 Active Bus Tracker GPS Lines' },
   { name: 'Library', icon: LibraryIcon, color: '#138D75', preview: '240 Checked out Books Today' },
   { name: 'Communication', icon: MessageSquare, color: '#7B1E3A', preview: '14,250 Bulk SMS Queue' },
