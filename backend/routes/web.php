@@ -24,7 +24,7 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     if (!$action) {
         return response()->json([
             'message' => 'Deploy utility is active.',
-            'available_actions' => ['migrate', 'migrate-fresh', 'db-seed', 'seed-admin', 'storage-link', 'clear-cache', 'optimize']
+            'available_actions' => ['migrate', 'migrate-fresh', 'db-seed', 'seed-admin', 'clear-data', 'storage-link', 'clear-cache', 'optimize']
         ]);
     }
 
@@ -60,6 +60,51 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
                 );
                 $admin->assignRole('super_admin');
                 return response()->json(['message' => 'Super admin account (admin@subhraedu.com) seeded/updated successfully.']);
+
+            case 'clear-data':
+                \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+                
+                $tablesToTruncate = [
+                    'payroll_records',
+                    'hostel_rooms',
+                    'library_issuances',
+                    'library_books',
+                    'transport_buses',
+                    'homework_tasks',
+                    'activity_logs',
+                    'announcements',
+                    'fee_transactions',
+                    'fee_structures',
+                    'exam_results',
+                    'exams',
+                    'attendances',
+                    'teacher_classes',
+                    'teachers',
+                    'student_documents',
+                    'student_parents',
+                    'parents',
+                    'students',
+                    'demo_requests',
+                    'testimonials',
+                    'admission_enquiries',
+                    'school_settings',
+                    'schools',
+                ];
+
+                foreach ($tablesToTruncate as $table) {
+                    if (\Illuminate\Support\Facades\Schema::hasTable($table)) {
+                        \Illuminate\Support\Facades\DB::table($table)->truncate();
+                    }
+                }
+
+                if (\Illuminate\Support\Facades\Schema::hasTable('users')) {
+                    \Illuminate\Support\Facades\DB::table('users')
+                        ->where('email', '!=', 'admin@subhraedu.com')
+                        ->delete();
+                }
+
+                \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+                return response()->json(['message' => 'All database tables cleared successfully. Only Super Admin has been preserved.']);
 
             case 'storage-link':
                 \Illuminate\Support\Facades\Artisan::call('storage:link');
