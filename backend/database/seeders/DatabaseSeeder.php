@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
         // 2. Create Super Admin (Global, no school_id)
         $superAdminUser = User::create([
             'name' => 'Super Admin',
-            'email' => 'superadmin@subhraedu.com',
-            'password' => Hash::make('password'),
+            'email' => 'admin@subhraedu.com',
+            'password' => Hash::make('admin123'),
             'role' => 'super_admin',
             'status' => 'active',
         ]);

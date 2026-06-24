@@ -9,33 +9,43 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
-  const [email, setEmail] = useState('superadmin@subhraedu.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('admin@subhraedu.com');
+  const [password, setPassword] = useState('admin123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+ 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
     if (role === 'Teacher') {
       setEmail('teacher@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Parent') {
       setEmail('parent@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Student') {
       setEmail('student@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Faculty') {
       setEmail('faculty@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Librarian') {
       setEmail('librarian@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Super Admin') {
-      setEmail('superadmin@subhraedu.com');
+      setEmail('admin@subhraedu.com');
+      setPassword('admin123');
     } else if (role === 'School Admin') {
       setEmail('admin@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Principal') {
       setEmail('principal@greenwood.edu');
+      setPassword('password');
     } else if (role === 'Accountant') {
       setEmail('accountant@greenwood.edu');
+      setPassword('password');
     } else if (role === 'HR') {
       setEmail('hr@greenwood.edu');
+      setPassword('password');
     }
   };
 

@@ -46,8 +46,8 @@ class DemoRequestTest extends TestCase
 
         $superAdmin = User::create([
             'name' => 'Super Admin',
-            'email' => 'superadmin@subhraedu.com',
-            'password' => bcrypt('password'),
+            'email' => 'admin@subhraedu.com',
+            'password' => bcrypt('admin123'),
             'role' => 'super_admin',
             'status' => 'active',
         ]);
