@@ -24,7 +24,7 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     if (!$action) {
         return response()->json([
             'message' => 'Deploy utility is active.',
-            'available_actions' => ['migrate', 'db-seed', 'storage-link', 'clear-cache', 'optimize']
+            'available_actions' => ['migrate', 'migrate-fresh', 'db-seed', 'seed-admin', 'storage-link', 'clear-cache', 'optimize']
         ]);
     }
 
@@ -35,10 +35,31 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
                 $output = \Illuminate\Support\Facades\Artisan::output();
                 return response()->json(['message' => 'Migrations run successfully.', 'output' => $output]);
             
+            case 'migrate-fresh':
+                \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
+                $output = \Illuminate\Support\Facades\Artisan::output();
+                return response()->json(['message' => 'Fresh migrations run successfully.', 'output' => $output]);
+
             case 'db-seed':
                 \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
                 $output = \Illuminate\Support\Facades\Artisan::output();
                 return response()->json(['message' => 'Database seeding run successfully.', 'output' => $output]);
+
+            case 'seed-admin':
+                // Ensure spatie role exists
+                \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+                
+                $admin = \App\Models\User::updateOrCreate(
+                    ['email' => 'admin@subhraedu.com'],
+                    [
+                        'name' => 'Super Admin',
+                        'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+                        'role' => 'super_admin',
+                        'status' => 'active',
+                    ]
+                );
+                $admin->assignRole('super_admin');
+                return response()->json(['message' => 'Super admin account (admin@subhraedu.com) seeded/updated successfully.']);
 
             case 'storage-link':
                 \Illuminate\Support\Facades\Artisan::call('storage:link');
