@@ -47,7 +47,12 @@ const NavbarDetailPage = lazy(() => import('../pages/NavbarDetailPage'));
 
 // Auth Guard
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <RouteSkeleton />;
+  }
+
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 

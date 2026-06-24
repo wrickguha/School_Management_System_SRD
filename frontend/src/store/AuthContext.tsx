@@ -14,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   role: UserRole | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email: string, role: UserRole, password?: string) => Promise<boolean>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
@@ -40,6 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Load session from localStorage on start (verify token with backend)
   useEffect(() => {
@@ -61,13 +63,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setRole(frontendRole);
           setIsAuthenticated(true);
         })
-        .catch(() => {
-          logout();
+        .catch(async () => {
+          await logout();
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     } else {
       setIsAuthenticated(false);
       setUser(null);
       setRole(null);
+      setIsLoading(false);
     }
   }, []);
 
@@ -132,7 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, isAuthenticated, login, logout, switchRole }}>
+    <AuthContext.Provider value={{ user, role, isAuthenticated, isLoading, login, logout, switchRole }}>
       {children}
     </AuthContext.Provider>
   );

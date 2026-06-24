@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
 import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
@@ -6,13 +6,19 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
   const [email, setEmail] = useState('admin@subhraedu.com');
   const [password, setPassword] = useState('admin123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isLoading, isAuthenticated, navigate]);
  
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
