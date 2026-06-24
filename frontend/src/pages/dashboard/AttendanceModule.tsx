@@ -67,6 +67,14 @@ export default function AttendanceModule() {
     return { day, status };
   });
 
+  const totalStudentsCount = students?.length || 0;
+  const presentRate = totalStudentsCount > 0
+    ? (students.reduce((acc: number, s: any) => acc + Number(s.attendanceRate || 0), 0) / totalStudentsCount).toFixed(1) + '%'
+    : '0%';
+
+  const absencesTodayCount = Object.values(attendanceSheet).filter((v) => v === 'Absent').length;
+  const lateArrivalsCount = Object.values(attendanceSheet).filter((v) => v === 'Late').length;
+
   return (
     <div className="space-y-8 text-left">
       
@@ -80,7 +88,7 @@ export default function AttendanceModule() {
         </div>
         
         {/* Toggle tabs */}
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+        <div className="flex bg-slate-100 dark:bg-slate-950 p-0.5 rounded-lg border border-slate-200 dark:border-slate-805">
           <button
             onClick={() => setActiveTab('register')}
             className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
@@ -104,15 +112,15 @@ export default function AttendanceModule() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Present Rate</span>
-          <span className="block text-2xl font-extrabold text-school-green mt-1">94.6%</span>
+          <span className="block text-2xl font-extrabold text-school-green mt-1">{presentRate}</span>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Absences Today</span>
-          <span className="block text-2xl font-extrabold text-school-maroon mt-1">4 Students</span>
+          <span className="block text-2xl font-extrabold text-school-maroon mt-1">{absencesTodayCount} Students</span>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Late Arrivals</span>
-          <span className="block text-2xl font-extrabold text-school-blue mt-1">2 Students</span>
+          <span className="block text-2xl font-extrabold text-school-blue mt-1">{lateArrivalsCount} Students</span>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">RFID Synced</span>

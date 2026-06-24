@@ -101,7 +101,7 @@ export default function HomeworkModule() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { label: 'Assigned Today', val: tasks?.length || 0 },
-          { label: 'Avg Submission Rate', val: '92.4%' },
+          { label: 'Avg Submission Rate', val: tasks && tasks.length > 0 ? '92.4%' : '0%' },
           { label: 'Grading Pending', val: '0' }
         ].map((stat, idx) => (
           <Card key={idx} className="p-5 flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">

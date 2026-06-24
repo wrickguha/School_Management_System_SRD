@@ -89,7 +89,7 @@ export default function FeeModule() {
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850 flex items-center justify-between">
           <div>
             <span className="text-[10px] font-bold text-slate-455 uppercase">Total Collected</span>
-            <span className="block text-2xl font-extrabold text-school-green mt-1">₹{(totalCollected + 117000).toLocaleString()}</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-1">₹{totalCollected.toLocaleString()}</span>
           </div>
           <div className="h-10 w-10 rounded-xl bg-school-greenLight dark:bg-school-green/10 text-school-green flex items-center justify-center shrink-0">
             <IndianRupee className="h-5 w-5" />

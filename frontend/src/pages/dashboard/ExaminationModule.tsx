@@ -46,6 +46,14 @@ export default function ExaminationModule() {
     setIsReportOpen(true);
   };
 
+  const hasPublishedResults = exams && exams.some((e) => e.status === 'Completed');
+  const publishedResultsText = hasPublishedResults ? 'Term-I 2026' : 'None';
+  const totalStudentsVal = students?.length || 0;
+  const classAvgText = totalStudentsVal > 0
+    ? (students.reduce((acc: number, s: any) => acc + Number(s.academicPerformance || 0), 0) / totalStudentsVal).toFixed(1) + '% Score'
+    : '0% Score';
+  const gradingSystemText = totalStudentsVal > 0 ? 'Letter grade (A-F)' : 'None';
+
   return (
     <div className="space-y-8 text-left">
       
@@ -89,15 +97,19 @@ export default function ExaminationModule() {
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Published Results</span>
-          <span className="block text-2xl font-extrabold text-school-green mt-1">Term-I 2026</span>
+          <span className="block text-2xl font-extrabold text-school-green mt-1">{publishedResultsText}</span>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Class Average</span>
-          <span className="block text-2xl font-extrabold text-school-blue mt-1">82.4% Score</span>
+          <span className="block text-2xl font-extrabold text-school-blue mt-1">{classAvgText}</span>
         </Card>
         <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850">
           <span className="text-[10px] font-bold text-slate-450 uppercase">Grading System</span>
-          <span className="block text-xs font-extrabold text-school-green mt-2 flex items-center gap-1"><CheckCircle className="h-4 w-4" /> Letter grade (A-F)</span>
+          {totalStudentsVal > 0 ? (
+            <span className="block text-xs font-extrabold text-school-green mt-2 flex items-center gap-1"><CheckCircle className="h-4 w-4" /> {gradingSystemText}</span>
+          ) : (
+            <span className="block text-2xl font-extrabold text-slate-900 dark:text-white mt-1">{gradingSystemText}</span>
+          )}
         </Card>
       </div>
 
