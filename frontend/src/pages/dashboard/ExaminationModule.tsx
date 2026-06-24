@@ -49,7 +49,7 @@ export default function ExaminationModule() {
   const hasPublishedResults = exams && exams.some((e) => e.status === 'Completed');
   const publishedResultsText = hasPublishedResults ? 'Term-I 2026' : 'None';
   const totalStudentsVal = students?.length || 0;
-  const classAvgText = totalStudentsVal > 0
+  const classAvgText = (students && totalStudentsVal > 0)
     ? (students.reduce((acc: number, s: any) => acc + Number(s.academicPerformance || 0), 0) / totalStudentsVal).toFixed(1) + '% Score'
     : '0% Score';
   const gradingSystemText = totalStudentsVal > 0 ? 'Letter grade (A-F)' : 'None';

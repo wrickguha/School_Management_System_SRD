@@ -68,7 +68,7 @@ export default function AttendanceModule() {
   });
 
   const totalStudentsCount = students?.length || 0;
-  const presentRate = totalStudentsCount > 0
+  const presentRate = (students && totalStudentsCount > 0)
     ? (students.reduce((acc: number, s: any) => acc + Number(s.attendanceRate || 0), 0) / totalStudentsCount).toFixed(1) + '%'
     : '0%';
 

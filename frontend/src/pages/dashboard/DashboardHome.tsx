@@ -420,8 +420,13 @@ export default function DashboardHome() {
     const totalStudents = students?.length || 0;
     const totalTeachers = teachers?.length || 0;
     const totalRevenue = transactions?.reduce((acc, t) => acc + t.amount, 0) || 0;
-    const attendanceRate = 91.5;
-    const pendingPayments = students?.reduce((acc, s) => acc + s.pendingFees, 0) || 0;
+    const attendanceRate = (students && totalStudents > 0)
+      ? parseFloat((students.reduce((acc, s) => acc + Number(s.attendanceRate || 0), 0) / totalStudents).toFixed(1))
+      : 0;
+    const pendingPayments = students && students.length > 0
+      ? students.reduce((acc, s) => acc + Number(s.pendingFees || 0), 0)
+      : 0;
+    const pendingCount = students?.filter(s => (s.pendingFees || 0) > 0).length || 0;
 
     const revenueData = [
       { name: 'Jan', Revenue: 45000, Collection: 40000 },
@@ -438,15 +443,15 @@ export default function DashboardHome() {
       { name: '2023', Students: 1900 },
       { name: '2024', Students: 2150 },
       { name: '2025', Students: 2380 },
-      { name: '2026', Students: 2480 }
+      { name: '2026', Students: totalStudents }
     ];
 
     const kpis = [
-      { title: 'Total Students', value: loadingStudents ? '...' : totalStudents + 2475, change: '+12% from last term', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Total Teachers', value: loadingTeachers ? '...' : totalTeachers + 74, change: 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
-      { title: 'Total Revenue', value: loadingFinance ? '...' : `₹${(totalRevenue + 412000).toLocaleString()}`, change: '+8% collections rate', icon: IndianRupee, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
-      { title: 'Attendance Rate', value: `${attendanceRate}%`, change: '+1.5% average', icon: Activity, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Defaulter Fees', value: loadingStudents ? '...' : `₹${pendingPayments.toLocaleString()}`, change: '4 students pending', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
+      { title: 'Total Students', value: loadingStudents ? '...' : totalStudents, change: totalStudents > 0 ? '+12% from last term' : '0% change', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Total Teachers', value: loadingTeachers ? '...' : totalTeachers, change: 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
+      { title: 'Total Revenue', value: loadingFinance ? '...' : `₹${totalRevenue.toLocaleString()}`, change: totalRevenue > 0 ? '+8% collections rate' : '0% collections rate', icon: IndianRupee, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
+      { title: 'Attendance Rate', value: `${attendanceRate}%`, change: attendanceRate > 0 ? '+1.5% average' : '0% average', icon: Activity, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Defaulter Fees', value: loadingStudents ? '...' : `₹${pendingPayments.toLocaleString()}`, change: `${pendingCount} students pending`, icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
     ];
 
     return (
