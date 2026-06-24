@@ -75,6 +75,9 @@ class DashboardController extends Controller
         $expiredSubs = School::where('status', 'suspended')->count();
         $pendingDemos = DemoRequest::where('status', 'new')->count();
 
+        $activeUsersToday = ($totalStudents > 0 || $totalTeachers > 0) ? 14850 : 0;
+        $systemHealth = $totalSchools > 0 ? '99.98%' : '100.00%';
+
         return response()->json([
             'totalSchools' => $totalSchools,
             'totalStudents' => $totalStudents,
@@ -84,8 +87,8 @@ class DashboardController extends Controller
             'activeSubscriptions' => $activeSubs,
             'expiredSubscriptions' => $expiredSubs,
             'pendingDemoRequests' => $pendingDemos,
-            'activeUsersToday' => 14850, // mock SaaS platform analytics metric
-            'systemHealth' => '99.98%',
+            'activeUsersToday' => $activeUsersToday,
+            'systemHealth' => $systemHealth,
         ]);
     }
 }

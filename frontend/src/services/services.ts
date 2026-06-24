@@ -199,3 +199,23 @@ export const enquiryService = {
   }
 };
 
+export interface SuperStats {
+  totalSchools: number;
+  totalStudents: number;
+  totalTeachers: number;
+  totalParents: number;
+  totalRevenue: number;
+  activeSubscriptions: number;
+  expiredSubscriptions: number;
+  pendingDemoRequests: number;
+  activeUsersToday: number;
+  systemHealth: string;
+}
+
+export const dashboardService = {
+  getSuperStats: async () => {
+    const res = await apiClient.get<SuperStats>('/dashboard/super-stats');
+    return res.data;
+  }
+};
+

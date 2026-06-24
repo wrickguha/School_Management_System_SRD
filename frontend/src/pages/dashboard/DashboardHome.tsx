@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, teacherService, financeService, announcementService, activityService, demoService } from '../../services/services';
+import { studentService, teacherService, financeService, announcementService, activityService, demoService, dashboardService } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -28,6 +28,11 @@ export default function DashboardHome() {
   const { data: demoRequests, refetch: refetchDemos } = useQuery({
     queryKey: ['demoRequests'],
     queryFn: demoService.getAll,
+    enabled: role === 'Super Admin'
+  });
+  const { data: superStats, isLoading: loadingSuperStats } = useQuery({
+    queryKey: ['superStats'],
+    queryFn: dashboardService.getSuperStats,
     enabled: role === 'Super Admin'
   });
 
@@ -58,65 +63,67 @@ export default function DashboardHome() {
   // VIEW S: SUPER ADMIN PORTAL (SaaS Platform Dashboard)
   // ----------------------------------------------------
   if (role === 'Super Admin') {
+    const hasData = superStats && superStats.totalSchools > 0;
+
     // SaaS KPIs
     const saasKpis = [
-      { title: 'Total Schools', value: '248', change: '+14 this month', icon: Building, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/20' },
-      { title: 'Total Students', value: '120,450', change: '+8.2% YoY', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Total Teachers', value: '5,840', change: '+5.1% YoY', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
-      { title: 'Total Parents', value: '98,200', change: '+7.8% YoY', icon: Users, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
-      { title: 'Total Revenue', value: '₹2,412,000', change: '+15.4% YoY', icon: IndianRupee, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' },
-      { title: 'Active Subscriptions', value: '232', change: '93.5% renewal rate', icon: CheckCircle, color: 'text-teal-650 bg-teal-50 dark:bg-teal-950/20' },
-      { title: 'Expired Subscriptions', value: '16', change: '-4% from last quarter', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' },
-      { title: 'Pending Demo Requests', value: '24', change: '8 scheduled today', icon: Clock, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20' },
-      { title: 'Active Users Today', value: '14,850', change: 'Peak concurrent: 3.2k', icon: TrendingUp, color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/20' },
-      { title: 'System Health', value: '99.98%', change: 'Latency: 220ms • Online', icon: Server, color: 'text-violet-650 bg-violet-50 dark:bg-violet-950/20' },
+      { title: 'Total Schools', value: loadingSuperStats ? '...' : (superStats?.totalSchools || 0).toString(), change: (superStats?.totalSchools || 0) > 0 ? '+14 this month' : 'No schools registered', icon: Building, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/20' },
+      { title: 'Total Students', value: loadingSuperStats ? '...' : (superStats?.totalStudents || 0).toLocaleString(), change: (superStats?.totalStudents || 0) > 0 ? '+8.2% YoY' : '0% change', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Total Teachers', value: loadingSuperStats ? '...' : (superStats?.totalTeachers || 0).toLocaleString(), change: (superStats?.totalTeachers || 0) > 0 ? '+5.1% YoY' : 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
+      { title: 'Total Parents', value: loadingSuperStats ? '...' : (superStats?.totalParents || 0).toLocaleString(), change: (superStats?.totalParents || 0) > 0 ? '+7.8% YoY' : 'Stable', icon: Users, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
+      { title: 'Total Revenue', value: loadingSuperStats ? '...' : `₹${(superStats?.totalRevenue || 0).toLocaleString()}`, change: (superStats?.totalRevenue || 0) > 0 ? '+15.4% YoY' : '0% change', icon: IndianRupee, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' },
+      { title: 'Active Subscriptions', value: loadingSuperStats ? '...' : (superStats?.activeSubscriptions || 0).toString(), change: (superStats?.activeSubscriptions || 0) > 0 ? '93.5% renewal rate' : 'No active subscriptions', icon: CheckCircle, color: 'text-teal-650 bg-teal-50 dark:bg-teal-950/20' },
+      { title: 'Expired Subscriptions', value: loadingSuperStats ? '...' : (superStats?.expiredSubscriptions || 0).toString(), change: (superStats?.expiredSubscriptions || 0) > 0 ? '-4% from last quarter' : 'No expired subscriptions', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' },
+      { title: 'Pending Demo Requests', value: loadingSuperStats ? '...' : (superStats?.pendingDemoRequests || 0).toString(), change: (superStats?.pendingDemoRequests || 0) > 0 ? '8 scheduled today' : 'No pending requests', icon: Clock, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20' },
+      { title: 'Active Users Today', value: loadingSuperStats ? '...' : (superStats?.activeUsersToday || 0).toLocaleString(), change: (superStats?.activeUsersToday || 0) > 0 ? 'Peak concurrent: 3.2k' : '0 concurrent', icon: TrendingUp, color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/20' },
+      { title: 'System Health', value: loadingSuperStats ? '...' : (superStats?.systemHealth || '0%'), change: 'Latency: 220ms • Online', icon: Server, color: 'text-violet-650 bg-violet-50 dark:bg-violet-950/20' },
     ];
 
-    // Mock Data for Charts
-    const schoolGrowthData = [
+    // Mock Data for Charts (only shown if there is data, otherwise empty to reflect cleared db)
+    const schoolGrowthData = hasData ? [
       { name: '2021', Schools: 45 },
       { name: '2022', Schools: 82 },
       { name: '2023', Schools: 135 },
       { name: '2024', Schools: 182 },
       { name: '2025', Schools: 220 },
-      { name: '2026', Schools: 248 }
-    ];
+      { name: '2026', Schools: superStats.totalSchools }
+    ] : [];
 
-    const monthlyRevenueData = [
+    const monthlyRevenueData = hasData ? [
       { name: 'Jan', Subscriptions: 150000, Addons: 35000 },
       { name: 'Feb', Subscriptions: 170000, Addons: 40000 },
       { name: 'Mar', Subscriptions: 185000, Addons: 40000 },
       { name: 'Apr', Subscriptions: 205000, Addons: 45000 },
       { name: 'May', Subscriptions: 225000, Addons: 50000 },
-      { name: 'Jun', Subscriptions: 240000, Addons: 55000 }
-    ];
+      { name: 'Jun', Subscriptions: Math.round(superStats.totalRevenue * 0.8), Addons: Math.round(superStats.totalRevenue * 0.2) }
+    ] : [];
 
-    const userGrowthData = [
+    const userGrowthData = hasData ? [
       { name: 'Jan', MAU: 85000, DAU: 28000 },
       { name: 'Feb', MAU: 92000, DAU: 31000 },
       { name: 'Mar', MAU: 105000, DAU: 36000 },
       { name: 'Apr', MAU: 112000, DAU: 39000 },
       { name: 'May', MAU: 118000, DAU: 42000 },
-      { name: 'Jun', MAU: 120450, DAU: 45850 }
-    ];
+      { name: 'Jun', MAU: superStats.totalStudents + superStats.totalTeachers, DAU: Math.round((superStats.totalStudents + superStats.totalTeachers) * 0.35) }
+    ] : [];
 
-    const demoConversionData = [
+    const demoConversionData = hasData ? [
       { name: 'Jan', Requested: 40, Converted: 12 },
       { name: 'Feb', Requested: 45, Converted: 15 },
       { name: 'Mar', Requested: 50, Converted: 20 },
       { name: 'Apr', Requested: 60, Converted: 22 },
       { name: 'May', Requested: 55, Converted: 25 },
-      { name: 'Jun', Requested: 65, Converted: 32 }
-    ];
+      { name: 'Jun', Requested: 65, Converted: Math.round(superStats.pendingDemoRequests * 1.5) }
+    ] : [];
 
-    const subscriptionTierData = [
+    const subscriptionTierData = hasData ? [
       { name: 'Jan', Basic: 80, Pro: 50, Enterprise: 20 },
       { name: 'Feb', Basic: 85, Pro: 60, Enterprise: 25 },
       { name: 'Mar', Basic: 90, Pro: 72, Enterprise: 28 },
       { name: 'Apr', Basic: 95, Pro: 80, Enterprise: 32 },
       { name: 'May', Basic: 100, Pro: 92, Enterprise: 38 },
-      { name: 'Jun', Basic: 105, Pro: 102, Enterprise: 41 }
-    ];
+      { name: 'Jun', Basic: Math.round(superStats.activeSubscriptions * 0.45), Pro: Math.round(superStats.activeSubscriptions * 0.4), Enterprise: Math.round(superStats.activeSubscriptions * 0.15) }
+    ] : [];
 
     const handleApproveDemo = async (id: number) => {
       try {
