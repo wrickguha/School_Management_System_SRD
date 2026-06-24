@@ -114,14 +114,23 @@ export default function DashboardHome() {
       }
     };
 
-    const handleModalAssignRep = async (id: number) => {
-      await handleAssignRep(id);
-      setSelectedDemoRequest((prev) => prev ? { ...prev, status: 'contacted', notes: 'Assigned to Sarah Connor' } : null);
-    };
+    const handleStatusChange = async (id: number, newStatus: DemoRequest['status']) => {
+      try {
+        let defaultNotes = selectedDemoRequest?.notes || '';
+        if (newStatus === 'contacted' && selectedDemoRequest?.status === 'new') {
+          defaultNotes = 'Assigned to Sarah Connor';
+        } else if (newStatus === 'converted') {
+          defaultNotes = 'Converted to client';
+        } else if (newStatus === 'rejected') {
+          defaultNotes = 'Rejected request';
+        }
 
-    const handleModalApproveDemo = async (id: number) => {
-      await handleApproveDemo(id);
-      setSelectedDemoRequest((prev) => prev ? { ...prev, status: 'converted', notes: 'Converted to client' } : null);
+        const updated = await demoService.updateStatus(id, { status: newStatus, notes: defaultNotes });
+        setSelectedDemoRequest(updated);
+        refetchDemos();
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     const getStatusLabel = (status: string) => {
@@ -434,18 +443,25 @@ export default function DashboardHome() {
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Status</span>
-                  <span className="mt-1 block">
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
-                      selectedDemoRequest.status === 'converted' 
-                        ? 'bg-school-greenLight text-school-green' 
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Status</span>
+                  <select
+                    value={selectedDemoRequest.status}
+                    onChange={(e) => handleStatusChange(selectedDemoRequest.id, e.target.value as any)}
+                    className={`px-2.5 py-0.5 text-[9px] font-extrabold uppercase rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20 ${
+                      selectedDemoRequest.status === 'converted'
+                        ? 'bg-school-greenLight text-school-green'
                         : selectedDemoRequest.status === 'new'
                         ? 'bg-blue-50 text-blue-650 dark:bg-blue-950/20 dark:text-blue-400'
+                        : selectedDemoRequest.status === 'rejected'
+                        ? 'bg-red-50 text-red-650 dark:bg-red-950/20 dark:text-red-400'
                         : 'bg-amber-50 text-amber-650 dark:bg-amber-950/20 dark:text-amber-400'
-                    }`}>
-                      {getStatusLabel(selectedDemoRequest.status)}
-                    </span>
-                  </span>
+                    }`}
+                  >
+                    <option value="new" className="text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 font-extrabold">New Request</option>
+                    <option value="contacted" className="text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 font-extrabold">Pending Approval</option>
+                    <option value="converted" className="text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 font-extrabold">Approved</option>
+                    <option value="rejected" className="text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 font-extrabold">Rejected</option>
+                  </select>
                 </div>
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Email Address</span>
@@ -481,12 +497,12 @@ export default function DashboardHome() {
                   Close
                 </Button>
                 {selectedDemoRequest.status === 'new' && (
-                  <Button variant="primary" onClick={() => handleModalAssignRep(selectedDemoRequest.id)}>
+                  <Button variant="primary" onClick={() => handleStatusChange(selectedDemoRequest.id, 'contacted')}>
                     Assign Representative
                   </Button>
                 )}
                 {selectedDemoRequest.status === 'contacted' && (
-                  <Button variant="accent" onClick={() => handleModalApproveDemo(selectedDemoRequest.id)}>
+                  <Button variant="accent" onClick={() => handleStatusChange(selectedDemoRequest.id, 'converted')}>
                     Approve Demo Request
                   </Button>
                 )}
