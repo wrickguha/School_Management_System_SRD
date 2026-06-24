@@ -85,12 +85,32 @@ export interface DemoRequest {
 
 export const demoService = {
   getAll: async () => {
-    const res = await apiClient.get<DemoRequest[]>('/admin/demo-requests');
-    return res.data;
+    const res = await apiClient.get<any[]>('/admin/demo-requests');
+    return res.data.map((item: any) => ({
+      id: item.id,
+      schoolName: item.school_name,
+      contactName: item.contact_name,
+      email: item.email,
+      phone: item.phone,
+      studentCount: item.student_count,
+      status: item.status,
+      notes: item.notes,
+      createdAt: item.created_at
+    }));
   },
   updateStatus: async (id: number, data: { status: string; notes?: string }) => {
-    const res = await apiClient.patch<DemoRequest>(`/admin/demo-requests/${id}`, data);
-    return res.data;
+    const res = await apiClient.patch<any>(`/admin/demo-requests/${id}`, data);
+    return {
+      id: res.data.id,
+      schoolName: res.data.school_name,
+      contactName: res.data.contact_name,
+      email: res.data.email,
+      phone: res.data.phone,
+      studentCount: res.data.student_count,
+      status: res.data.status,
+      notes: res.data.notes,
+      createdAt: res.data.created_at
+    };
   }
 };
 

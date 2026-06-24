@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService } from '../../services/services';
+import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, type DemoRequest } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -18,6 +18,9 @@ import {
 export default function DashboardHome() {
   const { role, user } = useAuth();
   const queryClient = useQueryClient();
+
+  // Selected demo request modal state
+  const [selectedDemoRequest, setSelectedDemoRequest] = useState<DemoRequest | null>(null);
 
   // Queries
   const { data: students } = useQuery({ queryKey: ['students'], queryFn: studentService.getAll });
@@ -109,6 +112,16 @@ export default function DashboardHome() {
       } catch (err) {
         console.error(err);
       }
+    };
+
+    const handleModalAssignRep = async (id: number) => {
+      await handleAssignRep(id);
+      setSelectedDemoRequest((prev) => prev ? { ...prev, status: 'contacted', notes: 'Assigned to Sarah Connor' } : null);
+    };
+
+    const handleModalApproveDemo = async (id: number) => {
+      await handleApproveDemo(id);
+      setSelectedDemoRequest((prev) => prev ? { ...prev, status: 'converted', notes: 'Converted to client' } : null);
     };
 
     const getStatusLabel = (status: string) => {
@@ -335,7 +348,11 @@ export default function DashboardHome() {
               </CardHeader>
               <div className="space-y-4">
                 {(demoRequests || []).map((item) => (
-                  <div key={item.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedDemoRequest(item)}
+                    className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:border-indigo-500/50 hover:bg-slate-50/50 dark:hover:bg-slate-850/30 hover:shadow-sm transition-all duration-200"
+                  >
                     <div>
                       <span className="text-xs font-extrabold block text-slate-900 dark:text-white">{item.schoolName}</span>
                       <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">
@@ -358,12 +375,12 @@ export default function DashboardHome() {
                         {getStatusLabel(item.status)}
                       </span>
                       {item.status === 'new' && (
-                        <Button variant="outline" size="sm" onClick={() => handleAssignRep(item.id)}>
+                        <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleAssignRep(item.id); }}>
                           Assign Rep
                         </Button>
                       )}
                       {item.status === 'contacted' && (
-                        <Button variant="accent" size="sm" onClick={() => handleApproveDemo(item.id)}>
+                        <Button variant="accent" size="sm" onClick={(e) => { e.stopPropagation(); handleApproveDemo(item.id); }}>
                           Approve
                         </Button>
                       )}
@@ -384,6 +401,99 @@ export default function DashboardHome() {
             </div>
           </Card>
         </div>
+
+        {/* Demo Request Detail Modal */}
+        <Modal
+          isOpen={selectedDemoRequest !== null}
+          onClose={() => setSelectedDemoRequest(null)}
+          title="Demo Request Details"
+          size="md"
+        >
+          {selectedDemoRequest && (
+            <div className="space-y-6 text-slate-900 dark:text-slate-100">
+              <div>
+                <h4 className="text-lg font-extrabold text-indigo-650 dark:text-indigo-400">
+                  {selectedDemoRequest.schoolName}
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">
+                  Requested on {new Date(selectedDemoRequest.createdAt).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Contact Person</span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white mt-1 block">
+                    {selectedDemoRequest.contactName}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Status</span>
+                  <span className="mt-1 block">
+                    <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                      selectedDemoRequest.status === 'converted' 
+                        ? 'bg-school-greenLight text-school-green' 
+                        : selectedDemoRequest.status === 'new'
+                        ? 'bg-blue-50 text-blue-650 dark:bg-blue-950/20 dark:text-blue-400'
+                        : 'bg-amber-50 text-amber-650 dark:bg-amber-950/20 dark:text-amber-400'
+                    }`}>
+                      {getStatusLabel(selectedDemoRequest.status)}
+                    </span>
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Email Address</span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white mt-1 block select-all">
+                    {selectedDemoRequest.email}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Phone Number</span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white mt-1 block select-all">
+                    {selectedDemoRequest.phone || 'N/A'}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Estimated Student Count</span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white mt-1 block">
+                    {selectedDemoRequest.studentCount || 'Not specified'} students
+                  </span>
+                </div>
+              </div>
+
+              {selectedDemoRequest.notes && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Activity Log & Notes</span>
+                  <div className="p-4 bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-950/30 rounded-2xl text-sm text-slate-700 dark:text-slate-300 font-medium">
+                    {selectedDemoRequest.notes}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <Button variant="outline" onClick={() => setSelectedDemoRequest(null)}>
+                  Close
+                </Button>
+                {selectedDemoRequest.status === 'new' && (
+                  <Button variant="primary" onClick={() => handleModalAssignRep(selectedDemoRequest.id)}>
+                    Assign Representative
+                  </Button>
+                )}
+                {selectedDemoRequest.status === 'contacted' && (
+                  <Button variant="accent" onClick={() => handleModalApproveDemo(selectedDemoRequest.id)}>
+                    Approve Demo Request
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </Modal>
       </div>
     );
   }
