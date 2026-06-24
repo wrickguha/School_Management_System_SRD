@@ -210,11 +210,31 @@ export interface SuperStats {
   pendingDemoRequests: number;
   activeUsersToday: number;
   systemHealth: string;
+  schoolGrowthData: Array<{ name: string; Schools: number }>;
+  monthlyRevenueData: Array<{ name: string; Subscriptions: number; Addons: number }>;
+  userGrowthData: Array<{ name: string; MAU: number; DAU: number }>;
+  demoConversionData: Array<{ name: string; Requested: number; Converted: number }>;
+  subscriptionTierData: Array<{ name: string; Basic: number; Pro: number; Enterprise: number }>;
+}
+
+export interface SchoolStats {
+  totalStudents: number;
+  totalTeachers: number;
+  totalParents: number;
+  totalRevenue: number;
+  attendanceRate: number;
+  pendingPayments: number;
+  revenueData: Array<{ name: string; Revenue: number; Collection: number }>;
+  studentGrowthData: Array<{ name: string; Students: number }>;
 }
 
 export const dashboardService = {
   getSuperStats: async () => {
     const res = await apiClient.get<SuperStats>('/dashboard/super-stats');
+    return res.data;
+  },
+  getSchoolStats: async () => {
+    const res = await apiClient.get<SchoolStats>('/dashboard/stats');
     return res.data;
   }
 };

@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, teacherService, financeService, announcementService, activityService, demoService, dashboardService } from '../../services/services';
+import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -20,9 +20,8 @@ export default function DashboardHome() {
   const queryClient = useQueryClient();
 
   // Queries
-  const { data: students, isLoading: loadingStudents } = useQuery({ queryKey: ['students'], queryFn: studentService.getAll });
-  const { data: teachers, isLoading: loadingTeachers } = useQuery({ queryKey: ['teachers'], queryFn: teacherService.getAll });
-  const { data: transactions, isLoading: loadingFinance } = useQuery({ queryKey: ['transactions'], queryFn: financeService.getTransactions });
+  const { data: students } = useQuery({ queryKey: ['students'], queryFn: studentService.getAll });
+  const { data: transactions } = useQuery({ queryKey: ['transactions'], queryFn: financeService.getTransactions });
   const { data: announcements } = useQuery({ queryKey: ['announcements'], queryFn: announcementService.getAll });
   const { data: activities } = useQuery({ queryKey: ['activities'], queryFn: activityService.getAll });
   const { data: demoRequests, refetch: refetchDemos } = useQuery({
@@ -34,6 +33,16 @@ export default function DashboardHome() {
     queryKey: ['superStats'],
     queryFn: dashboardService.getSuperStats,
     enabled: role === 'Super Admin'
+  });
+  const { data: schoolStats, isLoading: loadingSchoolStats } = useQuery({
+    queryKey: ['schoolStats'],
+    queryFn: dashboardService.getSchoolStats,
+    enabled: role === 'School Admin' || role === 'Accountant'
+  });
+  const { data: issuances } = useQuery({
+    queryKey: ['issuances'],
+    queryFn: libraryService.getIssuances,
+    enabled: role === 'Librarian'
   });
 
   // Parent specific states
@@ -63,8 +72,6 @@ export default function DashboardHome() {
   // VIEW S: SUPER ADMIN PORTAL (SaaS Platform Dashboard)
   // ----------------------------------------------------
   if (role === 'Super Admin') {
-    const hasData = superStats && superStats.totalSchools > 0;
-
     // SaaS KPIs
     const saasKpis = [
       { title: 'Total Schools', value: loadingSuperStats ? '...' : (superStats?.totalSchools || 0).toString(), change: (superStats?.totalSchools || 0) > 0 ? '+14 this month' : 'No schools registered', icon: Building, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/20' },
@@ -79,51 +86,12 @@ export default function DashboardHome() {
       { title: 'System Health', value: loadingSuperStats ? '...' : (superStats?.systemHealth || '0%'), change: 'Latency: 220ms • Online', icon: Server, color: 'text-violet-650 bg-violet-50 dark:bg-violet-950/20' },
     ];
 
-    // Mock Data for Charts (only shown if there is data, otherwise empty to reflect cleared db)
-    const schoolGrowthData = hasData ? [
-      { name: '2021', Schools: 45 },
-      { name: '2022', Schools: 82 },
-      { name: '2023', Schools: 135 },
-      { name: '2024', Schools: 182 },
-      { name: '2025', Schools: 220 },
-      { name: '2026', Schools: superStats.totalSchools }
-    ] : [];
-
-    const monthlyRevenueData = hasData ? [
-      { name: 'Jan', Subscriptions: 150000, Addons: 35000 },
-      { name: 'Feb', Subscriptions: 170000, Addons: 40000 },
-      { name: 'Mar', Subscriptions: 185000, Addons: 40000 },
-      { name: 'Apr', Subscriptions: 205000, Addons: 45000 },
-      { name: 'May', Subscriptions: 225000, Addons: 50000 },
-      { name: 'Jun', Subscriptions: Math.round(superStats.totalRevenue * 0.8), Addons: Math.round(superStats.totalRevenue * 0.2) }
-    ] : [];
-
-    const userGrowthData = hasData ? [
-      { name: 'Jan', MAU: 85000, DAU: 28000 },
-      { name: 'Feb', MAU: 92000, DAU: 31000 },
-      { name: 'Mar', MAU: 105000, DAU: 36000 },
-      { name: 'Apr', MAU: 112000, DAU: 39000 },
-      { name: 'May', MAU: 118000, DAU: 42000 },
-      { name: 'Jun', MAU: superStats.totalStudents + superStats.totalTeachers, DAU: Math.round((superStats.totalStudents + superStats.totalTeachers) * 0.35) }
-    ] : [];
-
-    const demoConversionData = hasData ? [
-      { name: 'Jan', Requested: 40, Converted: 12 },
-      { name: 'Feb', Requested: 45, Converted: 15 },
-      { name: 'Mar', Requested: 50, Converted: 20 },
-      { name: 'Apr', Requested: 60, Converted: 22 },
-      { name: 'May', Requested: 55, Converted: 25 },
-      { name: 'Jun', Requested: 65, Converted: Math.round(superStats.pendingDemoRequests * 1.5) }
-    ] : [];
-
-    const subscriptionTierData = hasData ? [
-      { name: 'Jan', Basic: 80, Pro: 50, Enterprise: 20 },
-      { name: 'Feb', Basic: 85, Pro: 60, Enterprise: 25 },
-      { name: 'Mar', Basic: 90, Pro: 72, Enterprise: 28 },
-      { name: 'Apr', Basic: 95, Pro: 80, Enterprise: 32 },
-      { name: 'May', Basic: 100, Pro: 92, Enterprise: 38 },
-      { name: 'Jun', Basic: Math.round(superStats.activeSubscriptions * 0.45), Pro: Math.round(superStats.activeSubscriptions * 0.4), Enterprise: Math.round(superStats.activeSubscriptions * 0.15) }
-    ] : [];
+    // Data for Charts (sourced dynamically from backend superStats query)
+    const schoolGrowthData = superStats?.schoolGrowthData || [];
+    const monthlyRevenueData = superStats?.monthlyRevenueData || [];
+    const userGrowthData = superStats?.userGrowthData || [];
+    const demoConversionData = superStats?.demoConversionData || [];
+    const subscriptionTierData = superStats?.subscriptionTierData || [];
 
     const handleApproveDemo = async (id: number) => {
       try {
@@ -424,41 +392,15 @@ export default function DashboardHome() {
   // VIEW A: SCHOOL ADMIN PORTAL (School-level Dashboard)
   // ----------------------------------------------------
   if (role === 'School Admin') {
-    const totalStudents = students?.length || 0;
-    const totalTeachers = teachers?.length || 0;
-    const totalRevenue = transactions?.reduce((acc, t) => acc + t.amount, 0) || 0;
-    const attendanceRate = (students && totalStudents > 0)
-      ? parseFloat((students.reduce((acc, s) => acc + Number(s.attendanceRate || 0), 0) / totalStudents).toFixed(1))
-      : 0;
-    const pendingPayments = students && students.length > 0
-      ? students.reduce((acc, s) => acc + Number(s.pendingFees || 0), 0)
-      : 0;
-    const pendingCount = students?.filter(s => (s.pendingFees || 0) > 0).length || 0;
-
-    const revenueData = [
-      { name: 'Jan', Revenue: 45000, Collection: 40000 },
-      { name: 'Feb', Revenue: 55000, Collection: 52000 },
-      { name: 'Mar', Revenue: 60000, Collection: 58000 },
-      { name: 'Apr', Revenue: 75000, Collection: 70000 },
-      { name: 'May', Revenue: 95000, Collection: 92000 },
-      { name: 'Jun', Revenue: totalRevenue, Collection: totalRevenue * 0.95 }
-    ];
-
-    const studentGrowthData = [
-      { name: '2021', Students: 1200 },
-      { name: '2022', Students: 1550 },
-      { name: '2023', Students: 1900 },
-      { name: '2024', Students: 2150 },
-      { name: '2025', Students: 2380 },
-      { name: '2026', Students: totalStudents }
-    ];
+    const revenueData = schoolStats?.revenueData || [];
+    const studentGrowthData = schoolStats?.studentGrowthData || [];
 
     const kpis = [
-      { title: 'Total Students', value: loadingStudents ? '...' : totalStudents, change: totalStudents > 0 ? '+12% from last term' : '0% change', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Total Teachers', value: loadingTeachers ? '...' : totalTeachers, change: 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
-      { title: 'Total Revenue', value: loadingFinance ? '...' : `₹${totalRevenue.toLocaleString()}`, change: totalRevenue > 0 ? '+8% collections rate' : '0% collections rate', icon: IndianRupee, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
-      { title: 'Attendance Rate', value: `${attendanceRate}%`, change: attendanceRate > 0 ? '+1.5% average' : '0% average', icon: Activity, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
-      { title: 'Defaulter Fees', value: loadingStudents ? '...' : `₹${pendingPayments.toLocaleString()}`, change: `${pendingCount} students pending`, icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
+      { title: 'Total Students', value: loadingSchoolStats ? '...' : (schoolStats?.totalStudents || 0).toString(), change: (schoolStats?.totalStudents || 0) > 0 ? '+12% from last term' : '0% change', icon: Users, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Total Teachers', value: loadingSchoolStats ? '...' : (schoolStats?.totalTeachers || 0).toString(), change: 'Stable', icon: Users, color: 'text-school-maroon bg-school-maroonLight dark:bg-school-maroon/10' },
+      { title: 'Total Revenue', value: loadingSchoolStats ? '...' : `₹${(schoolStats?.totalRevenue || 0).toLocaleString()}`, change: (schoolStats?.totalRevenue || 0) > 0 ? '+8% collections rate' : '0% collections rate', icon: IndianRupee, color: 'text-school-green bg-school-greenLight dark:bg-school-green/10' },
+      { title: 'Attendance Rate', value: loadingSchoolStats ? '...' : `${schoolStats?.attendanceRate || 0}%`, change: (schoolStats?.attendanceRate || 0) > 0 ? '+1.5% average' : '0% average', icon: Activity, color: 'text-school-blue bg-school-blueLight dark:bg-school-blue/10' },
+      { title: 'Defaulter Fees', value: loadingSchoolStats ? '...' : `₹${(schoolStats?.pendingPayments || 0).toLocaleString()}`, change: (schoolStats?.totalStudents || 0) > 0 ? 'Billing outstanding' : 'All clear', icon: AlertCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/20' }
     ];
 
     return (
@@ -641,11 +583,18 @@ export default function DashboardHome() {
   // VIEW B: TEACHER PORTAL
   // ----------------------------------------------------
   if (role === 'Teacher' || role === 'Faculty') {
-    const classPerfData = [
+    const classNames = Array.from(new Set(students?.map(s => s.grade) || []));
+    const teacherClass = classNames.length > 0 ? classNames[0] : 'None';
+    const classPupilsCount = students?.filter(s => s.grade === teacherClass).length || 0;
+    const classAttendance = (students && classPupilsCount > 0)
+      ? (students.filter(s => s.grade === teacherClass).reduce((acc: number, s: any) => acc + Number(s.attendanceRate || 0), 0) / classPupilsCount).toFixed(1) + '%'
+      : '0%';
+
+    const classPerfData = classPupilsCount > 0 ? [
       { name: 'UT-I', Physics: 78, Math: 82 },
       { name: 'UT-II', Physics: 84, Math: 85 },
       { name: 'Term-I', Physics: 86, Math: 88 }
-    ];
+    ] : [];
 
     return (
       <div className="space-y-8 text-left">
@@ -654,7 +603,7 @@ export default function DashboardHome() {
             {role === 'Faculty' ? 'Faculty Command Portal' : 'Teacher Command Portal'}
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-            Welcome back, {user?.name}. You have 2 classes scheduled today.
+            Welcome back, {user?.name}. {classPupilsCount > 0 ? 'You have 2 classes scheduled today.' : 'No lectures scheduled today.'}
           </p>
         </div>
 
@@ -662,23 +611,27 @@ export default function DashboardHome() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">My Class Wards</span>
-            <span className="block text-2xl font-extrabold text-school-blue mt-2">Grade 10-A</span>
-            <span className="text-[10px] text-slate-405 font-bold block mt-1">28 Registered pupils</span>
+            <span className="block text-2xl font-extrabold text-school-blue mt-2">{teacherClass}</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">{classPupilsCount} Registered pupils</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Attendance</span>
-            <span className="block text-2xl font-extrabold text-school-green mt-2">98.2%</span>
+            <span className="block text-2xl font-extrabold text-school-green mt-2">{classAttendance}</span>
             <span className="text-[10px] text-slate-405 font-bold block mt-1">Present this month</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Graded Submissions</span>
-            <span className="block text-2xl font-extrabold text-school-maroon mt-2">4 Pending</span>
-            <span className="text-[10px] text-slate-405 font-bold block mt-1">Calculus Homework UT-I</span>
+            <span className="block text-2xl font-extrabold text-school-maroon mt-2">0 Pending</span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">No pending homework</span>
           </Card>
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Next Lecture</span>
-            <span className="block text-sm font-extrabold text-slate-900 dark:text-white mt-3">10:45 AM - Physics Lab</span>
-            <span className="text-[10px] text-slate-405 font-bold block mt-1">Block-B Room 304</span>
+            <span className="block text-sm font-extrabold text-slate-900 dark:text-white mt-3">
+              {teacherClass !== 'None' ? '10:45 AM - Physics Lab' : 'No Scheduled Lectures'}
+            </span>
+            <span className="text-[10px] text-slate-405 font-bold block mt-1">
+              {teacherClass !== 'None' ? 'Block-B Room 304' : 'All clear'}
+            </span>
           </Card>
         </div>
 
@@ -743,8 +696,7 @@ export default function DashboardHome() {
   // VIEW C: PARENT PORTAL
   // ----------------------------------------------------
   if (role === 'Parent') {
-    // Read local Aarav Sharma student details
-    const aarav = students?.find(s => s.name === 'Aarav Sharma') || { pendingFees: 0, attendanceRate: 94.5, academicPerformance: 88.5 };
+    const aarav = students?.find(s => s.parentEmail === user?.email) || students?.[0] || { name: 'No child linked', grade: 'N/A', pendingFees: 0, attendanceRate: 0, academicPerformance: 0 };
 
     return (
       <div className="space-y-8 text-left">
@@ -752,7 +704,7 @@ export default function DashboardHome() {
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Parent Portal</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Active child profile: Aarav Sharma (Grade 10-A).
+              Active child profile: {aarav.name} ({aarav.grade}).
             </p>
           </div>
           {aarav.pendingFees > 0 && (
@@ -861,7 +813,7 @@ export default function DashboardHome() {
               <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-150 dark:border-slate-850 flex justify-between items-center text-xs font-bold">
                 <div>
                   <span className="text-slate-400">Ward billing:</span>
-                  <p className="mt-0.5 text-slate-900 dark:text-white">Aarav Sharma (Grade 10-A)</p>
+                  <p className="mt-0.5 text-slate-900 dark:text-white">{aarav.name} ({aarav.grade})</p>
                 </div>
                 <div>
                   <span className="text-slate-400">Amount Due:</span>
@@ -925,7 +877,7 @@ export default function DashboardHome() {
   // VIEW D: STUDENT PORTAL
   // ----------------------------------------------------
   if (role === 'Student') {
-    const aarav = students?.find(s => s.name === 'Aarav Sharma') || { pendingFees: 0, attendanceRate: 94.5, academicPerformance: 88.5 };
+    const aarav = students?.find(s => s.name === user?.name) || students?.[0] || { name: user?.name || 'Student', grade: 'N/A', pendingFees: 0, attendanceRate: 0, academicPerformance: 0 };
 
     return (
       <div className="space-y-8 text-left">
@@ -933,7 +885,7 @@ export default function DashboardHome() {
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Student Command Center</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Welcome back, {user?.name} (Grade 10-A). Track your classes, grades, and schedules.
+              Welcome back, {user?.name} ({aarav.grade}). Track your classes, grades, and schedules.
             </p>
           </div>
         </div>
@@ -1018,11 +970,13 @@ export default function DashboardHome() {
   // VIEW E: LIBRARIAN PORTAL
   // ----------------------------------------------------
   if (role === 'Librarian') {
-    const libraryActivities = [
-      { id: '1', book: 'Concepts of Physics Vol 1', student: 'Aarav Sharma', type: 'Checkout', date: 'Today, 10:15 AM' },
-      { id: '2', book: 'Introduction to Algorithms', student: 'Priya Patel', type: 'Return', date: 'Today, 09:30 AM' },
-      { id: '3', book: 'Organic Chemistry Part II', student: 'Rohan Gupta', type: 'Checkout', date: 'Yesterday, 04:00 PM' }
-    ];
+    const libraryActivities = issuances && issuances.length > 0 ? issuances.map((iss: any) => ({
+      id: iss.id.toString(),
+      book: iss.book?.title || 'Unknown Book',
+      student: iss.student?.name || 'Unknown Student',
+      type: iss.status === 'Issued' ? 'Checkout' : 'Return',
+      date: new Date(iss.created_at || iss.createdAt).toLocaleDateString()
+    })) : [];
 
     return (
       <div className="space-y-8 text-left">
@@ -1212,20 +1166,15 @@ export default function DashboardHome() {
   // VIEW G: ACCOUNTANT PORTAL
   // ----------------------------------------------------
   if (role === 'Accountant') {
-    const revenueData = [
-      { name: 'Jan', Revenue: 45000, Collection: 40000 },
-      { name: 'Feb', Revenue: 55000, Collection: 52000 },
-      { name: 'Mar', Revenue: 60000, Collection: 58000 },
-      { name: 'Apr', Revenue: 75000, Collection: 70000 },
-      { name: 'May', Revenue: 95000, Collection: 92000 },
-      { name: 'Jun', Revenue: 110000, Collection: 104000 }
-    ];
+    const revenueData = schoolStats?.revenueData || [];
 
-    const financeLogs = [
-      { id: '1', item: 'Aarav Sharma - Term II fee payment', amount: '₹1,250', status: 'Cleared', date: 'Today, 10:15 AM' },
-      { id: '2', item: 'Rohan Gupta - Bus Route 4 outstanding', amount: '₹450', status: 'Pending', date: 'Today, 08:30 AM' },
-      { id: '3', item: 'Administrative Office - Supplies cost', amount: '₹820', status: 'Cleared', date: 'Yesterday, 04:00 PM' }
-    ];
+    const financeLogs = transactions && transactions.length > 0 ? transactions.map((t: any) => ({
+      id: t.id.toString(),
+      item: `${t.studentName || 'Student'} - Fee payment`,
+      amount: `₹${t.amount.toLocaleString()}`,
+      status: t.status === 'Paid' ? 'Cleared' : 'Pending',
+      date: new Date(t.created_at || t.createdAt).toLocaleDateString()
+    })) : [];
 
     return (
       <div className="space-y-8 text-left">
