@@ -379,7 +379,7 @@ export default function StudentModule() {
             <div className="space-y-4">
               <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Document Management Vault</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedStudent.documents.map((doc, idx) => (
+                {(selectedStudent.documents || []).map((doc, idx) => (
                   <div key={idx} className="p-3 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-school-blue" />

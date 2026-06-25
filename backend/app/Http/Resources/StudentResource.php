@@ -27,6 +27,9 @@ class StudentResource extends JsonResource
             'feeStatus' => $this->fee_status,
             'academicPerformance' => (float) $this->academic_performance,
             'status' => $this->status,
+            'parentName' => $this->parents->first()?->name,
+            'parentPhone' => $this->parents->first()?->phone,
+            'parentEmail' => $this->parents->first()?->email,
             'documents' => StudentDocumentResource::collection($this->whenLoaded('documents')),
         ];
     }
