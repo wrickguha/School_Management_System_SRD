@@ -51,6 +51,12 @@ jobs:
           composer install --no-dev --optimize-autoloader
         working-directory: ./backend
 
+      # 6.5. Zip the Backend Vendor Folder
+      - name: Zip Vendor Folder
+        run: |
+          zip -r vendor.zip vendor
+        working-directory: ./backend
+
       # 7. Upload Combined App to GoDaddy via FTP (EXCLUDING the massive vendor/ folder) using LFTP
       - name: Deploy via FTP (lftp)
         run: |
@@ -76,6 +82,8 @@ jobs:
       - name: Trigger Remote Database Migrations & Cache Clear
         continue-on-error: true
         run: |
+          echo "Extracting remote vendor dependencies..."
+          curl -f -s "https://subhraedu.com/unzip-vendor.php?secret=${{ secrets.DEPLOY_SECRET }}"
           echo "Running remote migrations..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
           echo "Clearing remote cache and optimizing..."
