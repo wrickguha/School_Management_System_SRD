@@ -30,11 +30,29 @@ export default function StudentModule() {
     totalFees: 45000
   });
 
+  // Filters state
+  const [gradeFilter, setGradeFilter] = useState('');
+  const [feeStatusFilter, setFeeStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
   // Queries
   const { data: students, isLoading } = useQuery({
     queryKey: ['students'],
     queryFn: studentService.getAll
   });
+
+  const uniqueGrades = React.useMemo(() => {
+    return Array.from(new Set((students || []).map(s => s.grade))).filter(Boolean);
+  }, [students]);
+
+  const filteredStudents = React.useMemo(() => {
+    return (students || []).filter(student => {
+      if (gradeFilter && student.grade !== gradeFilter) return false;
+      if (feeStatusFilter && student.feeStatus !== feeStatusFilter) return false;
+      if (statusFilter && student.status !== statusFilter) return false;
+      return true;
+    });
+  }, [students, gradeFilter, feeStatusFilter, statusFilter]);
 
   // Mutations
   const createMutation = useMutation({
@@ -130,6 +148,55 @@ export default function StudentModule() {
         </Button>
       </div>
 
+      {/* Filters Section */}
+      <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
+        <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400">Filter By:</span>
+        
+        {/* Grade Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500">Grade</label>
+          <select
+            value={gradeFilter}
+            onChange={(e) => setGradeFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
+          >
+            <option value="">All Grades</option>
+            {uniqueGrades.map(g => (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Fee Status Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500">Fee Status</label>
+          <select
+            value={feeStatusFilter}
+            onChange={(e) => setFeeStatusFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
+          >
+            <option value="">All Statuses</option>
+            <option value="Paid">Paid</option>
+            <option value="Partial">Partial</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+
+        {/* Enrollment Status Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500">Status</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
+          >
+            <option value="">All</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
       {/* Main Grid */}
       <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
         {isLoading ? (
@@ -140,7 +207,7 @@ export default function StudentModule() {
         ) : (
           <DataTable
             columns={columns}
-            data={students || []}
+            data={filteredStudents}
             searchKey="name"
             searchPlaceholder="Search by student name..."
             actions={(row) => (

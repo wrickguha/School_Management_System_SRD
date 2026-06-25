@@ -34,6 +34,10 @@ export default function ParentsModule() {
     relation: 'Father'
   });
 
+  // Filters state
+  const [gradeFilter, setGradeFilter] = useState('');
+  const [feeFilter, setFeeFilter] = useState('');
+
   // Queries
   const { data: parents, isLoading } = useQuery({
     queryKey: ['parents'],
@@ -44,6 +48,33 @@ export default function ParentsModule() {
     queryKey: ['students'],
     queryFn: studentService.getAll
   });
+
+  const uniqueGrades = React.useMemo(() => {
+    return Array.from(new Set(
+      (parents || []).flatMap(p => (p.students || []).map(w => w.grade))
+    )).filter(Boolean);
+  }, [parents]);
+
+  const filteredParents = React.useMemo(() => {
+    return (parents || []).filter(parent => {
+      // Grade filter: check if any ward belongs to this grade
+      if (gradeFilter) {
+        const hasWardInGrade = (parent.students || []).some(w => w.grade === gradeFilter);
+        if (!hasWardInGrade) return false;
+      }
+      
+      // Fee filter: check if any ward has this fee status
+      if (feeFilter) {
+        const hasWardWithFeeStatus = (parent.students || []).some(w => {
+          const wardFee = w.fee_status || w.feeStatus;
+          return wardFee === feeFilter;
+        });
+        if (!hasWardWithFeeStatus) return false;
+      }
+      
+      return true;
+    });
+  }, [parents, gradeFilter, feeFilter]);
 
   // Mutations
   const createMutation = useMutation({
@@ -145,6 +176,41 @@ export default function ParentsModule() {
         ))}
       </div>
 
+      {/* Filters Section */}
+      <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
+        <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400">Filter By:</span>
+        
+        {/* Ward Grade Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500">Ward Grade</label>
+          <select
+            value={gradeFilter}
+            onChange={(e) => setGradeFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer font-Jakarta"
+          >
+            <option value="">All Grades</option>
+            {uniqueGrades.map(g => (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Ward Fee Status Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500">Ward Fee Status</label>
+          <select
+            value={feeFilter}
+            onChange={(e) => setFeeFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer font-Jakarta"
+          >
+            <option value="">All Statuses</option>
+            <option value="Paid">Paid</option>
+            <option value="Partial">Partial</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+      </div>
+
       <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
         {isLoading ? (
           <div className="space-y-4 animate-pulse">
@@ -154,7 +220,7 @@ export default function ParentsModule() {
         ) : (
           <DataTable
             columns={columns}
-            data={parents || []}
+            data={filteredParents}
             searchKey="name"
             searchPlaceholder="Search by parent name..."
             actions={(row) => (
