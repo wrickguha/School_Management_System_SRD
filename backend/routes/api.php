@@ -141,4 +141,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:super_admin');
     Route::patch('/admin/demo-requests/{id}', [DemoRequestController::class, 'update'])
         ->middleware('role:super_admin');
+
+    // Schools (Super Admin)
+    Route::post('/admin/schools', [\App\Http\Controllers\Admin\SchoolController::class, 'store'])
+        ->middleware('role:super_admin');
 });

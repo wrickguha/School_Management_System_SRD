@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, type DemoRequest } from '../../services/services';
+import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, schoolService, type DemoRequest } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -21,6 +21,55 @@ export default function DashboardHome() {
 
   // Selected demo request modal state
   const [selectedDemoRequest, setSelectedDemoRequest] = useState<DemoRequest | null>(null);
+
+  // School registration modal state
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [registerForm, setRegisterForm] = useState({
+    name: '',
+    subdomain: '',
+    address: '',
+    phone: '',
+    email: '',
+    plan: 'starter' as 'starter' | 'professional' | 'enterprise',
+    admin_name: '',
+    admin_email: '',
+    admin_password: ''
+  });
+  const [registerError, setRegisterError] = useState('');
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerSubmitting, setRegisterSubmitting] = useState(false);
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegisterSubmitting(true);
+    setRegisterError('');
+    setRegisterSuccess(false);
+    try {
+      await schoolService.create(registerForm);
+      setRegisterSuccess(true);
+      setRegisterForm({
+        name: '',
+        subdomain: '',
+        address: '',
+        phone: '',
+        email: '',
+        plan: 'starter',
+        admin_name: '',
+        admin_email: '',
+        admin_password: ''
+      });
+      queryClient.invalidateQueries({ queryKey: ['superStats'] });
+      setTimeout(() => {
+        setIsRegisterModalOpen(false);
+        setRegisterSuccess(false);
+      }, 2000);
+    } catch (err: any) {
+      console.error(err);
+      setRegisterError(err.response?.data?.message || 'Failed to register school. Make sure subdomain/email are unique.');
+    } finally {
+      setRegisterSubmitting(false);
+    }
+  };
 
   // Queries
   const { data: students } = useQuery({ queryKey: ['students'], queryFn: studentService.getAll });
@@ -154,7 +203,7 @@ export default function DashboardHome() {
             <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Opening tenant configuration panel...')}>
               Configure Settings
             </Button>
-            <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Registering new tenant school...')}>
+            <Button variant="primary" size="sm" onClick={() => setIsRegisterModalOpen(true)}>
               Register New School
             </Button>
           </div>
@@ -508,6 +557,182 @@ export default function DashboardHome() {
                 )}
               </div>
             </div>
+          )}
+        </Modal>
+
+        {/* Register New School Modal */}
+        <Modal
+          isOpen={isRegisterModalOpen}
+          onClose={() => {
+            setIsRegisterModalOpen(false);
+            setRegisterError('');
+            setRegisterSuccess(false);
+          }}
+          title="Register New Tenant School"
+          size="lg"
+        >
+          {registerSuccess ? (
+            <div className="text-center py-8 space-y-4">
+              <div className="mx-auto h-16 w-16 rounded-full bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center text-emerald-500 hover:scale-[1.05] transition-transform duration-300">
+                <CheckCircle className="h-10 w-10" />
+              </div>
+              <h4 className="text-xl font-extrabold text-slate-900 dark:text-white">School Registered Successfully!</h4>
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold max-w-sm mx-auto leading-relaxed">
+                The school has been registered and standard demo credentials have been successfully initialized.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleRegisterSubmit} className="space-y-6 text-left">
+              {registerError && (
+                <div className="p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-2xl text-xs font-bold text-red-650 text-center">
+                  {registerError}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Left Column: School Details */}
+                <div className="space-y-4">
+                  <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-650 dark:text-indigo-400">School Details</h4>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">School Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={registerForm.name}
+                      onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                      placeholder="e.g. Beaconwood High School"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Subdomain / Slug</label>
+                    <input
+                      type="text"
+                      required
+                      value={registerForm.subdomain}
+                      onChange={(e) => setRegisterForm({ ...registerForm, subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                      placeholder="e.g. beaconwood"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                    <span className="text-[10px] text-slate-400 font-bold block mt-1">Will resolve to: <span className="text-school-blue font-extrabold">{registerForm.subdomain || 'slug'}.subhraedu.com</span></span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Contact Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={registerForm.email}
+                      onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                      placeholder="e.g. info@beaconwood.edu"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Phone</label>
+                    <input
+                      type="text"
+                      value={registerForm.phone}
+                      onChange={(e) => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                      placeholder="e.g. +1-555-0199"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Address</label>
+                    <textarea
+                      value={registerForm.address}
+                      onChange={(e) => setRegisterForm({ ...registerForm, address: e.target.value })}
+                      placeholder="e.g. 123 Orchard Lane, Sector 4..."
+                      rows={2}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Subscription Plan</label>
+                    <select
+                      value={registerForm.plan}
+                      onChange={(e) => setRegisterForm({ ...registerForm, plan: e.target.value as any })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all cursor-pointer font-bold appearance-none relative"
+                    >
+                      <option value="starter">Starter Plan</option>
+                      <option value="professional">Professional Plan</option>
+                      <option value="enterprise">Enterprise Plan</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Right Column: Admin Details */}
+                <div className="space-y-4">
+                  <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-650 dark:text-indigo-400">School Administrator</h4>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Admin Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={registerForm.admin_name}
+                      onChange={(e) => setRegisterForm({ ...registerForm, admin_name: e.target.value })}
+                      placeholder="e.g. Sarah Connor"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Admin Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={registerForm.admin_email}
+                      onChange={(e) => setRegisterForm({ ...registerForm, admin_email: e.target.value })}
+                      placeholder="e.g. admin@beaconwood.edu"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Admin Password</label>
+                    <input
+                      type="password"
+                      required
+                      value={registerForm.admin_password}
+                      onChange={(e) => setRegisterForm({ ...registerForm, admin_password: e.target.value })}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                    />
+                  </div>
+
+                  <div className="p-4 bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-950/30 rounded-2xl space-y-1.5">
+                    <span className="text-[10px] font-extrabold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest block">Pro-Tip for Demos</span>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                      Registering this school will auto-generate demo accounts for all standard school roles (Principal, Teacher, Parent, Student, etc.) using format <code>role@{registerForm.subdomain || 'slug'}.edu</code> with password <code>password</code>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsRegisterModalOpen(false);
+                    setRegisterError('');
+                    setRegisterSuccess(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary" isLoading={registerSubmitting}>
+                  Register School
+                </Button>
+              </div>
+            </form>
           )}
         </Modal>
       </div>

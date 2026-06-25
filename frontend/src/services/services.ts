@@ -259,3 +259,23 @@ export const dashboardService = {
   }
 };
 
+export interface School {
+  id: number;
+  name: string;
+  subdomain: string;
+  address: string;
+  phone: string;
+  email: string;
+  plan: 'starter' | 'professional' | 'enterprise';
+  status: 'active' | 'inactive' | 'suspended';
+  createdAt: string;
+}
+
+export const schoolService = {
+  create: async (data: any) => {
+    const res = await apiClient.post('/admin/schools', data);
+    return res.data;
+  }
+};
+
+
