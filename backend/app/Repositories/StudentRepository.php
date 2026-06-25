@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Guardian;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -73,8 +74,10 @@ class StudentRepository
                 $userId = $user->id;
             }
 
+            $schoolId = auth()->user()->school_id ?? $data['school_id'] ?? null;
+
             $student = Student::create([
-                'school_id' => auth()->user()->school_id ?? $data['school_id'] ?? null,
+                'school_id' => $schoolId,
                 'user_id' => $userId,
                 'admission_no' => $data['admission_no'],
                 'roll_no' => $data['roll_no'] ?? null,
@@ -90,6 +93,51 @@ class StudentRepository
                 'pending_fees' => $data['total_fees'] ?? 0,
                 'status' => $data['status'] ?? 'Active',
             ]);
+
+            // Create/link Parent profile if provided
+            if (!empty($data['parent_name'])) {
+                $parent = null;
+                
+                // If parent email is provided, check if parent already exists in this school
+                if (!empty($data['parent_email'])) {
+                    $parent = Guardian::where('school_id', $schoolId)
+                        ->where('email', $data['parent_email'])
+                        ->first();
+                }
+
+                if (!$parent) {
+                    $parentUserId = null;
+                    if (!empty($data['parent_email'])) {
+                        // Check if a User already exists with this email
+                        $existingUser = User::where('email', $data['parent_email'])->first();
+                        if (!$existingUser) {
+                            $parentUser = User::create([
+                                'school_id' => $schoolId,
+                                'name' => $data['parent_name'],
+                                'email' => $data['parent_email'],
+                                'password' => Hash::make('password'),
+                                'role' => 'parent',
+                                'status' => 'active',
+                            ]);
+                            $parentUser->assignRole('parent');
+                            $parentUserId = $parentUser->id;
+                        } else {
+                            $parentUserId = $existingUser->id;
+                        }
+                    }
+
+                    $parent = Guardian::create([
+                        'school_id' => $schoolId,
+                        'user_id' => $parentUserId,
+                        'name' => $data['parent_name'],
+                        'phone' => $data['parent_phone'] ?? null,
+                        'email' => $data['parent_email'] ?? null,
+                    ]);
+                }
+
+                // Associate student with parent
+                $student->parents()->attach($parent->id, ['relation' => 'Parent']);
+            }
 
             return $student;
         });
