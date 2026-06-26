@@ -13,6 +13,9 @@ interface Ward {
   name: string;
   grade: string;
   section: string;
+  // Both snake_case and camelCase are checked to handle different API response formats
+  fee_status?: string;
+  feeStatus?: string;
 }
 
 interface Parent {
@@ -51,7 +54,7 @@ export default function ParentsModule() {
 
   const uniqueGrades = React.useMemo(() => {
     return Array.from(new Set(
-      (parents || []).flatMap(p => (p.students || []).map(w => w.grade))
+      (parents || []).flatMap((p: Parent) => (p.students || []).map((w: Ward) => w.grade))
     )).filter(Boolean);
   }, [parents]);
 
@@ -59,13 +62,13 @@ export default function ParentsModule() {
     return (parents || []).filter(parent => {
       // Grade filter: check if any ward belongs to this grade
       if (gradeFilter) {
-        const hasWardInGrade = (parent.students || []).some(w => w.grade === gradeFilter);
+        const hasWardInGrade = (parent.students || []).some((w: Ward) => w.grade === gradeFilter);
         if (!hasWardInGrade) return false;
       }
       
       // Fee filter: check if any ward has this fee status
       if (feeFilter) {
-        const hasWardWithFeeStatus = (parent.students || []).some(w => {
+        const hasWardWithFeeStatus = (parent.students || []).some((w: Ward) => {
           const wardFee = w.fee_status || w.feeStatus;
           return wardFee === feeFilter;
         });
