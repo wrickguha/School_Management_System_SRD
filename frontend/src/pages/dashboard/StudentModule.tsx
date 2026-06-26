@@ -85,9 +85,19 @@ export default function StudentModule() {
   // Mutations
   const createMutation = useMutation({
     mutationFn: studentService.create,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setIsAdmissionOpen(false);
+      const admNo = (variables.admissionNo ?? '').toLowerCase().replace(/[\s-]/g, '');
+      const loginEmail = `${admNo}@student.school`;
+      const loginPassword = (variables.dob ?? '').replace(/-/g, '');
+      alert(
+        `Student Registered Successfully!\n\n` +
+        `Admission No: ${variables.admissionNo}\n` +
+        `Portal Login Email: ${loginEmail}\n` +
+        `Password: ${loginPassword || '(date of birth YYYYMMDD)'}\n\n` +
+        `Please share these credentials with the student.`
+      );
       setAdmissionForm({
         name: '', grade: 'Grade 10', section: 'A', gender: 'Male', dob: '',
         parentName: '', parentPhone: '', parentEmail: '', address: '', bloodGroup: 'O+', totalFees: 45000

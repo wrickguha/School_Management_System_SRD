@@ -72,7 +72,7 @@ class StudentRepository
 
     /**
      * Create a student.
-     * Optionally creates a User login if an email is provided.
+     * Creates a portal login account for the student using parent_email + DOB as password.
      */
     public function create(array $data): Student
     {
@@ -83,18 +83,46 @@ class StudentRepository
             // Derive password from DOB (YYYYMMDD format, matching frontend hint)
             $dobPassword = !empty($data['dob'])
                 ? str_replace('-', '', $data['dob'])
-                : 'password';
-            if (!empty($data['email'])) {
-                $user = User::create([
-                    'school_id' => $schoolId,
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'password' => Hash::make($dobPassword),
-                    'role' => 'student',
-                    'status' => 'active',
-                ]);
-                $user->assignRole('student');
-                $userId = $user->id;
+                : 'student123';
+
+            // Admin-level roles that should never be repurposed as student accounts
+            $adminRoles = ['super_admin', 'school_admin', 'principal', 'hr', 'accountant', 'librarian', 'teacher', 'faculty'];
+
+            // Determine the login email for the student account
+            $studentEmail = $data['parent_email'] ?? $data['email'] ?? null;
+
+            if (!empty($studentEmail)) {
+                $existingUser = User::where('email', $studentEmail)->first();
+
+                if ($existingUser && in_array($existingUser->role, $adminRoles)) {
+                    // Admin already owns this email — generate a safe fallback login for the student
+                    $admNo = strtolower(str_replace(' ', '', $data['admission_no'] ?? 'std' . time()));
+                    $studentEmail = $admNo . '@student.portal';
+                    $existingUser = null; // force creation of a new account
+                }
+
+                if ($existingUser) {
+                    // Update existing non-admin user to student role + new password
+                    $existingUser->update([
+                        'password' => Hash::make($dobPassword),
+                        'role'     => 'student',
+                        'status'   => 'active',
+                    ]);
+                    // Re-assign role if spatie permission is used
+                    $existingUser->syncRoles(['student']);
+                    $userId = $existingUser->id;
+                } else {
+                    $newUser = User::create([
+                        'school_id' => $schoolId,
+                        'name'      => $data['name'],
+                        'email'     => $studentEmail,
+                        'password'  => Hash::make($dobPassword),
+                        'role'      => 'student',
+                        'status'    => 'active',
+                    ]);
+                    $newUser->assignRole('student');
+                    $userId = $newUser->id;
+                }
             }
 
             $student = Student::create([
@@ -127,32 +155,14 @@ class StudentRepository
                 }
 
                 if (!$parent) {
-                    $parentUserId = null;
-                    if (!empty($data['parent_email'])) {
-                        // Check if a User already exists with this email
-                        $existingUser = User::where('email', $data['parent_email'])->first();
-                        if (!$existingUser) {
-                            $parentUser = User::create([
-                                'school_id' => $schoolId,
-                                'name' => $data['parent_name'],
-                                'email' => $data['parent_email'],
-                                'password' => Hash::make($dobPassword),
-                                'role' => 'parent',
-                                'status' => 'active',
-                            ]);
-                            $parentUser->assignRole('parent');
-                            $parentUserId = $parentUser->id;
-                        } else {
-                            $parentUserId = $existingUser->id;
-                        }
-                    }
-
+                    // The student account (created above) uses parent_email as login.
+                    // The Guardian record is purely for contact/relationship tracking.
                     $parent = Guardian::create([
                         'school_id' => $schoolId,
-                        'user_id' => $parentUserId,
-                        'name' => $data['parent_name'],
-                        'phone' => $data['parent_phone'] ?? null,
-                        'email' => $data['parent_email'] ?? null,
+                        'user_id'   => null,
+                        'name'      => $data['parent_name'],
+                        'phone'     => $data['parent_phone'] ?? null,
+                        'email'     => $data['parent_email'] ?? null,
                     ]);
                 }
 

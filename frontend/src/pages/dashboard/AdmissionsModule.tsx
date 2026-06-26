@@ -104,9 +104,20 @@ export default function AdmissionsModule() {
   // Mutations
   const createStudentMutation = useMutation({
     mutationFn: studentService.create,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setIsRegisterOpen(false);
+      // Compute the student login email (mirrors backend logic)
+      const admNo = (variables.admissionNo ?? '').toLowerCase().replace(/[\s-]/g, '');
+      const loginEmail = `${admNo}@student.school`;
+      const loginPassword = (variables.dob ?? '').replace(/-/g, '');
+      alert(
+        `Student Registered Successfully!\n\n` +
+        `Admission No: ${variables.admissionNo}\n` +
+        `Portal Login Email: ${loginEmail}\n` +
+        `Password: ${loginPassword || '(date of birth YYYYMMDD)'}\n\n` +
+        `Please share these credentials with the student.`
+      );
       setRegisterForm({
         name: '', grade: 'Grade 10', section: 'A', gender: 'Male', dob: '',
         parentName: '', parentPhone: '', parentEmail: '', address: '', bloodGroup: 'O+', totalFees: 5000
