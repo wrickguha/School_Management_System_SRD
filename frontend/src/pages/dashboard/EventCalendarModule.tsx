@@ -166,7 +166,7 @@ export default function EventCalendarModule() {
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) return;
-    createMutation.mutate({ ...form, created_by: userRole });
+    createMutation.mutate({ ...form, created_by: userRole ?? undefined });
   };
 
   const todayStr = toYMD(today);

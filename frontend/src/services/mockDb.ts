@@ -3,6 +3,7 @@ export interface Student {
   name: string;
   admissionNo: string;
   rollNo: string;
+  photo?: string;
   grade: string;
   section: string;
   gender: string;

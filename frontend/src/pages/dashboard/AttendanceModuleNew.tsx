@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Check, X, Clock, Calendar as CalendarIcon, BarChart2, Filter } from 'lucide-react';
+import { Check, X, Clock, BarChart2, Filter } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../../store/AuthContext';
 
@@ -19,7 +19,7 @@ interface AttendanceRecord {
 }
 
 const AttendanceModule: React.FC = () => {
-  const { role, user } = useAuth();
+  const { role } = useAuth();
   const queryClient = useQueryClient();
   
   const [activeTab, setActiveTab] = useState<'register' | 'insights' | 'history'>('register');
@@ -55,17 +55,17 @@ const AttendanceModule: React.FC = () => {
   });
 
   // Fetch teacher's classes
-  const { data: teacherClasses } = useQuery({
+  useQuery({
     queryKey: ['teacher-classes'],
     queryFn: async () => {
-      if (!['teacher', 'faculty'].includes(role)) return [];
+      if (!['teacher', 'faculty'].includes(role ?? '')) return [];
       const response = await fetch('/api/attendance/teacher-classes', {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       if (!response.ok) throw new Error('Failed to fetch classes');
       return response.json();
     },
-    enabled: ['teacher', 'faculty'].includes(role),
+    enabled: ['teacher', 'faculty'].includes(role ?? ''),
   });
 
   // Fetch attendance history with filters

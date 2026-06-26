@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, GraduationCap, Users, Filter, Camera, UploadCloud } from 'lucide-react';
+import { Plus, GraduationCap, Filter, Camera, UploadCloud } from 'lucide-react';
 
 function generateEmployeeId(): string {
   const year = new Date().getFullYear();
