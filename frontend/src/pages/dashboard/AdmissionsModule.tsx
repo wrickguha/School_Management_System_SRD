@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Plus, Eye, Trash2, HelpCircle
+  Plus, Eye, Trash2, HelpCircle, Camera, UploadCloud, Key
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -10,6 +10,11 @@ import type { Column } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { studentService, enquiryService } from '../../services/services';
 import type { Student } from '../../services/mockDb';
+
+function generateAdmissionNo(): string {
+  const year = new Date().getFullYear();
+  return `ADM${year}${Math.floor(1000 + Math.random() * 9000)}`;
+}
 
 interface Enquiry {
   id: number;
@@ -28,10 +33,37 @@ export default function AdmissionsModule() {
   const [activeSubTab, setActiveSubTab] = useState<'admissions' | 'enquiries'>('admissions');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   
-  // Modals
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  // Photo upload state
+  const [studentImageFile, setStudentImageFile] = useState<File | null>(null);
+  const [studentImagePreview, setStudentImagePreview] = useState<string>('');
+  const [generatedAdmNo, setGeneratedAdmNo] = useState('');
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleOpenRegister = () => {
+    setGeneratedAdmNo(generateAdmissionNo());
+    setStudentImageFile(null);
+    setStudentImagePreview('');
+    setRegisterForm({
+      name: '', grade: 'Grade 10', section: 'A', gender: 'Male', dob: '',
+      parentName: '', parentPhone: '', parentEmail: '', address: '', bloodGroup: 'O+', totalFees: 5000
+    });
+    setIsRegisterOpen(true);
+  };
+
+  const handleStudentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
+    if (file.size > 3 * 1024 * 1024) { alert('Image must be under 3MB.'); return; }
+    setStudentImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setStudentImagePreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
   
   // Registration Form
   const [registerForm, setRegisterForm] = useState({
@@ -122,7 +154,7 @@ export default function AdmissionsModule() {
     e.preventDefault();
     createStudentMutation.mutate({
       name: registerForm.name,
-      admissionNo: `ADM2026${Math.floor(100 + Math.random() * 900)}`,
+      admissionNo: generatedAdmNo,
       rollNo: String(students ? students.length + 101 : 101),
       grade: registerForm.grade,
       section: registerForm.section,
@@ -134,7 +166,8 @@ export default function AdmissionsModule() {
       address: registerForm.address,
       bloodGroup: registerForm.bloodGroup,
       admissionDate: new Date().toISOString().split('T')[0],
-      totalFees: Number(registerForm.totalFees)
+      totalFees: Number(registerForm.totalFees),
+      photo: studentImagePreview || undefined,
     });
   };
 
@@ -223,7 +256,7 @@ export default function AdmissionsModule() {
         </div>
         <div className="flex gap-3">
           {activeSubTab === 'admissions' ? (
-            <Button variant="primary" size="sm" onClick={() => setIsRegisterOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
+            <Button variant="primary" size="sm" onClick={handleOpenRegister} leftIcon={<Plus className="h-4 w-4" />}>
               Register Student
             </Button>
           ) : (
@@ -320,6 +353,53 @@ export default function AdmissionsModule() {
       {/* Student Registration Modal */}
       <Modal isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} title="Register Student Portfolio">
         <form onSubmit={handleRegisterSubmit} className="space-y-4 text-left">
+
+          {/* Auto-generated Admission Number */}
+          <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl">
+            <div className="flex-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Auto-Generated Admission No.</span>
+              <span className="text-base font-extrabold text-school-blue">{generatedAdmNo}</span>
+            </div>
+            <button type="button" onClick={() => setGeneratedAdmNo(generateAdmissionNo())} className="text-xs font-bold text-school-blue hover:underline shrink-0">
+              Regenerate
+            </button>
+          </div>
+
+          {/* Student Photo Upload */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Student Photo</label>
+            <div className="flex items-center gap-4">
+              <div
+                className="h-20 w-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900 cursor-pointer hover:border-school-blue transition-colors shrink-0"
+                onClick={() => imageInputRef.current?.click()}
+              >
+                {studentImagePreview ? (
+                  <img src={studentImagePreview} alt="Student" className="h-full w-full object-cover rounded-2xl" />
+                ) : (
+                  <div className="text-center">
+                    <Camera className="h-6 w-6 text-slate-400 mx-auto" />
+                    <span className="text-[10px] text-slate-400 mt-1 block">Upload</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <UploadCloud className="h-4 w-4" />
+                  Choose Photo from Device
+                </button>
+                <p className="text-[10px] text-slate-400 mt-1">JPEG, PNG, WebP · Max 3MB</p>
+                {studentImageFile && (
+                  <p className="text-[10px] text-green-600 font-semibold mt-1">✓ {studentImageFile.name}</p>
+                )}
+              </div>
+            </div>
+            <input ref={imageInputRef} type="file" accept="image/*" className="hidden" onChange={handleStudentImageChange} />
+          </div>
+
           <div className="space-y-1">
             <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
             <input
@@ -432,7 +512,25 @@ export default function AdmissionsModule() {
             </div>
           </div>
 
-          <div className="pt-4 flex items-center justify-end gap-3">
+          {/* Password hint */}
+          {registerForm.parentEmail && registerForm.dob && (
+            <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl">
+              <Key className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs font-bold text-amber-800 dark:text-amber-300">Student Portal Login Credentials</p>
+                <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5">
+                  <span className="font-semibold">Email:</span> {registerForm.parentEmail}
+                </p>
+                <p className="text-[11px] text-amber-700 dark:text-amber-400">
+                  <span className="font-semibold">Password:</span>{' '}
+                  <span className="font-mono font-extrabold">{registerForm.dob.replace(/-/g, '')}</span>
+                  <span className="text-[10px] text-amber-500 ml-1">(date of birth · YYYYMMDD)</span>
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="pt-2 flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={() => setIsRegisterOpen(false)}>
               Cancel
             </Button>
