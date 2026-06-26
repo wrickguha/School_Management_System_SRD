@@ -5,6 +5,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import apiClient from '../../services/apiClient';
+import { useAuth } from '../../store/AuthContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 type EventType = 'Holiday' | 'Exam' | 'Sport' | 'Cultural' | 'Meeting' | 'Other';
@@ -44,14 +45,23 @@ const EVENT_TYPE_COLORS: Record<EventType, { bg: string; text: string; badge: st
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_NAMES   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
+// ── Demo data (used as fallback when backend is unavailable) ──────────────────
+const DEMO_EVENTS: SchoolEvent[] = [
+  { id: 1, title: 'Mid-Term Examinations', description: 'Mid-term exams for all classes Grade 6–12.', date: '2026-07-10', start_time: '09:00', end_time: '12:00', type: 'Exam', notify_all: true, created_by: 'Faculty' },
+  { id: 2, title: 'Annual Sports Day', description: 'Inter-house sports competition on the main ground.', date: '2026-07-22', start_time: '08:00', end_time: '17:00', type: 'Sport', notify_all: true, created_by: 'Faculty' },
+  { id: 3, title: 'Independence Day Holiday', description: 'National holiday – school closed.', date: '2026-08-15', type: 'Holiday', notify_all: true, created_by: 'Faculty' },
+  { id: 4, title: 'Parent-Teacher Meeting', description: 'PTM for Grade 10 & 12 parents.', date: '2026-08-05', start_time: '10:00', end_time: '13:00', type: 'Meeting', notify_all: false, created_by: 'Faculty' },
+  { id: 5, title: 'Cultural Festival', description: 'Annual school cultural fest — music, dance, drama.', date: '2026-09-15', start_time: '10:00', end_time: '18:00', type: 'Cultural', notify_all: true, created_by: 'Faculty' },
+];
+
 // ── API ───────────────────────────────────────────────────────────────────────
 const eventsApi = {
   getAll: async (): Promise<SchoolEvent[]> => {
     try {
       const res = await apiClient.get('/events');
-      return res.data.data ?? res.data;
+      const result = res.data.data ?? res.data;
+      return Array.isArray(result) ? result : DEMO_EVENTS;
     } catch {
-      // Return demo data when API not yet ready
       return DEMO_EVENTS;
     }
   },
@@ -60,14 +70,6 @@ const eventsApi = {
     return res.data.data ?? res.data;
   },
 };
-
-const DEMO_EVENTS: SchoolEvent[] = [
-  { id: 1, title: 'Mid-Term Examinations', description: 'Mid-term exams for all classes Grade 6–12.', date: '2025-02-10', start_time: '09:00', end_time: '12:00', type: 'Exam', notify_all: true, created_by: 'Faculty' },
-  { id: 2, title: 'Annual Sports Day', description: 'Inter-house sports competition on the main ground.', date: '2025-02-22', start_time: '08:00', end_time: '17:00', type: 'Sport', notify_all: true, created_by: 'Faculty' },
-  { id: 3, title: 'Republic Day Holiday', description: 'National holiday – school closed.', date: '2025-01-26', type: 'Holiday', notify_all: true, created_by: 'Faculty' },
-  { id: 4, title: 'Parent-Teacher Meeting', description: 'PTM for Grade 10 & 12 parents.', date: '2025-03-05', start_time: '10:00', end_time: '13:00', type: 'Meeting', notify_all: false, created_by: 'Faculty' },
-  { id: 5, title: 'Cultural Festival', description: 'Annual school cultural fest — music, dance, drama.', date: '2025-03-15', start_time: '10:00', end_time: '18:00', type: 'Cultural', notify_all: true, created_by: 'Faculty' },
-];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function getDaysInMonth(year: number, month: number) {
@@ -83,11 +85,8 @@ function toYMD(d: Date) {
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function EventCalendarModule() {
   const queryClient = useQueryClient();
-
-  // Get user role from localStorage (set during login)
-  const storedUser = JSON.parse(localStorage.getItem('erp_user') || localStorage.getItem('user') || '{}');
-  const userRole: string = storedUser?.role ?? storedUser?.user_role ?? '';
-  const canCreate = ['Faculty', 'Teacher', 'Principal', 'School Admin', 'Super Admin'].includes(userRole);
+  const { role: userRole } = useAuth();
+  const canCreate = ['Faculty', 'Teacher', 'Principal', 'School Admin', 'Super Admin'].includes(userRole ?? '');
 
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -128,7 +127,8 @@ export default function EventCalendarModule() {
   // Map events by date
   const eventsByDate = useMemo(() => {
     const map: Record<string, SchoolEvent[]> = {};
-    events.forEach(ev => {
+    const safeEvents = Array.isArray(events) ? events : [];
+    safeEvents.forEach(ev => {
       if (!map[ev.date]) map[ev.date] = [];
       map[ev.date].push(ev);
     });
@@ -139,7 +139,8 @@ export default function EventCalendarModule() {
 
   // Events for current month (for side-panel list)
   const monthPrefix = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`;
-  const monthEvents = events
+  const safeEvents = Array.isArray(events) ? events : [];
+  const monthEvents = safeEvents
     .filter(ev => ev.date.startsWith(monthPrefix))
     .sort((a, b) => a.date.localeCompare(b.date));
 
