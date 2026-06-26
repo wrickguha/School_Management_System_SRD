@@ -10,6 +10,8 @@ use App\Http\Controllers\Communication\AnnouncementController;
 use App\Http\Controllers\HR\TeacherController;
 use App\Http\Controllers\Settings\SchoolSettingsController;
 use App\Http\Controllers\Reports\ReportController;
+use App\Http\Controllers\Reports\AuditReportController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\HomeworkController;
 use App\Http\Controllers\TransportController;
@@ -34,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth Profile
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/profile-image', [AuthController::class, 'uploadProfileImage']);
+    Route::put('/auth/profile', [AuthController::class, 'updateProfile']);
 
     // Dashboard & Logs
     Route::get('/activities', [DashboardController::class, 'indexActivities'])
@@ -145,4 +149,37 @@ Route::middleware('auth:sanctum')->group(function () {
     // Schools (Super Admin)
     Route::post('/admin/schools', [\App\Http\Controllers\Admin\SchoolController::class, 'store'])
         ->middleware('role:super_admin');
+
+    // User Management (School Admin & Principal)
+    Route::get('/admin/users', [UserManagementController::class, 'index'])
+        ->middleware('role:school_admin,principal');
+    Route::post('/admin/users', [UserManagementController::class, 'store'])
+        ->middleware('role:school_admin,principal');
+    Route::put('/admin/users/{user}', [UserManagementController::class, 'update'])
+        ->middleware('role:school_admin,principal');
+    Route::delete('/admin/users/{user}', [UserManagementController::class, 'destroy'])
+        ->middleware('role:school_admin,principal');
+    Route::get('/admin/users/available-roles', [UserManagementController::class, 'availableRoles'])
+        ->middleware('role:school_admin,principal');
+
+    // Audit Reports
+    Route::get('/audit-logs', [AuditReportController::class, 'index'])
+        ->middleware('role:school_admin,principal,accountant,hr');
+    Route::get('/audit-logs/{auditLog}', [AuditReportController::class, 'show'])
+        ->middleware('role:school_admin,principal,accountant,hr');
+    Route::get('/audit-logs/export/csv', [AuditReportController::class, 'export'])
+        ->middleware('role:school_admin,principal,accountant,hr');
+    Route::get('/audit-logs/statistics', [AuditReportController::class, 'statistics'])
+        ->middleware('role:school_admin,principal,accountant,hr');
+
+    // Enhanced Attendance Endpoints
+    Route::get('/attendance', [AttendanceController::class, 'index'])
+        ->middleware('role:school_admin,principal,teacher,faculty');
+    Route::post('/attendance', [AttendanceController::class, 'store'])
+        ->middleware('role:school_admin,principal,teacher,faculty');
+    Route::get('/attendance/by-class', [AttendanceController::class, 'getByClass'])
+        ->middleware('role:school_admin,principal,teacher,faculty');
+    Route::get('/attendance/teacher-classes', [AttendanceController::class, 'getTeacherClasses'])
+        ->middleware('role:teacher,faculty');
 });
+

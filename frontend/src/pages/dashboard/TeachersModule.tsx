@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, GraduationCap, Users } from 'lucide-react';
+import { Plus, GraduationCap, Users, Filter } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
@@ -25,6 +25,10 @@ interface StaffMember {
 export default function TeachersModule() {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -41,6 +45,20 @@ export default function TeachersModule() {
     queryKey: ['teachers'],
     queryFn: teacherService.getAll
   });
+
+  // Filter logic
+  const uniqueDepartments = React.useMemo(() => {
+    return Array.from(new Set((staff || []).map(s => s.department).filter(Boolean)));
+  }, [staff]);
+
+  const filteredStaff = React.useMemo(() => {
+    return (staff || []).filter(member => {
+      if (searchTerm && !member.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      if (departmentFilter && member.department !== departmentFilter) return false;
+      if (statusFilter && member.status !== statusFilter) return false;
+      return true;
+    });
+  }, [staff, searchTerm, departmentFilter, statusFilter]);
 
   // Mutations
   const createMutation = useMutation({
@@ -143,6 +161,62 @@ export default function TeachersModule() {
         ))}
       </div>
 
+      {/* Filters */}
+      <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2 text-sm font-bold text-school-blue hover:text-school-blue/80"
+        >
+          <Filter className="h-4 w-4" /> Filters
+        </button>
+        
+        {showFilters && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-400 uppercase">Search</label>
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-bold focus:outline-none dark:text-white"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-400 uppercase">Department</label>
+              <input
+                type="text"
+                placeholder="e.g., Science"
+                value={departmentFilter}
+                onChange={(e) => setDepartmentFilter(e.target.value)}
+                list="departments-list"
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-bold focus:outline-none dark:text-white"
+              />
+              <datalist id="departments-list">
+                {uniqueDepartments.map(dept => (
+                  <option key={dept} value={dept} />
+                ))}
+              </datalist>
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-400 uppercase">Status</label>
+              <input
+                type="text"
+                placeholder="e.g., Active"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                list="status-list"
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-bold focus:outline-none dark:text-white"
+              />
+              <datalist id="status-list">
+                <option value="Active" />
+                <option value="Inactive" />
+              </datalist>
+            </div>
+          </div>
+        )}
+      </Card>
+
       <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6">
         {isLoading ? (
           <div className="space-y-4 animate-pulse">
@@ -152,7 +226,7 @@ export default function TeachersModule() {
         ) : (
           <DataTable
             columns={columns}
-            data={staff || []}
+            data={filteredStaff}
             searchKey="name"
             searchPlaceholder="Search by staff name..."
           />

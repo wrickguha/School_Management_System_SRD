@@ -17,7 +17,8 @@ class User extends Authenticatable
 
     protected $fillable = [
         'school_id', 'name', 'email', 'password',
-        'role', 'avatar_path', 'status', 'last_login_at',
+        'role', 'avatar_path', 'profile_image_path', 'status', 'last_login_at',
+        'date_of_birth',
     ];
 
     protected $hidden = [
@@ -30,6 +31,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'last_login_at'     => 'datetime',
+            'date_of_birth'     => 'date',
             'password'          => 'hashed',
         ];
     }

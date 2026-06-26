@@ -183,31 +183,37 @@ export default function ParentsModule() {
         {/* Ward Grade Filter */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-bold text-slate-500">Ward Grade</label>
-          <select
+          <input
+            type="text"
+            placeholder="e.g., Grade 10"
             value={gradeFilter}
             onChange={(e) => setGradeFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer font-Jakarta"
-          >
-            <option value="">All Grades</option>
+            list="grades-list"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white"
+          />
+          <datalist id="grades-list">
             {uniqueGrades.map(g => (
-              <option key={g} value={g}>{g}</option>
+              <option key={g} value={g} />
             ))}
-          </select>
+          </datalist>
         </div>
 
         {/* Ward Fee Status Filter */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-bold text-slate-500">Ward Fee Status</label>
-          <select
+          <input
+            type="text"
+            placeholder="e.g., Paid"
             value={feeFilter}
             onChange={(e) => setFeeFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer font-Jakarta"
-          >
-            <option value="">All Statuses</option>
-            <option value="Paid">Paid</option>
-            <option value="Partial">Partial</option>
-            <option value="Pending">Pending</option>
-          </select>
+            list="fee-status-list"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white"
+          />
+          <datalist id="fee-status-list">
+            <option value="Paid" />
+            <option value="Partial" />
+            <option value="Pending" />
+          </datalist>
         </div>
       </div>
 

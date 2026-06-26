@@ -126,6 +126,18 @@ export default function LoginPage() {
               </div>
             )}
 
+            {/* Password info for non-admin roles */}
+            {!['Super Admin', 'School Admin'].includes(selectedRole) && (
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-700 dark:text-blue-400">
+                <p className="font-semibold mb-1">Password Note:</p>
+                <p>
+                  {selectedRole === 'Parent' 
+                    ? 'Your password is your child\'s date of birth in YYYYMMDD format (e.g., 20100315)'
+                    : 'Your password is your date of birth in YYYYMMDD format (e.g., 20100315)'}
+                </p>
+              </div>
+            )}
+
             {/* Email input */}
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Portal Username / Email</label>

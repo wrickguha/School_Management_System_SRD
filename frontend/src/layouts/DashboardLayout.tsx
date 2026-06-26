@@ -9,6 +9,7 @@ import {
   FileBarChart, Settings, LogOut, Sun, Moon, Bell, Search,
   Menu, ChevronLeft, ChevronRight, RefreshCw
 } from 'lucide-react';
+import NotificationPanel from '../components/NotificationPanel';
 
 interface SidebarItem {
   name: string;
@@ -42,6 +43,7 @@ export const DashboardLayout: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showRoleSwapper, setShowRoleSwapper] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -244,11 +246,20 @@ export const DashboardLayout: React.FC = () => {
             </button>
 
             {/* Notification Center */}
-            <button className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 relative transition-colors">
-              <Bell className="h-4.5 w-4.5" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon animate-ping" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 relative transition-colors"
+              >
+                <Bell className="h-4.5 w-4.5" />
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon animate-ping" />
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon" />
+              </button>
+              
+              {showNotifications && (
+                <NotificationPanel onClose={() => setShowNotifications(false)} />
+              )}
+            </div>
 
             {/* User Profile */}
             <div className="flex items-center gap-3 pl-2 border-l border-slate-200 dark:border-slate-800">

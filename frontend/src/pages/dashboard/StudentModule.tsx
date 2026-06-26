@@ -155,45 +155,54 @@ export default function StudentModule() {
         {/* Grade Filter */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-bold text-slate-500">Grade</label>
-          <select
+          <input
+            type="text"
+            placeholder="e.g., Grade 10"
             value={gradeFilter}
             onChange={(e) => setGradeFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
-          >
-            <option value="">All Grades</option>
+            list="grades-list"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white"
+          />
+          <datalist id="grades-list">
             {uniqueGrades.map(g => (
-              <option key={g} value={g}>{g}</option>
+              <option key={g} value={g} />
             ))}
-          </select>
+          </datalist>
         </div>
 
         {/* Fee Status Filter */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-bold text-slate-500">Fee Status</label>
-          <select
+          <input
+            type="text"
+            placeholder="e.g., Paid"
             value={feeStatusFilter}
             onChange={(e) => setFeeStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
-          >
-            <option value="">All Statuses</option>
-            <option value="Paid">Paid</option>
-            <option value="Partial">Partial</option>
-            <option value="Pending">Pending</option>
-          </select>
+            list="fee-status-list"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white"
+          />
+          <datalist id="fee-status-list">
+            <option value="Paid" />
+            <option value="Partial" />
+            <option value="Pending" />
+          </datalist>
         </div>
 
         {/* Enrollment Status Filter */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-bold text-slate-500">Status</label>
-          <select
+          <input
+            type="text"
+            placeholder="e.g., Active"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white cursor-pointer"
-          >
-            <option value="">All</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
+            list="status-list"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none dark:text-white"
+          />
+          <datalist id="status-list">
+            <option value="Active" />
+            <option value="Inactive" />
+          </datalist>
         </div>
       </div>
 
