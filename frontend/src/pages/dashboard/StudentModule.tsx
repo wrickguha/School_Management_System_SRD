@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Plus, Eye, Trash2, FileText, UploadCloud
+  Plus, Eye, Trash2, FileText, UploadCloud, Camera, User
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -11,11 +11,21 @@ import { Modal } from '../../components/ui/Modal';
 import { studentService } from '../../services/services';
 import type { Student } from '../../services/mockDb';
 
+function generateAdmissionNo(): string {
+  const year = new Date().getFullYear();
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `ADM${year}${random}`;
+}
+
 export default function StudentModule() {
   const queryClient = useQueryClient();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isAdmissionOpen, setIsAdmissionOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [studentImageFile, setStudentImageFile] = useState<File | null>(null);
+  const [studentImagePreview, setStudentImagePreview] = useState<string>('');
+  const [generatedAdmNo, setGeneratedAdmNo] = useState('');
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const [admissionForm, setAdmissionForm] = useState({
     name: '',
     grade: 'Grade 10',
@@ -29,6 +39,24 @@ export default function StudentModule() {
     bloodGroup: 'O+',
     totalFees: 45000
   });
+
+  const handleOpenAdmission = () => {
+    setGeneratedAdmNo(generateAdmissionNo());
+    setStudentImageFile(null);
+    setStudentImagePreview('');
+    setIsAdmissionOpen(true);
+  };
+
+  const handleStudentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
+    if (file.size > 3 * 1024 * 1024) { alert('Image must be under 3MB.'); return; }
+    setStudentImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setStudentImagePreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
 
   // Filters state
   const [gradeFilter, setGradeFilter] = useState('');
@@ -82,8 +110,9 @@ export default function StudentModule() {
     e.preventDefault();
     createMutation.mutate({
       name: admissionForm.name,
-      admissionNo: `ADM2026${Math.floor(100 + Math.random() * 900)}`,
+      admissionNo: generatedAdmNo,
       rollNo: String(students ? students.length + 1 : 1).padStart(2, '0'),
+      photo: studentImagePreview || undefined,
       grade: admissionForm.grade,
       section: admissionForm.section,
       gender: admissionForm.gender,
@@ -143,7 +172,7 @@ export default function StudentModule() {
             Browse and manage all registered pupils and new admissions.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={() => setIsAdmissionOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
+        <Button variant="primary" size="sm" onClick={handleOpenAdmission} leftIcon={<Plus className="h-4 w-4" />}>
           Register Student
         </Button>
       </div>
@@ -239,7 +268,59 @@ export default function StudentModule() {
           <p className="text-xs text-slate-500">
             Submit the official academic registry documents to initialize the student portfolio.
           </p>
-          
+
+          {/* Auto-generated Admission Number */}
+          <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl">
+            <div className="flex-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Auto-Generated Admission No.</span>
+              <span className="text-base font-extrabold text-school-blue">{generatedAdmNo}</span>
+            </div>
+            <button type="button" onClick={() => setGeneratedAdmNo(generateAdmissionNo())} className="text-xs font-bold text-school-blue hover:underline shrink-0">
+              Regenerate
+            </button>
+          </div>
+
+          {/* Student Photo Upload */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Student Photo</label>
+            <div className="flex items-center gap-4">
+              <div
+                className="h-20 w-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900 cursor-pointer hover:border-school-blue transition-colors shrink-0"
+                onClick={() => imageInputRef.current?.click()}
+              >
+                {studentImagePreview ? (
+                  <img src={studentImagePreview} alt="Student" className="h-full w-full object-cover rounded-2xl" />
+                ) : (
+                  <div className="text-center">
+                    <Camera className="h-6 w-6 text-slate-400 mx-auto" />
+                    <span className="text-[10px] text-slate-400 mt-1 block">Upload</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <UploadCloud className="h-4 w-4" />
+                  Choose Photo from Device
+                </button>
+                <p className="text-[10px] text-slate-400 mt-1">JPEG, PNG, WebP · Max 3MB</p>
+                {studentImageFile && (
+                  <p className="text-[10px] text-green-600 font-semibold mt-1">✓ {studentImageFile.name}</p>
+                )}
+              </div>
+            </div>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleStudentImageChange}
+            />
+          </div>
+
           <div className="space-y-1">
             <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
             <input

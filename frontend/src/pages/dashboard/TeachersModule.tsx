@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, GraduationCap, Users, Filter } from 'lucide-react';
+import { Plus, GraduationCap, Users, Filter, Camera, UploadCloud } from 'lucide-react';
+
+function generateEmployeeId(): string {
+  const year = new Date().getFullYear();
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `EMP${year}${random}`;
+}
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
@@ -29,6 +35,10 @@ export default function TeachersModule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [staffImageFile, setStaffImageFile] = useState<File | null>(null);
+  const [staffImagePreview, setStaffImagePreview] = useState<string>('');
+  const [generatedEmpId, setGeneratedEmpId] = useState('');
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -39,6 +49,24 @@ export default function TeachersModule() {
     salary_grade: 'Grade A',
     employee_id: ''
   });
+
+  const handleOpenRegister = () => {
+    setGeneratedEmpId(generateEmployeeId());
+    setStaffImageFile(null);
+    setStaffImagePreview('');
+    setIsOpen(true);
+  };
+
+  const handleStaffImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
+    if (file.size > 3 * 1024 * 1024) { alert('Image must be under 3MB.'); return; }
+    setStaffImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setStaffImagePreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
 
   // Queries
   const { data: staff, isLoading } = useQuery({
@@ -75,8 +103,9 @@ export default function TeachersModule() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const generatedEmpId = form.employee_id || `EMP2026${Math.floor(100 + Math.random() * 900)}`;
+    const empId = form.employee_id || generatedEmpId;
     createMutation.mutate({
+      photo: staffImagePreview || undefined,
       name: form.name,
       email: form.email,
       phone: form.phone,
@@ -84,7 +113,7 @@ export default function TeachersModule() {
       department: ['teacher', 'faculty'].includes(form.role) ? form.department : 'Administration',
       designation: ['teacher', 'faculty'].includes(form.role) ? form.designation : form.role.toUpperCase().replace('_', ' '),
       salary_grade: form.salary_grade,
-      employee_id: generatedEmpId,
+      employee_id: empId,
       attendance_rate: 98.0
     });
   };
@@ -135,7 +164,7 @@ export default function TeachersModule() {
             Browse and manage school teachers, principal, librarians, accountants, HR, and other administrative staff roles.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={() => setIsOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
+        <Button variant="primary" size="sm" onClick={handleOpenRegister} leftIcon={<Plus className="h-4 w-4" />}>
           Register Staff Member
         </Button>
       </div>
@@ -235,6 +264,59 @@ export default function TeachersModule() {
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Register Staff Member & Role">
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
+
+          {/* Auto-generated Employee ID */}
+          <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-xl">
+            <div className="flex-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Auto-Generated Employee ID</span>
+              <span className="text-base font-extrabold text-school-green">{generatedEmpId}</span>
+            </div>
+            <button type="button" onClick={() => setGeneratedEmpId(generateEmployeeId())} className="text-xs font-bold text-school-green hover:underline shrink-0">
+              Regenerate
+            </button>
+          </div>
+
+          {/* Staff Photo Upload */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Profile Photo</label>
+            <div className="flex items-center gap-4">
+              <div
+                className="h-20 w-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900 cursor-pointer hover:border-school-green transition-colors shrink-0"
+                onClick={() => imageInputRef.current?.click()}
+              >
+                {staffImagePreview ? (
+                  <img src={staffImagePreview} alt="Staff" className="h-full w-full object-cover rounded-2xl" />
+                ) : (
+                  <div className="text-center">
+                    <Camera className="h-6 w-6 text-slate-400 mx-auto" />
+                    <span className="text-[10px] text-slate-400 mt-1 block">Upload</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <UploadCloud className="h-4 w-4" />
+                  Choose Photo from Device
+                </button>
+                <p className="text-[10px] text-slate-400 mt-1">JPEG, PNG, WebP · Max 3MB</p>
+                {staffImageFile && (
+                  <p className="text-[10px] text-green-600 font-semibold mt-1">✓ {staffImageFile.name}</p>
+                )}
+              </div>
+            </div>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleStaffImageChange}
+            />
+          </div>
+
           <div className="space-y-1">
             <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Account Role</label>
             <select

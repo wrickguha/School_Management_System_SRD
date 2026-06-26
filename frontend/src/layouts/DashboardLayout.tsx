@@ -34,7 +34,9 @@ const sidebarItems: SidebarItem[] = [
   { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Super Admin', 'School Admin', 'Accountant', 'HR'] },
   { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
   { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Teacher', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Event Calendar', path: '/dashboard/events', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Manage Members', path: '/dashboard/members', icon: Users, roles: ['School Admin'] },
 ];
 
 export const DashboardLayout: React.FC = () => {
