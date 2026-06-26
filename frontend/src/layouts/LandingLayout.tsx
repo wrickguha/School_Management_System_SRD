@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import apiClient from '../services/apiClient';
+import logoUrl from '../assets/subhraedu_logo.png';
 
 export const LandingLayout: React.FC = () => {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -107,7 +108,7 @@ export const LandingLayout: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-14 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+            <img src={logoUrl} alt="SubhraEdu Logo" className="h-14 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300" />
           </Link>
 
           {/* Navigation Links with dropdown indicators */}
@@ -530,7 +531,7 @@ export const LandingLayout: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-4">
             <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-premium border border-slate-100 hover:scale-[1.03] transition-all duration-300 inline-block max-w-max">
-              <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-12 w-auto object-contain" />
+              <img src={logoUrl} alt="SubhraEdu Logo" className="h-12 w-auto object-contain" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering global schools with premium, enterprise-grade academic administration, financial operations, and real-time learning analytics.

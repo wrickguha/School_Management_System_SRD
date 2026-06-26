@@ -10,6 +10,7 @@ import {
   Menu, ChevronLeft, ChevronRight, RefreshCw
 } from 'lucide-react';
 import NotificationPanel from '../components/NotificationPanel';
+import logoUrl from '../assets/subhraedu_logo.png';
 
 interface SidebarItem {
   name: string;
@@ -78,10 +79,10 @@ export const DashboardLayout: React.FC = () => {
           <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden group">
             {isSidebarCollapsed ? (
               <div className="h-12 w-12 shrink-0 overflow-hidden flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300">
-                <img src="/subhraedu_logo.png" alt="SubhraEdu" className="h-10 w-auto max-w-none object-left object-contain" />
+                <img src={logoUrl} alt="SubhraEdu" className="h-10 w-auto max-w-none object-left object-contain" />
               </div>
             ) : (
-              <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-14 w-auto object-contain hover:scale-[1.03] active:scale-95 transition-all duration-300" />
+              <img src={logoUrl} alt="SubhraEdu Logo" className="h-14 w-auto object-contain hover:scale-[1.03] active:scale-95 transition-all duration-300" />
             )}
           </Link>
         </div>

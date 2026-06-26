@@ -4,6 +4,7 @@ import { useAuth, type UserRole } from '../store/AuthContext';
 import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import logoUrl from '../assets/subhraedu_logo.png';
 
 export default function LoginPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -84,7 +85,7 @@ export default function LoginPage() {
       <div className="w-full max-w-lg space-y-6">
         <div className="text-center space-y-3">
           <div className="mx-auto bg-white p-3.5 rounded-3xl inline-block shadow-premium border border-slate-100 hover:scale-[1.05] hover:shadow-cardHover transition-all duration-300">
-            <img src="/subhraedu_logo.png" alt="SubhraEdu Logo" className="h-24 w-auto object-contain" />
+            <img src={logoUrl} alt="SubhraEdu Logo" className="h-24 w-auto object-contain" />
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">Access SubhraEdu Portal</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
