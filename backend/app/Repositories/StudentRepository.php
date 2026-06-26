@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Guardian;
+use App\Models\School;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -52,6 +53,24 @@ class StudentRepository
     }
 
     /**
+     * Resolve school_id for the current request.
+     * Falls back to first active school when Super Admin (no school_id on user).
+     */
+    private function resolveSchoolId(array $data): int
+    {
+        $id = auth()->user()->school_id ?? $data['school_id'] ?? null;
+        if ($id) {
+            return (int) $id;
+        }
+        // Super Admin: use first available school
+        $school = School::first();
+        if ($school) {
+            return $school->id;
+        }
+        throw new \RuntimeException('No school found in the system. Please create a school first.');
+    }
+
+    /**
      * Create a student.
      * Optionally creates a User login if an email is provided.
      */
@@ -59,22 +78,24 @@ class StudentRepository
     {
         return DB::transaction(function () use ($data) {
             $userId = null;
+            $schoolId = $this->resolveSchoolId($data);
 
-            // Create login user account if requested / email provided
+            // Derive password from DOB (YYYYMMDD format, matching frontend hint)
+            $dobPassword = !empty($data['dob'])
+                ? str_replace('-', '', $data['dob'])
+                : 'password';
             if (!empty($data['email'])) {
                 $user = User::create([
-                    'school_id' => auth()->user()->school_id ?? $data['school_id'] ?? null,
+                    'school_id' => $schoolId,
                     'name' => $data['name'],
                     'email' => $data['email'],
-                    'password' => Hash::make($data['password'] ?? 'password'),
+                    'password' => Hash::make($dobPassword),
                     'role' => 'student',
                     'status' => 'active',
                 ]);
                 $user->assignRole('student');
                 $userId = $user->id;
             }
-
-            $schoolId = auth()->user()->school_id ?? $data['school_id'] ?? null;
 
             $student = Student::create([
                 'school_id' => $schoolId,
@@ -115,7 +136,7 @@ class StudentRepository
                                 'school_id' => $schoolId,
                                 'name' => $data['parent_name'],
                                 'email' => $data['parent_email'],
-                                'password' => Hash::make('password'),
+                                'password' => Hash::make($dobPassword),
                                 'role' => 'parent',
                                 'status' => 'active',
                             ]);
