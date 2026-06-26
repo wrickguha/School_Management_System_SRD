@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Plus, Edit2, Trash2, Search, Filter } from 'lucide-react';
+import { Plus, Trash2, Search } from 'lucide-react';
 import { useAuth } from '../../store/AuthContext';
 
 interface User {
@@ -36,7 +36,7 @@ export default function UserManagement() {
   });
 
   // Check authorization
-  if (!['school_admin', 'principal'].includes(role)) {
+  if (role === null || !['school_admin', 'principal'].includes(role)) {
     return (
       <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg text-red-700 dark:text-red-400">
         You don't have permission to manage users. Only School Admin and Principal can access this.
@@ -194,7 +194,7 @@ export default function UserManagement() {
             </div>
 
             <div className="flex gap-2 justify-end pt-4 border-t border-slate-200 dark:border-slate-800">
-              <Button variant="secondary" onClick={() => setShowCreateForm(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setShowCreateForm(false)}>Cancel</Button>
               <Button variant="primary" isLoading={createUserMutation.isPending}>Create User</Button>
             </div>
           </form>

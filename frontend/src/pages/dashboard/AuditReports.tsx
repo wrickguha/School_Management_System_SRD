@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Download, Filter, BarChart2 } from 'lucide-react';
+import { Download, Filter } from 'lucide-react';
 
 interface AuditLog {
   id: number;

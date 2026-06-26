@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { ShieldAlert, Sliders, ToggleLeft, ToggleRight, AlertCircle, Check } from 'lucide-react';
-import { useAuth } from '../../store/AuthContext';
 
 interface SchoolSettings {
   school: {
@@ -32,7 +31,6 @@ interface SchoolSettings {
 }
 
 export default function SettingsModule() {
-  const { role } = useAuth();
   const queryClient = useQueryClient();
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [settingsForm, setSettingsForm] = useState<any>({});
@@ -319,7 +317,7 @@ export default function SettingsModule() {
                 <>
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => {
                       setIsEditing(false);
                       if (settingsData) {

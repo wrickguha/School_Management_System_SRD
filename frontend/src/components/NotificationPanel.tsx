@@ -1,6 +1,5 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Bell, Check, Trash2 } from 'lucide-react';
+import { Bell, Trash2 } from 'lucide-react';
 
 interface Notification {
   id: number;
@@ -31,19 +30,6 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
 
   const notifications = notificationsData?.data || [];
   const unreadCount = notifications.filter((n: Notification) => !n.read).length;
-
-  const getNotificationColor = (type: string) => {
-    switch (type) {
-      case 'success':
-        return 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900';
-      case 'warning':
-        return 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900';
-      case 'error':
-        return 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900';
-      default:
-        return 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900';
-    }
-  };
 
   const markAsRead = async (notificationId: number) => {
     try {
