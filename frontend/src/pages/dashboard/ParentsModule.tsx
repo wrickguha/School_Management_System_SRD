@@ -13,6 +13,7 @@ interface Ward {
   name: string;
   grade: string;
   section: string;
+  // Both snake_case and camelCase are checked to handle different API response formats
   fee_status?: string;
   feeStatus?: string;
 }
