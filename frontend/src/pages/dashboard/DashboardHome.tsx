@@ -8,7 +8,7 @@ import {
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, schoolService, type DemoRequest } from '../../services/services';
+import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, schoolService, homeworkService, type DemoRequest } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -95,6 +95,11 @@ export default function DashboardHome() {
     queryKey: ['issuances'],
     queryFn: libraryService.getIssuances,
     enabled: role === 'Librarian'
+  });
+  const { data: homeworkTasks } = useQuery({
+    queryKey: ['homework'],
+    queryFn: homeworkService.getAll,
+    enabled: role === 'Student'
   });
 
   // Parent specific states
@@ -1105,22 +1110,24 @@ export default function DashboardHome() {
               </CardTitle>
             </CardHeader>
             <div className="space-y-4">
-              {[
-                { id: '1', title: 'Calculus Derivatives Problems', subject: 'Math', date: 'Due June 08', status: 'Pending' },
-                { id: '2', title: 'Kinematics lab writeup report', subject: 'Physics', date: 'Due June 06', status: 'Submitted' }
-              ].map((hw) => (
+              {Array.isArray(homeworkTasks) && homeworkTasks.length > 0 ? homeworkTasks.map((hw: any) => (
                 <div key={hw.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold block">{hw.title}</span>
-                    <span className="text-[10px] text-slate-400 font-semibold">{hw.subject} • {hw.date}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{hw.subject} • Due {hw.due_date ? new Date(hw.due_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'TBD'}</span>
                   </div>
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
-                    hw.status === 'Submitted' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-650'
+                    hw.status === 'Submitted' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-600'
                   }`}>
-                    {hw.status}
+                    {hw.status ?? 'Pending'}
                   </span>
                 </div>
-              ))}
+              )) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <BookOpen className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
+                  <span className="text-xs font-semibold text-slate-400">No assignments yet</span>
+                </div>
+              )}
             </div>
           </Card>
 
@@ -1277,22 +1284,24 @@ export default function DashboardHome() {
               </CardTitle>
             </CardHeader>
             <div className="space-y-4">
-              {[
-                { id: '1', title: 'Calculus Derivatives Problems', subject: 'Math', date: 'Due June 08', status: 'Pending' },
-                { id: '2', title: 'Kinematics lab writeup report', subject: 'Physics', date: 'Due June 06', status: 'Submitted' }
-              ].map((hw) => (
+              {Array.isArray(homeworkTasks) && homeworkTasks.length > 0 ? homeworkTasks.map((hw: any) => (
                 <div key={hw.id} className="p-3.5 border border-slate-150 dark:border-slate-800 rounded-xl flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold block">{hw.title}</span>
-                    <span className="text-[10px] text-slate-400 font-semibold">{hw.subject} • {hw.date}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{hw.subject} • Due {hw.due_date ? new Date(hw.due_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'TBD'}</span>
                   </div>
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
-                    hw.status === 'Submitted' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-650'
+                    hw.status === 'Submitted' ? 'bg-school-greenLight text-school-green' : 'bg-yellow-50 text-yellow-600'
                   }`}>
-                    {hw.status}
+                    {hw.status ?? 'Pending'}
                   </span>
                 </div>
-              ))}
+              )) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <BookOpen className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
+                  <span className="text-xs font-semibold text-slate-400">No active assignments</span>
+                </div>
+              )}
             </div>
           </Card>
 

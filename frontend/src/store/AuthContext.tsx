@@ -7,7 +7,7 @@ interface User {
   name: string;
   email: string;
   role: UserRole;
-  avatar: string;
+  avatar: string | null;
 }
 
 interface AuthContextType {
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: apiUser.name,
             email: apiUser.email,
             role: frontendRole,
-            avatar: apiUser.avatar_path || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+            avatar: apiUser.profile_image_path || apiUser.avatar_path || null
           };
           setUser(userData);
           setRole(frontendRole);
@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: apiUser.name,
         email: apiUser.email,
         role: frontendRole,
-        avatar: apiUser.avatar_path || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+        avatar: apiUser.profile_image_path || apiUser.avatar_path || null
       };
 
       setUser(userData);

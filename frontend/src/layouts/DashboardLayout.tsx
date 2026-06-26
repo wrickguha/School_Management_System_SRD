@@ -265,11 +265,19 @@ export const DashboardLayout: React.FC = () => {
 
             {/* User Profile */}
             <div className="flex items-center gap-3 pl-2 border-l border-slate-200 dark:border-slate-800">
-              <img 
-                src={user?.avatar} 
-                alt="user avatar" 
-                className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-800 object-cover shadow-sm"
-              />
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="user avatar"
+                  className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-800 object-cover shadow-sm"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-800 bg-school-blue flex items-center justify-center shadow-sm flex-shrink-0">
+                  <span className="text-white font-bold text-sm leading-none select-none">
+                    {user?.name?.charAt(0).toUpperCase() ?? 'U'}
+                  </span>
+                </div>
+              )}
               <div className="hidden lg:flex flex-col">
                 <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">{user?.name}</span>
                 <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{role} Dashboard</span>
