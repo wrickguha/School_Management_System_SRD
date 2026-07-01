@@ -10,8 +10,8 @@ export default function LoginPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
-  const [email, setEmail] = useState('admin@subhraedu.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,37 +23,6 @@ export default function LoginPage() {
  
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
-    if (role === 'Teacher') {
-      setEmail('teacher@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'Parent') {
-      setEmail('parent@greenwood.edu');
-      setPassword('');
-    } else if (role === 'Student') {
-      setEmail('');
-      setPassword('');
-    } else if (role === 'Faculty') {
-      setEmail('faculty@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'Librarian') {
-      setEmail('librarian@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'Super Admin') {
-      setEmail('admin@subhraedu.com');
-      setPassword('admin123');
-    } else if (role === 'School Admin') {
-      setEmail('admin@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'Principal') {
-      setEmail('principal@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'Accountant') {
-      setEmail('accountant@greenwood.edu');
-      setPassword('password');
-    } else if (role === 'HR') {
-      setEmail('hr@greenwood.edu');
-      setPassword('password');
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,7 +35,7 @@ export default function LoginPage() {
       if (success) {
         navigate('/dashboard');
       } else {
-        setError('Invalid credentials. Try using default values.');
+        setError('Invalid credentials. Please check your username and password.');
       }
     } catch (err) {
       setError('An error occurred during authentication.');
