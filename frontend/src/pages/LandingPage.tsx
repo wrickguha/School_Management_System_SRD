@@ -1329,39 +1329,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------
-          5.4 SCHOOL SUCCESS STORIES / CASE STUDIES
-          --------------------------------------------------------- */}
-      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-slate-50/50 dark:bg-slate-955/20">
-        <div className="max-w-7xl mx-auto px-6 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Operational Outcomes</span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Institutional Success Stories</h2>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Read how academic institutes optimized their registration, revenue, and payroll cycles post-migration.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              { school: 'Greenwood Prep', metric: '45% Defaulter Reduction', desc: 'Automated 3-click fee links via parent app decreased late invoice collections from months to hours.', color: 'border-school-green text-school-green' },
-              { school: 'Sterling District', metric: '15+ Hours Saved Weekly', desc: 'Digital gradebooks and attendance checkers eliminated physical log registers for 140+ faculty members.', color: 'border-school-blue text-school-blue' },
-              { school: 'Horizon Global', metric: '85% Faster Admissions', desc: 'Multi-step online seat forms and document upload modules eliminated campus onboarding queues.', color: 'border-school-maroon text-school-maroon' }
-            ].map((story, i) => (
-              <Card key={i} className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-850 hover:border-school-blue/20 hover:shadow-cardHover transition-all text-left space-y-4 rounded-2xl flex flex-col justify-between">
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold text-slate-455 dark:text-slate-400 uppercase tracking-widest block">{story.school}</span>
-                  <h4 className={`text-lg font-extrabold block ${story.color.split(' ')[1]}`}>{story.metric}</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">{story.desc}</p>
-                </div>
-                <button onClick={openDemoModal} className="text-[10px] font-bold text-school-blue hover:underline cursor-pointer text-left self-start mt-2">
-                  Read Case Study →
-                </button>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ---------------------------------------------------------
           6. TRUST / STATISTICS (SCROLL COUNTERS)

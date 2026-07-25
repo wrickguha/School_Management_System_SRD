@@ -186,35 +186,7 @@ export const LandingLayout: React.FC = () => {
               )}
             </div>
 
-            {/* Success Stories */}
-            <div 
-              className="relative h-full flex items-center"
-              onMouseEnter={() => setActiveDropdown('successStories')}
-            >
-              <button className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer py-4 ${activeDropdown === 'successStories' ? 'text-school-green' : 'text-slate-700 dark:text-slate-300 hover:text-school-green'}`}>
-                <span>Success Stories</span>
-                <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${activeDropdown === 'successStories' ? 'rotate-180' : ''}`} />
-              </button>
 
-              {activeDropdown === 'successStories' && (
-                <div 
-                  className="absolute left-0 top-[100%] -mt-1 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl py-1.5 z-50 text-left"
-                  onMouseEnter={() => setActiveDropdown('successStories')}
-                >
-                  {[
-                    { label: 'Case Studies', to: '/success-stories/case-studies' }
-                  ].map((item, idx) => (
-                    <Link 
-                      key={idx}
-                      to={item.to}
-                      className="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-school-green dark:hover:text-school-green transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
 
             {/* Insights */}
             <div 
@@ -395,32 +367,7 @@ export const LandingLayout: React.FC = () => {
                   )}
                 </div>
 
-                {/* Success Stories Accordion */}
-                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <button
-                    onClick={() => toggleMobileSection('successStories')}
-                    className="w-full flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white py-2 cursor-pointer"
-                  >
-                    <span>Success Stories</span>
-                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedMobileSection === 'successStories' ? 'rotate-180' : ''}`} />
-                  </button>
-                  {expandedMobileSection === 'successStories' && (
-                    <div className="pl-4 pt-2 space-y-2.5">
-                      {[
-                        { label: 'Case Studies', to: '/success-stories/case-studies' }
-                      ].map((item, idx) => (
-                        <Link
-                          key={idx}
-                          to={item.to}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="block text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-school-green py-1"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+
 
                 {/* Insights Accordion */}
                 <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
