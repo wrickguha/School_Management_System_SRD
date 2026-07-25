@@ -18,6 +18,18 @@ use Illuminate\Support\Facades\Hash;
 class SchoolController extends Controller
 {
     /**
+     * Display a listing of registered tenant schools.
+     */
+    public function index(): JsonResponse
+    {
+        $schools = School::with('setting')->orderBy('created_at', 'desc')->get();
+        return response()->json([
+            'schools' => $schools,
+            'total' => $schools->count(),
+        ]);
+    }
+
+    /**
      * Store a newly created school, settings, and its users.
      */
     public function store(Request $request): JsonResponse
