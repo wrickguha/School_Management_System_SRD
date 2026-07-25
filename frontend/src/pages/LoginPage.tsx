@@ -53,8 +53,8 @@ export default function LoginPage() {
 
       <div className="w-full max-w-lg space-y-6">
         <div className="text-center space-y-3">
-          <div className="mx-auto bg-white p-3.5 rounded-3xl inline-block shadow-premium border border-slate-100 hover:scale-[1.05] hover:shadow-cardHover transition-all duration-300">
-            <img src={logoUrl} alt="SubhraEdu Logo" className="h-24 w-auto object-contain" />
+          <div className="mx-auto bg-white p-5 md:p-6 rounded-3xl inline-block shadow-premium border border-slate-100 hover:scale-[1.05] hover:shadow-cardHover transition-all duration-300">
+            <img src={logoUrl} alt="SubhraEdu Logo" className="h-32 md:h-36 w-auto object-contain" />
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">Access SubhraEdu Portal</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">

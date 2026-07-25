@@ -106,9 +106,9 @@ export const LandingLayout: React.FC = () => {
         className="sticky top-0 z-50 w-full border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md"
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
+        <div className="max-w-7xl mx-auto px-6 h-24 md:h-28 flex items-center justify-between relative py-2">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logoUrl} alt="SubhraEdu Logo" className="h-14 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+            <img src={logoUrl} alt="SubhraEdu Logo" className="h-20 md:h-24 w-auto object-contain group-hover:scale-[1.03] transition-transform duration-300 drop-shadow-sm" />
           </Link>
 
           {/* Navigation Links with dropdown indicators */}
@@ -530,8 +530,8 @@ export const LandingLayout: React.FC = () => {
       <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-4">
-            <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-premium border border-slate-100 hover:scale-[1.03] transition-all duration-300 inline-block max-w-max">
-              <img src={logoUrl} alt="SubhraEdu Logo" className="h-12 w-auto object-contain" />
+            <div className="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-premium border border-slate-100 hover:scale-[1.03] transition-all duration-300 inline-block max-w-max">
+              <img src={logoUrl} alt="SubhraEdu Logo" className="h-16 md:h-20 w-auto object-contain" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering global schools with premium, enterprise-grade academic administration, financial operations, and real-time learning analytics.
