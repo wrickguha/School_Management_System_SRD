@@ -71,6 +71,7 @@ jobs:
               --exclude-glob .github/ \
               --exclude-glob node_modules/ \
               --exclude-glob vendor/ \
+              --exclude-glob bootstrap/cache/*.php \
               --exclude-glob .env \
               --exclude-glob tests/ \
               --exclude-glob database/database.sqlite \
@@ -86,6 +87,8 @@ jobs:
           curl -f -s "https://subhraedu.com/unzip-vendor.php?secret=${{ secrets.DEPLOY_SECRET }}"
           echo "Running remote migrations..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
-          echo "Clearing remote cache and optimizing..."
+          echo "Clearing remote route and application cache..."
+          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=clear-cache"
+          echo "Optimizing remote application..."
           curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"
 
