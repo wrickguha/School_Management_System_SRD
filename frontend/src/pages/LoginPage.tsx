@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
-import { Lock, Mail, Users, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, Users, ArrowLeft, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import logoUrl from '../assets/subhraedu_logo.png';
@@ -10,6 +10,7 @@ export default function LoginPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole>('Super Admin');
+  const [schoolId, setSchoolId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,11 +32,11 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const success = await login(email, selectedRole, password);
+      const success = await login(email, selectedRole, password, schoolId);
       if (success) {
         navigate('/dashboard');
       } else {
-        setError('Invalid credentials. Please check your username and password.');
+        setError('Invalid credentials. Please check your username, password, and School ID.');
       }
     } catch (err) {
       setError('An error occurred during authentication.');
@@ -88,6 +89,23 @@ export default function LoginPage() {
                 </div>
               </div>
             </div>
+
+            {/* School ID / Institution Code Input */}
+            {selectedRole !== 'Super Admin' && (
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-450 uppercase tracking-widest block mb-1">School ID / Institution Code</label>
+                <div className="relative">
+                  <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+                  <input
+                    type="text"
+                    value={schoolId}
+                    onChange={(e) => setSchoolId(e.target.value)}
+                    placeholder="e.g. SCH-1001 or greenwood"
+                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Error display */}
             {error && (

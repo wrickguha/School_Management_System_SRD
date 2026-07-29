@@ -15,7 +15,7 @@ interface AuthContextType {
   role: UserRole | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, role: UserRole, password?: string) => Promise<boolean>;
+  login: (email: string, role: UserRole, password?: string, schoolId?: string) => Promise<boolean>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
 }
@@ -77,9 +77,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (email: string, selectedRole: UserRole, password = 'password'): Promise<boolean> => {
+  const login = async (email: string, selectedRole: UserRole, password = 'password', schoolId?: string): Promise<boolean> => {
     try {
-      const res = await apiClient.post('/auth/login', { email, password });
+      const payload: Record<string, string> = { email, password };
+      if (schoolId) {
+        payload.school_id = schoolId;
+      }
+      const res = await apiClient.post('/auth/login', payload);
       const { token, user: apiUser } = res.data;
 
       localStorage.setItem('erp_auth_token', token);
