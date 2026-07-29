@@ -4,13 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, Calendar, Award, CreditCard, UserCheck, GraduationCap,
   BookOpen, ShieldAlert, Bus, Library as LibraryIcon, Home as HomeIcon,
-  BarChart3, Check, ChevronRight, HelpCircle, ArrowRight, Star,
+  BarChart3, Check, ChevronRight, HelpCircle, ArrowRight,
   MessageSquare, Sparkles, FileText, Clock
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
-import apiClient from '../services/apiClient';
 
 interface LandingContext {
   openDemoModal: () => void;
