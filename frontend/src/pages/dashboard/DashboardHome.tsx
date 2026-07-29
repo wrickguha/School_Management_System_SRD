@@ -658,18 +658,7 @@ export default function DashboardHome() {
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Subscription Plan</label>
-                    <select
-                      value={registerForm.plan}
-                      onChange={(e) => setRegisterForm({ ...registerForm, plan: e.target.value as any })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all cursor-pointer font-bold appearance-none relative"
-                    >
-                      <option value="starter">Starter Plan</option>
-                      <option value="professional">Professional Plan</option>
-                      <option value="enterprise">Enterprise Plan</option>
-                    </select>
-                  </div>
+
                 </div>
 
                 {/* Right Column: Admin Details */}
