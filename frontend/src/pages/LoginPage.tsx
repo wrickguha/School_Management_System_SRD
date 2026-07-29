@@ -36,7 +36,11 @@ export default function LoginPage() {
       if (success) {
         navigate('/dashboard');
       } else {
-        setError('Invalid credentials. Please check your username, password, and School ID.');
+        setError(
+          selectedRole === 'Super Admin'
+            ? 'Invalid credentials. For Super Admin, use email: admin@subhraedu.com and password: admin123'
+            : 'Invalid credentials. Please check your username, password, and School ID.'
+        );
       }
     } catch (err) {
       setError('An error occurred during authentication.');
@@ -146,7 +150,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@school.edu"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
                 />
               </div>
             </div>
