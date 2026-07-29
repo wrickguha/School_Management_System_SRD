@@ -45,17 +45,17 @@ class User extends Authenticatable
     // ── Role Helpers ─────────────────────────────────────────────────────────
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'super_admin';
+        return in_array($this->role, ['super_admin', 'platform_owner']);
     }
 
     public function isSchoolAdmin(): bool
     {
-        return in_array($this->role, ['school_admin', 'principal']);
+        return in_array($this->role, ['school_admin', 'principal', 'vice_principal']);
     }
 
     public function isTeacher(): bool
     {
-        return in_array($this->role, ['teacher', 'faculty']);
+        return in_array($this->role, ['teacher', 'faculty', 'class_teacher', 'dept_head']);
     }
 
     public function isParent(): bool

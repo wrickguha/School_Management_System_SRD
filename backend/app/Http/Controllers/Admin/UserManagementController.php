@@ -29,7 +29,7 @@ class UserManagementController extends Controller
             'email' => 'required|email|unique:users',
             'role' => [
                 'required',
-                Rule::in(['principal', 'teacher', 'faculty', 'librarian', 'accountant', 'hr']),
+                Rule::in(['principal', 'vice_principal', 'dept_head', 'teacher', 'class_teacher', 'faculty', 'librarian', 'accountant', 'hr', 'staff', 'driver']),
             ],
             'date_of_birth' => 'required|date|before:today',
             'status' => 'sometimes|in:active,inactive',
@@ -163,11 +163,16 @@ class UserManagementController extends Controller
         return response()->json([
             'roles' => [
                 ['value' => 'principal', 'label' => 'Principal'],
+                ['value' => 'vice_principal', 'label' => 'Vice Principal'],
+                ['value' => 'dept_head', 'label' => 'Department Head'],
                 ['value' => 'teacher', 'label' => 'Teacher'],
+                ['value' => 'class_teacher', 'label' => 'Class Teacher'],
                 ['value' => 'faculty', 'label' => 'Faculty'],
                 ['value' => 'librarian', 'label' => 'Librarian'],
                 ['value' => 'accountant', 'label' => 'Accountant'],
                 ['value' => 'hr', 'label' => 'HR'],
+                ['value' => 'staff', 'label' => 'Staff'],
+                ['value' => 'driver', 'label' => 'Driver'],
             ],
         ]);
     }

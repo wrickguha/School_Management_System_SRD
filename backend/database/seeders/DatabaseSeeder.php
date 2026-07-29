@@ -35,16 +35,21 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Create Roles in Spatie Permission
         $roles = [
+            'platform_owner',
             'super_admin',
             'school_admin',
             'principal',
+            'vice_principal',
+            'dept_head',
             'teacher',
-            'faculty',
-            'parent',
+            'class_teacher',
             'student',
+            'parent',
+            'staff',
             'accountant',
             'hr',
-            'librarian'
+            'librarian',
+            'driver'
         ];
 
         foreach ($roles as $roleName) {
