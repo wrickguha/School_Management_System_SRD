@@ -524,30 +524,7 @@ export default function LandingPage() {
   const [hoveredEco, setHoveredEco] = useState<typeof ecosystemModules[0] | null>(ecosystemModules[0]);
   const [selectedEco, setSelectedEco] = useState<typeof ecosystemModules[0] | null>(null);
 
-  // Testimonials state fetched from backend
-  const [dynamicTestimonials, setDynamicTestimonials] = useState<typeof testimonials>(testimonials);
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
 
-  useEffect(() => {
-    apiClient.get('/testimonials')
-      .then((res) => {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setDynamicTestimonials(res.data);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to load testimonials from backend:', err);
-      });
-  }, []);
-
-  // Auto testimonial rotation
-  useEffect(() => {
-    if (dynamicTestimonials.length === 0) return;
-    const timer = setInterval(() => {
-      setTestimonialIndex((p) => (p + 1) % dynamicTestimonials.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [dynamicTestimonials]);
 
   return (
     <div className="relative overflow-x-hidden min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
@@ -1417,67 +1394,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------
-          8. TESTIMONIALS SLIDER
-          --------------------------------------------------------- */}
-      <section className="py-24 border-t border-slate-100 dark:border-slate-900 bg-slate-50/20 dark:bg-slate-950/5">
-        <div className="max-w-7xl mx-auto px-6 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold text-school-blue uppercase tracking-widest bg-school-blue/10 px-3.5 py-1.5 rounded-full border border-school-blue/20">Success Records</span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Evaluations by Directors</h2>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Read how principals and administrative board heads value their ERP migration to SubhraEdu.
-            </p>
-          </div>
 
-          <div className="max-w-3xl mx-auto min-h-[250px] relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonialIndex}
-                initial={{ opacity: 0, x: 25 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -25 }}
-                transition={{ duration: 0.4 }}
-                className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8 md:p-10 rounded-3xl shadow-glass flex flex-col justify-between text-left animate-float-y"
-              >
-                <div className="space-y-4">
-                  <div className="flex gap-1">
-                    {Array.from({ length: dynamicTestimonials[testimonialIndex]?.rating || 5 }).map((_, i) => (
-                      <Star key={i} className="h-4.5 w-4.5 fill-yellow-400 text-yellow-400 shrink-0" />
-                    ))}
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 text-sm md:text-base italic leading-relaxed font-medium">
-                    "{dynamicTestimonials[testimonialIndex]?.text || ''}"
-                  </p>
-                </div>
-
-                <div className="border-t border-slate-100 dark:border-slate-850 pt-5 mt-8 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-school-blue/10 text-school-blue dark:text-school-blueLight flex items-center justify-center text-xs font-bold uppercase shrink-0">
-                      {dynamicTestimonials[testimonialIndex]?.name?.slice(0, 2) || ''}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-extrabold text-slate-855 dark:text-white leading-tight">{dynamicTestimonials[testimonialIndex]?.name || ''}</h4>
-                      <span className="text-[10px] font-bold text-slate-400">{dynamicTestimonials[testimonialIndex]?.role || ''}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Slider controllers */}
-                  <div className="flex gap-2">
-                    {dynamicTestimonials.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setTestimonialIndex(i)}
-                        className={`h-2.5 w-2.5 rounded-full transition-all cursor-pointer ${testimonialIndex === i ? 'w-6 bg-school-blue' : 'bg-slate-200 dark:bg-slate-800'}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-      </section>
 
 
 
@@ -1639,26 +1556,7 @@ const showcaseData = {
   }
 };
 
-const testimonials = [
-  {
-    name: 'Dr. Arthur Sterling',
-    role: 'Board President, Sterling Academies',
-    text: 'SubhraEdu transformed our entire district. Managing 5 campus sites, 12,000 students, and unified billing used to take a team of 40. Now we handle everything seamlessly from a single dashboard.',
-    rating: 5
-  },
-  {
-    name: 'Mrs. Rebecca Mercer',
-    role: 'Principal, Greenfield Prep School',
-    text: 'The Parent Portal is incredible. Late fees dropped by 45% because parents can checkout outstanding balances in 3 clicks. The teachers love the automated gradecard publisher.',
-    rating: 5
-  },
-  {
-    name: 'Mr. David Cho',
-    role: 'Chief Administrator, Horizon Global School',
-    text: 'Its rare to find a platform with both high-level financial tracking and detailed academic tools. SubhraEdu looks premium, runs lightning-fast, and their API structure is highly scalable.',
-    rating: 5
-  }
-];
+
 
 const faqs = [
   { q: 'How long does the ERP migration and setup take?', a: 'Setting up your customized SubhraEdu instance takes 5 to 7 business days, including migrating student rosters, historical grade books, and teacher database profiles.' },
