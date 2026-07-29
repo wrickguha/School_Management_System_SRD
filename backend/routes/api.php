@@ -161,10 +161,20 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:super_admin');
 
     // Schools (Super Admin)
-    Route::get('/admin/schools', [\App\Http\Controllers\Admin\SchoolController::class, 'index'])
-        ->middleware('role:super_admin');
-    Route::post('/admin/schools', [\App\Http\Controllers\Admin\SchoolController::class, 'store'])
-        ->middleware('role:super_admin');
+    Route::match(['get', 'post'], '/admin/schools', function (\Illuminate\Http\Request $request) {
+        $controller = app(\App\Http\Controllers\Admin\SchoolController::class);
+        if ($request->isMethod('post')) {
+            return $controller->store($request);
+        }
+        return $controller->index();
+    })->middleware('role:super_admin');
+    Route::match(['get', 'post'], '/admin/schools/', function (\Illuminate\Http\Request $request) {
+        $controller = app(\App\Http\Controllers\Admin\SchoolController::class);
+        if ($request->isMethod('post')) {
+            return $controller->store($request);
+        }
+        return $controller->index();
+    })->middleware('role:super_admin');
 
     // User Management (School Admin & Principal)
     Route::get('/admin/users', [UserManagementController::class, 'index'])

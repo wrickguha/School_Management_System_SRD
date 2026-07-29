@@ -146,6 +146,21 @@ Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     }
 });
 
+Route::match(['get', 'post'], '/api/admin/schools', function (\Illuminate\Http\Request $request) {
+    $controller = app(\App\Http\Controllers\Admin\SchoolController::class);
+    if ($request->isMethod('post')) {
+        return $controller->store($request);
+    }
+    return $controller->index();
+})->middleware(['auth:sanctum', 'role:super_admin']);
+Route::match(['get', 'post'], '/api/admin/schools/', function (\Illuminate\Http\Request $request) {
+    $controller = app(\App\Http\Controllers\Admin\SchoolController::class);
+    if ($request->isMethod('post')) {
+        return $controller->store($request);
+    }
+    return $controller->index();
+})->middleware(['auth:sanctum', 'role:super_admin']);
+
 // React SPA fallback routing
 Route::fallback(function () {
     $indexPath = public_path('index.html');
