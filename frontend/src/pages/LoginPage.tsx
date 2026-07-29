@@ -38,7 +38,7 @@ export default function LoginPage() {
       } else {
         setError(
           selectedRole === 'Super Admin'
-            ? 'Invalid credentials. For Super Admin, use email: admin@subhraedu.com and password: admin123'
+            ? 'Invalid credentials.'
             : 'Invalid credentials. Please check your username, password, and School ID.'
         );
       }
