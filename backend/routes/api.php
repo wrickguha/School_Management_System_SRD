@@ -30,6 +30,20 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'app' => 'SubhraEdu API']);
 });
 
+Route::get('/clear-route-cache', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Route and config caches cleared successfully!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 // ── Protected Routes (Sanctum) ────────────────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
     

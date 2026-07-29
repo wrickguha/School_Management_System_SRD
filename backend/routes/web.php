@@ -6,6 +6,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/clear-route-cache', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Laravel route and application caches cleared successfully!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     $expectedSecret = env('DEPLOY_SECRET');
     
