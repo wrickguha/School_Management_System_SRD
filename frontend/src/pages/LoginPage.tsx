@@ -93,7 +93,9 @@ export default function LoginPage() {
             {/* School ID / Institution Code Input */}
             {selectedRole !== 'Super Admin' && (
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-450 uppercase tracking-widest block mb-1">School ID / Institution Code</label>
+                <label className="text-xs font-bold text-slate-450 uppercase tracking-widest block mb-1">
+                  School ID / Institution Code <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                </label>
                 <div className="relative">
                   <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
                   <input

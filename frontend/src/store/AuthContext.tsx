@@ -80,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, selectedRole: UserRole, password = 'password', schoolId?: string): Promise<boolean> => {
     try {
       const payload: Record<string, string> = { email, password };
-      if (schoolId) {
+      if (schoolId && selectedRole !== 'Super Admin') {
         payload.school_id = schoolId;
       }
       const res = await apiClient.post('/auth/login', payload);
