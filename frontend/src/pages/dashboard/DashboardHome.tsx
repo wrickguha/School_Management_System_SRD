@@ -701,10 +701,10 @@ export default function DashboardHome() {
                     />
                   </div>
 
-                  <div className="p-4 bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-950/30 rounded-2xl space-y-1.5">
-                    <span className="text-[10px] font-extrabold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest block">Pro-Tip for Demos</span>
+                  <div className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1">
+                    <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-widest block">School Setup Note</span>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
-                      Registering this school will auto-generate demo accounts for all standard school roles (Principal, Teacher, Parent, Student, etc.) using format <code>role@{registerForm.subdomain || 'slug'}.edu</code> with password <code>password</code>.
+                      Registering this school will create a fresh, empty tenant environment with only the School Administrator credentials provided above.
                     </p>
                   </div>
                 </div>
