@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Users, IndianRupee, Activity, AlertCircle,
   FileSpreadsheet, ArrowUpRight, TrendingUp, Calendar, Megaphone,
-  BookOpen, CheckCircle, CreditCard, Building, Clock, Server, Upload
+  BookOpen, CheckCircle, CreditCard, Building, Clock, Server, Upload,
+  Search, Trash2, Eye, Globe, ExternalLink, ShieldCheck, Layers, Filter
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -21,6 +22,61 @@ export default function DashboardHome() {
 
   // Selected demo request modal state
   const [selectedDemoRequest, setSelectedDemoRequest] = useState<DemoRequest | null>(null);
+
+  // Registered Schools directory state for Super Admin
+  const [schoolSearchTerm, setSchoolSearchTerm] = useState('');
+  const [schoolStatusFilter, setSchoolStatusFilter] = useState('all');
+  const [schoolPlanFilter, setSchoolPlanFilter] = useState('all');
+  const [selectedSchoolDetails, setSelectedSchoolDetails] = useState<any | null>(null);
+  const [deletingSchoolId, setDeletingSchoolId] = useState<number | null>(null);
+
+  const { data: schoolsResponse, isLoading: loadingSchools } = useQuery({
+    queryKey: ['adminSchools'],
+    queryFn: schoolService.getAll,
+    enabled: role === 'Super Admin'
+  });
+
+  const registeredSchools = schoolsResponse?.schools || [];
+
+  const handleToggleSchoolStatus = async (schoolId: number, currentStatus: string) => {
+    const nextStatus = currentStatus === 'active' ? 'suspended' : 'active';
+    try {
+      await schoolService.updateStatus(schoolId, nextStatus);
+      queryClient.invalidateQueries({ queryKey: ['adminSchools'] });
+      queryClient.invalidateQueries({ queryKey: ['superStats'] });
+    } catch (err) {
+      console.error('Failed to update school status', err);
+    }
+  };
+
+  const handleDeleteSchool = async (schoolId: number) => {
+    if (!window.confirm('Are you sure you want to delete this school and all its tenant data? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      setDeletingSchoolId(schoolId);
+      await schoolService.delete(schoolId);
+      queryClient.invalidateQueries({ queryKey: ['adminSchools'] });
+      queryClient.invalidateQueries({ queryKey: ['superStats'] });
+    } catch (err) {
+      console.error('Failed to delete school', err);
+    } finally {
+      setDeletingSchoolId(null);
+    }
+  };
+
+  const filteredSchools = registeredSchools.filter((school: any) => {
+    const matchesSearch = !schoolSearchTerm.trim() ||
+      school.name.toLowerCase().includes(schoolSearchTerm.toLowerCase()) ||
+      (school.subdomain && school.subdomain.toLowerCase().includes(schoolSearchTerm.toLowerCase())) ||
+      (school.code && school.code.toLowerCase().includes(schoolSearchTerm.toLowerCase())) ||
+      (school.email && school.email.toLowerCase().includes(schoolSearchTerm.toLowerCase()));
+
+    const matchesStatus = schoolStatusFilter === 'all' || school.status === schoolStatusFilter;
+    const matchesPlan = schoolPlanFilter === 'all' || school.plan === schoolPlanFilter;
+
+    return matchesSearch && matchesStatus && matchesPlan;
+  });
 
   // School ID auto-generator: First letters capitalized + Establish Year
   const computeSchoolId = (name: string, year: string) => {
@@ -254,6 +310,189 @@ export default function DashboardHome() {
             );
           })}
         </div>
+
+        {/* Registered Tenant Schools Directory Section */}
+        <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <CardTitle>Registered Tenant Schools Directory</CardTitle>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                  {registeredSchools.length} {registeredSchools.length === 1 ? 'School' : 'Schools'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 font-semibold mt-1">
+                Full platform overview and multi-tenant school directory for Super Admin control.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Search Bar */}
+              <div className="relative min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={schoolSearchTerm}
+                  onChange={(e) => setSchoolSearchTerm(e.target.value)}
+                  placeholder="Search name, code, slug..."
+                  className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 text-slate-900 dark:text-slate-100"
+                />
+              </div>
+
+              {/* Status Filter */}
+              <select
+                value={schoolStatusFilter}
+                onChange={(e) => setSchoolStatusFilter(e.target.value)}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none text-slate-900 dark:text-slate-100 cursor-pointer"
+              >
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="inactive">Inactive</option>
+              </select>
+
+              {/* Plan Filter */}
+              <select
+                value={schoolPlanFilter}
+                onChange={(e) => setSchoolPlanFilter(e.target.value)}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-semibold focus:outline-none text-slate-900 dark:text-slate-100 cursor-pointer"
+              >
+                <option value="all">All Plans</option>
+                <option value="starter">Starter</option>
+                <option value="professional">Professional</option>
+                <option value="enterprise">Enterprise</option>
+              </select>
+
+              <Button variant="primary" size="sm" onClick={() => setIsRegisterModalOpen(true)}>
+                + Register School
+              </Button>
+            </div>
+          </div>
+
+          {/* Table of Registered Schools */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 dark:border-slate-800 text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+                  <th className="py-3 px-4">School Details</th>
+                  <th className="py-3 px-4">School ID & Est.</th>
+                  <th className="py-3 px-4">Plan & Subdomain</th>
+                  <th className="py-3 px-4">Enrolled Metrics</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                {filteredSchools.map((school: any) => (
+                  <tr key={school.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-950/40 transition-colors">
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
+                          {school.logo_path ? (
+                            <img src={school.logo_path} alt={school.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <Building className="h-5 w-5 text-indigo-500" />
+                          )}
+                        </div>
+                        <div>
+                          <span className="font-extrabold text-slate-900 dark:text-white block text-sm">{school.name}</span>
+                          <span className="text-[11px] text-slate-400 block font-medium">{school.email}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <div className="space-y-1">
+                        <span className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-650 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-900 tracking-wider">
+                          {school.code || 'NO-ID'}
+                        </span>
+                        {school.established_year && (
+                          <span className="text-[10px] text-slate-400 block font-bold">Est. {school.established_year}</span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <div className="space-y-1">
+                        <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${
+                          school.plan === 'enterprise'
+                            ? 'bg-purple-50 text-purple-650 dark:bg-purple-950/30 dark:text-purple-300 border border-purple-200 dark:border-purple-900'
+                            : school.plan === 'professional'
+                            ? 'bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-blue-300 border border-blue-200 dark:border-blue-900'
+                            : 'bg-slate-100 text-slate-650 dark:bg-slate-800 dark:text-slate-300'
+                        }`}>
+                          {school.plan}
+                        </span>
+                        <a
+                          href={`http://${school.subdomain}.localhost:5173`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[11px] text-school-blue font-bold hover:underline block flex items-center gap-1"
+                        >
+                          {school.subdomain}.subhraedu.com
+                          <ExternalLink className="h-3 w-3 inline" />
+                        </a>
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3 text-xs">
+                        <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg font-bold text-slate-700 dark:text-slate-300">
+                          🎓 {school.students_count ?? 0} Students
+                        </span>
+                        <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg font-bold text-slate-700 dark:text-slate-300">
+                          👨‍🏫 {school.teachers_count ?? 0} Teachers
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <button
+                        onClick={() => handleToggleSchoolStatus(school.id, school.status)}
+                        title="Click to toggle Active / Suspended status"
+                        className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all border cursor-pointer ${
+                          school.status === 'active'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900 hover:bg-emerald-100'
+                            : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900 hover:bg-rose-100'
+                        }`}
+                      >
+                        ● {school.status ? school.status.toUpperCase() : 'ACTIVE'}
+                      </button>
+                    </td>
+
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => setSelectedSchoolDetails(school)}
+                          className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors cursor-pointer"
+                          title="View Full School Details"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSchool(school.id)}
+                          disabled={deletingSchoolId === school.id}
+                          className="p-1.5 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 text-rose-600 dark:text-rose-400 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+                          title="Delete School"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+
+                {filteredSchools.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="text-center py-8 text-xs text-slate-400 font-bold">
+                      {loadingSchools ? 'Loading registered schools...' : 'No registered tenant schools found matching your search.'}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
 
         {/* Row 1 Charts: School Growth & Monthly Revenue */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -577,6 +816,98 @@ export default function DashboardHome() {
                     Approve Demo Request
                   </Button>
                 )}
+              </div>
+            </div>
+          )}
+        </Modal>
+
+        {/* Tenant School Profile Details Modal */}
+        <Modal
+          isOpen={selectedSchoolDetails !== null}
+          onClose={() => setSelectedSchoolDetails(null)}
+          title="Tenant School Profile & Credentials"
+          size="md"
+        >
+          {selectedSchoolDetails && (
+            <div className="space-y-6 text-slate-900 dark:text-slate-100">
+              <div className="flex items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div className="h-16 w-16 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                  {selectedSchoolDetails.logo_path ? (
+                    <img src={selectedSchoolDetails.logo_path} alt={selectedSchoolDetails.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <Building className="h-8 w-8 text-indigo-500" />
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-xl font-extrabold text-slate-900 dark:text-white">
+                    {selectedSchoolDetails.name}
+                  </h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-650 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-900">
+                      ID: {selectedSchoolDetails.code || 'N/A'}
+                    </span>
+                    <span className="text-xs text-slate-400 font-bold">Est. {selectedSchoolDetails.established_year || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Subdomain URL</span>
+                  <a
+                    href={`http://${selectedSchoolDetails.subdomain}.localhost:5173`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-extrabold text-school-blue hover:underline mt-1 block flex items-center gap-1"
+                  >
+                    {selectedSchoolDetails.subdomain}.subhraedu.com
+                    <ExternalLink className="h-3.5 w-3.5 inline" />
+                  </a>
+                </div>
+                <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Subscription Tier</span>
+                  <span className="text-sm font-extrabold text-slate-900 dark:text-white mt-1 block uppercase">
+                    {selectedSchoolDetails.plan} Plan
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-3 p-4 bg-indigo-50/50 dark:bg-indigo-950/20 rounded-2xl border border-indigo-100 dark:border-indigo-900/40">
+                <h5 className="text-xs font-extrabold uppercase tracking-wider text-indigo-650 dark:text-indigo-400">School Administrator</h5>
+                <div className="grid grid-cols-2 gap-3 text-xs font-semibold">
+                  <div>
+                    <span className="text-slate-400 block text-[10px] font-extrabold uppercase">Admin Name</span>
+                    <span className="text-slate-900 dark:text-white font-bold">{selectedSchoolDetails.users?.[0]?.name || 'School Admin'}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] font-extrabold uppercase">Admin Email</span>
+                    <span className="text-slate-900 dark:text-white font-bold">{selectedSchoolDetails.users?.[0]?.email || selectedSchoolDetails.email}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
+                <div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase block">Contact Phone</span>
+                  <span className="text-slate-900 dark:text-slate-200 font-bold">{selectedSchoolDetails.phone || 'N/A'}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase block">Contact Email</span>
+                  <span className="text-slate-900 dark:text-slate-200 font-bold">{selectedSchoolDetails.email}</span>
+                </div>
+              </div>
+
+              {selectedSchoolDetails.address && (
+                <div className="text-xs font-semibold">
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase block">School Address</span>
+                  <span className="text-slate-800 dark:text-slate-300 font-medium">{selectedSchoolDetails.address}</span>
+                </div>
+              )}
+
+              <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+                <Button variant="outline" onClick={() => setSelectedSchoolDetails(null)}>
+                  Close Profile
+                </Button>
               </div>
             </div>
           )}

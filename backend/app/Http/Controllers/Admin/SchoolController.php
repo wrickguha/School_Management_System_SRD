@@ -18,7 +18,10 @@ class SchoolController extends Controller
      */
     public function index(): JsonResponse
     {
-        $schools = School::with('setting')->orderBy('created_at', 'desc')->get();
+        $schools = School::with(['setting', 'users' => function($q) {
+            $q->where('role', 'school_admin');
+        }])->withCount(['students', 'teachers', 'users'])->orderBy('created_at', 'desc')->get();
+
         return response()->json([
             'schools' => $schools,
             'total' => $schools->count(),
@@ -121,4 +124,38 @@ class SchoolController extends Controller
             ],
         ], 201);
     }
+
+    /**
+     * Update school status (active, suspended, inactive).
+     */
+    public function updateStatus(Request $request, School $school): JsonResponse
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:active,inactive,suspended',
+        ]);
+
+        $school->update(['status' => $validated['status']]);
+
+        return response()->json([
+            'message' => 'School status updated successfully',
+            'school' => $school,
+        ]);
+    }
+
+    /**
+     * Remove a school and its associated data.
+     */
+    public function destroy(School $school): JsonResponse
+    {
+        DB::transaction(function () use ($school) {
+            $school->users()->delete();
+            $school->students()->delete();
+            $school->teachers()->delete();
+            $school->settings()->delete();
+            $school->delete();
+        });
+
+        return response()->json(['message' => 'School deleted successfully']);
+    }
+}
 }

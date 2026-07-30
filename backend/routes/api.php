@@ -166,9 +166,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:super_admin');
     Route::post('/admin/schools', [\App\Http\Controllers\Admin\SchoolController::class, 'store'])
         ->middleware('role:super_admin');
-    Route::get('/admin/schools/', [\App\Http\Controllers\Admin\SchoolController::class, 'index'])
+    Route::put('/admin/schools/{school}/status', [\App\Http\Controllers\Admin\SchoolController::class, 'updateStatus'])
         ->middleware('role:super_admin');
-    Route::post('/admin/schools/', [\App\Http\Controllers\Admin\SchoolController::class, 'store'])
+    Route::delete('/admin/schools/{school}', [\App\Http\Controllers\Admin\SchoolController::class, 'destroy'])
         ->middleware('role:super_admin');
 
 
