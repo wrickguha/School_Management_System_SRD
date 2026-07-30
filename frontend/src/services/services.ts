@@ -275,7 +275,21 @@ export interface School {
 
 export const schoolService = {
   create: async (data: any) => {
-    const res = await apiClient.post('/admin/schools', data);
+    let payload = data;
+    if (data.logoFile instanceof File) {
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        if (key === 'logoFile' && data[key]) {
+          formData.append('logo', data[key]);
+        } else if (data[key] !== undefined && data[key] !== null && key !== 'logoPreview') {
+          formData.append(key, data[key]);
+        }
+      });
+      payload = formData;
+    }
+    const res = await apiClient.post('/admin/schools', payload, {
+      headers: payload instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {},
+    });
     return res.data;
   }
 };

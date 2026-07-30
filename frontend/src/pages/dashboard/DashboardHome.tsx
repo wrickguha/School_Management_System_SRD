@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Users, IndianRupee, Activity, AlertCircle,
   FileSpreadsheet, ArrowUpRight, TrendingUp, Calendar, Megaphone,
-  BookOpen, CheckCircle, CreditCard, Building, Clock, Server
+  BookOpen, CheckCircle, CreditCard, Building, Clock, Server, Upload
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -38,6 +38,8 @@ export default function DashboardHome() {
     subdomain: '',
     code: '',
     established_year: new Date().getFullYear().toString(),
+    logoFile: null as File | null,
+    logoPreview: '',
     address: '',
     phone: '',
     email: '',
@@ -63,6 +65,8 @@ export default function DashboardHome() {
         subdomain: '',
         code: '',
         established_year: new Date().getFullYear().toString(),
+        logoFile: null,
+        logoPreview: '',
         address: '',
         phone: '',
         email: '',
@@ -612,6 +616,50 @@ export default function DashboardHome() {
                 <div className="space-y-4">
                   <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-650 dark:text-indigo-400">School Details</h4>
                   
+                  {/* School Logo Section */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">School Logo</label>
+                    <div className="flex items-center gap-4 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
+                      <div className="h-14 w-14 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden shrink-0 shadow-sm relative group">
+                        {registerForm.logoPreview ? (
+                          <img src={registerForm.logoPreview} alt="School Logo Preview" className="h-full w-full object-cover" />
+                        ) : (
+                          <Building className="h-7 w-7 text-slate-400" />
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <label className="cursor-pointer px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-lg text-xs font-extrabold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-colors inline-flex items-center gap-1.5">
+                            <Upload className="h-3.5 w-3.5" />
+                            {registerForm.logoFile ? 'Change Logo' : 'Upload Logo'}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const previewUrl = URL.createObjectURL(file);
+                                  setRegisterForm({ ...registerForm, logoFile: file, logoPreview: previewUrl });
+                                }
+                              }}
+                            />
+                          </label>
+                          {registerForm.logoFile && (
+                            <button
+                              type="button"
+                              onClick={() => setRegisterForm({ ...registerForm, logoFile: null, logoPreview: '' })}
+                              className="text-xs font-bold text-red-500 hover:underline px-2 py-1"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-400 font-semibold">PNG, JPG, SVG or WEBP (Max 2MB)</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">School Name</label>
                     <input

@@ -43,6 +43,8 @@ class SchoolController extends Controller
             'admin_name' => 'required|string|max:255',
             'admin_email' => 'required|email|max:255|unique:users,email',
             'admin_password' => 'required|string|min:6',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo_path' => 'nullable|string|max:500',
         ]);
 
         // Auto-generate School ID/Code if not provided
@@ -58,8 +60,17 @@ class SchoolController extends Controller
             $validated['code'] = ($initials ?: 'SCH') . $estYear;
         }
 
+        // Handle logo file upload
+        $logoUrl = null;
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('school-logos', 'public');
+            $logoUrl = \Illuminate\Support\Facades\Storage::url($path);
+        } elseif (!empty($validated['logo_path'])) {
+            $logoUrl = $validated['logo_path'];
+        }
+
         // 2. Database transaction to ensure atomicity
-        $result = DB::transaction(function () use ($validated, $estYear) {
+        $result = DB::transaction(function () use ($validated, $estYear, $logoUrl) {
             // Create School
             $school = School::create([
                 'name' => $validated['name'],
@@ -69,6 +80,7 @@ class SchoolController extends Controller
                 'address' => $validated['address'] ?? null,
                 'phone' => $validated['phone'] ?? null,
                 'email' => $validated['email'],
+                'logo_path' => $logoUrl,
                 'plan' => $validated['plan'],
                 'status' => 'active',
             ]);
