@@ -19,9 +19,30 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => array_values(array_unique(array_filter(array_merge(
+        [
+            'http://localhost:3000',
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:8000',
+            'https://subhraedu.com',
+            'https://www.subhraedu.com',
+            'http://subhraedu.com',
+            'http://www.subhraedu.com',
+            '*',
+        ],
+        explode(',', env('ALLOWED_ORIGINS', '')),
+        explode(',', env('FRONTEND_URL', ''))
+    )))),
 
-    'allowed_origins_patterns' => ['.*'],
+    'allowed_origins_patterns' => [
+        '#^https?://(.*\\.)?subhraedu\\.com$#i',
+        '#^https?://localhost(:[0-9]+)?$#i',
+        '#^https?://127\\.0\\.0\\.1(:[0-9]+)?$#i',
+        '#^https?://192\\.168\\.[0-9]+\\.[0-9]+(:[0-9]+)?$#i',
+        '.*',
+    ],
 
     'allowed_headers' => ['*'],
 
