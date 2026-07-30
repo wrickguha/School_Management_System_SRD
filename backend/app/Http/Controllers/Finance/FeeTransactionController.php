@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFeeTransactionRequest;
 use App\Http\Resources\FeeTransactionResource;
 use App\Http\Resources\StudentResource;
 use App\Services\FeeService;
@@ -33,17 +34,9 @@ class FeeTransactionController extends Controller
     /**
      * Record a new fee payment.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreFeeTransactionRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'student_name' => 'required|string|max:255',
-            'grade' => 'required|string|max:50',
-            'amount' => 'required|numeric|min:1',
-            'payment_mode' => 'required|string|in:Card,UPI,Bank Transfer,Cash',
-            'notes' => 'nullable|string',
-        ]);
-
-        $transaction = $this->feeService->recordPayment($data);
+        $transaction = $this->feeService->recordPayment($request->validated());
         $resource = new FeeTransactionResource($transaction);
 
         return response()->json($resource->resolve(), 201);
@@ -69,8 +62,6 @@ class FeeTransactionController extends Controller
             'student_id' => 'required|integer|exists:students,id',
         ]);
 
-        // In production, trigger Twilio or SNS here.
-        // For now, write a log audit and return success.
         return response()->json(['success' => true, 'message' => 'Reminder sent successfully']);
     }
 }

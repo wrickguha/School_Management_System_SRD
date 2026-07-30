@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreParentRequest;
+use App\Http\Resources\GuardianResource;
 use App\Services\ParentService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ParentController extends Controller
 {
@@ -19,22 +20,14 @@ class ParentController extends Controller
     public function index(): JsonResponse
     {
         $parents = $this->parentService->getAllParents();
-        return response()->json($parents);
+        return response()->json(GuardianResource::collection($parents)->resolve());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreParentRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'required|email|unique:users,email',
-            'student_id' => 'nullable|integer|exists:students,id',
-            'relation' => 'nullable|string|max:50',
-        ]);
+        $parent = $this->parentService->createParent($request->validated(), auth()->id());
 
-        $parent = $this->parentService->createParent($data, auth()->id());
-
-        return response()->json($parent, 201);
+        return response()->json((new GuardianResource($parent))->resolve(), 201);
     }
 
     public function destroy(int $id): JsonResponse

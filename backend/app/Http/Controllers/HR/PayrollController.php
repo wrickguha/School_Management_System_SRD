@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePayrollRecordRequest;
+use App\Http\Requests\UpdatePayrollRecordRequest;
+use App\Http\Resources\PayrollRecordResource;
 use App\Models\PayrollRecord;
 use App\Services\PayrollService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class PayrollController extends Controller
 {
@@ -20,33 +22,21 @@ class PayrollController extends Controller
     public function index(): JsonResponse
     {
         $payroll = $this->payrollService->getAllRecords();
-        return response()->json($payroll);
+        return response()->json(PayrollRecordResource::collection($payroll)->resolve());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StorePayrollRecordRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'teacher_id' => 'required|integer|exists:teachers,id',
-            'month' => 'required|string|max:20',
-            'base_salary' => 'required|numeric|min:0',
-            'deductions' => 'sometimes|required|numeric|min:0',
-            'bank_account' => 'nullable|string|max:100',
-            'status' => 'sometimes|required|string|in:Pending,Disbursed,Hold',
-        ]);
+        $record = $this->payrollService->createRecord($request->validated(), auth()->id());
 
-        $record = $this->payrollService->createRecord($data, auth()->id());
-
-        return response()->json($record, 201);
+        return response()->json((new PayrollRecordResource($record))->resolve(), 201);
     }
 
-    public function update(Request $request, PayrollRecord $payroll): JsonResponse
+    public function update(UpdatePayrollRecordRequest $request, PayrollRecord $payroll): JsonResponse
     {
-        $data = $request->validate([
-            'status' => 'required|string|in:Pending,Disbursed,Hold',
-        ]);
+        $validated = $request->validated();
+        $updatedPayroll = $this->payrollService->updateStatus($payroll, $validated['status'], auth()->id());
 
-        $updatedPayroll = $this->payrollService->updateStatus($payroll, $data['status'], auth()->id());
-
-        return response()->json($updatedPayroll);
+        return response()->json((new PayrollRecordResource($updatedPayroll))->resolve());
     }
 }
