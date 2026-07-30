@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Communication;
 
+use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
 use Illuminate\Http\JsonResponse;
 

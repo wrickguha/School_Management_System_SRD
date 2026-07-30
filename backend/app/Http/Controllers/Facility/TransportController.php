@@ -1,17 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Facility;
 
-use App\Models\TransportBus;
-use App\Models\ActivityLog;
+use App\Http\Controllers\Controller;
+use App\Services\TransportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TransportController extends Controller
 {
+    protected TransportService $transportService;
+
+    public function __construct(TransportService $transportService)
+    {
+        $this->transportService = $transportService;
+    }
+
     public function index(): JsonResponse
     {
-        $buses = TransportBus::latest()->get();
+        $buses = $this->transportService->getAllBuses();
         return response()->json($buses);
     }
 
@@ -27,19 +34,7 @@ class TransportController extends Controller
             'status' => 'sometimes|required|string|in:Active,Maintenance,Inactive',
         ]);
 
-        $bus = TransportBus::create(array_merge($data, [
-            'school_id' => auth()->user()->school_id,
-        ]));
-
-        // Log Activity
-        ActivityLog::create([
-            'school_id' => $bus->school_id,
-            'user_id' => auth()->id(),
-            'action' => 'Transport Added',
-            'description' => "Added transport bus: {$bus->bus_number} on route {$bus->route}",
-            'model_type' => TransportBus::class,
-            'model_id' => $bus->id,
-        ]);
+        $bus = $this->transportService->createBus($data, auth()->id());
 
         return response()->json($bus, 201);
     }

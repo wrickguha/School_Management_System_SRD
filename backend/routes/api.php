@@ -12,19 +12,20 @@ use App\Http\Controllers\Settings\SchoolSettingsController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\AuditReportController;
 use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\ParentController;
-use App\Http\Controllers\HomeworkController;
-use App\Http\Controllers\TransportController;
-use App\Http\Controllers\HostelController;
-use App\Http\Controllers\LibraryController;
-use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\Student\ParentController;
+use App\Http\Controllers\Academics\HomeworkController;
+use App\Http\Controllers\Facility\TransportController;
+use App\Http\Controllers\Facility\HostelController;
+use App\Http\Controllers\Facility\LibraryController;
+use App\Http\Controllers\HR\PayrollController;
+use App\Http\Controllers\Communication\TestimonialController;
 use App\Http\Controllers\Admin\DemoRequestController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ───────────────────────────────────────────────────────────
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/demo/request', [DemoRequestController::class, 'store']);
-Route::get('/testimonials', [\App\Http\Controllers\TestimonialController::class, 'index']);
+Route::get('/testimonials', [TestimonialController::class, 'index']);
 
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'app' => 'SubhraEdu API']);

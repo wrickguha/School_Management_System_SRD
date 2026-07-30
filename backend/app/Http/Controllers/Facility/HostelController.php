@@ -1,17 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Facility;
 
-use App\Models\HostelRoom;
-use App\Models\ActivityLog;
+use App\Http\Controllers\Controller;
+use App\Services\HostelService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class HostelController extends Controller
 {
+    protected HostelService $hostelService;
+
+    public function __construct(HostelService $hostelService)
+    {
+        $this->hostelService = $hostelService;
+    }
+
     public function index(): JsonResponse
     {
-        $rooms = HostelRoom::latest()->get();
+        $rooms = $this->hostelService->getAllRooms();
         return response()->json($rooms);
     }
 
@@ -26,19 +33,7 @@ class HostelController extends Controller
             'rent_per_term' => 'nullable|numeric|min:0',
         ]);
 
-        $room = HostelRoom::create(array_merge($data, [
-            'school_id' => auth()->user()->school_id,
-        ]));
-
-        // Log Activity
-        ActivityLog::create([
-            'school_id' => $room->school_id,
-            'user_id' => auth()->id(),
-            'action' => 'Hostel Room Created',
-            'description' => "Created hostel room: {$room->room_no} in {$room->block}",
-            'model_type' => HostelRoom::class,
-            'model_id' => $room->id,
-        ]);
+        $room = $this->hostelService->createRoom($data, auth()->id());
 
         return response()->json($room, 201);
     }

@@ -1,77 +1,58 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
 use App\Models\LibraryBook;
 use App\Models\LibraryIssuance;
 use App\Models\ActivityLog;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class LibraryController extends Controller
+class LibraryService
 {
     /**
-     * List library catalog.
+     * Get all library books.
      */
-    public function indexBooks(): JsonResponse
+    public function getAllBooks(): Collection
     {
-        $books = LibraryBook::latest()->get();
-        return response()->json($books);
+        return LibraryBook::latest()->get();
     }
 
     /**
-     * Add a book to catalog.
+     * Store a new book in the library catalog.
      */
-    public function storeBook(Request $request): JsonResponse
+    public function createBook(array $data, int $userId): LibraryBook
     {
-        $data = $request->validate([
-            'accession_no' => 'nullable|string|max:50|unique:library_books,accession_no',
-            'isbn' => 'nullable|string|max:20',
-            'title' => 'required|string|max:255',
-            'author' => 'nullable|string|max:255',
-            'rack' => 'nullable|string|max:50',
-            'total_copies' => 'sometimes|required|integer|min:1',
-        ]);
-
         $book = LibraryBook::create(array_merge($data, [
             'school_id' => auth()->user()->school_id,
             'available_copies' => $data['total_copies'] ?? 1,
         ]));
 
-        // Log Activity
         ActivityLog::create([
             'school_id' => $book->school_id,
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
             'action' => 'Book Catalogued',
             'description' => "Catalogued new library book: {$book->title} by {$book->author}",
             'model_type' => LibraryBook::class,
             'model_id' => $book->id,
         ]);
 
-        return response()->json($book, 201);
+        return $book;
     }
 
     /**
-     * List book issuances.
+     * Get all book issuances.
      */
-    public function indexIssuances(): JsonResponse
+    public function getAllIssuances(): Collection
     {
-        $issuances = LibraryIssuance::with(['book', 'student'])->latest()->get();
-        return response()->json($issuances);
+        return LibraryIssuance::with(['book', 'student'])->latest()->get();
     }
 
     /**
-     * Issue a book to a student.
+     * Issue a book to a student with atomic inventory decrement.
      */
-    public function issueBook(Request $request): JsonResponse
+    public function issueBook(array $data, int $userId): LibraryIssuance
     {
-        $data = $request->validate([
-            'book_id' => 'required|integer|exists:library_books,id',
-            'student_id' => 'required|integer|exists:students,id',
-            'due_date' => 'required|date|after_or_equal:today',
-        ]);
-
         $issuance = DB::transaction(function () use ($data) {
             $book = LibraryBook::lockForUpdate()->findOrFail($data['book_id']);
 
@@ -90,16 +71,15 @@ class LibraryController extends Controller
             ]);
         });
 
-        // Log Activity
         ActivityLog::create([
             'school_id' => $issuance->school_id,
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
             'action' => 'Book Issued',
             'description' => "Issued book ID #{$issuance->book_id} to student ID #{$issuance->student_id}",
             'model_type' => LibraryIssuance::class,
             'model_id' => $issuance->id,
         ]);
 
-        return response()->json($issuance, 201);
+        return $issuance;
     }
 }

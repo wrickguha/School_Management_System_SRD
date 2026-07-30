@@ -1,33 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
 use App\Models\Guardian;
 use App\Models\User;
 use App\Models\ActivityLog;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class ParentController extends Controller
+class ParentService
 {
-    public function index(): JsonResponse
+    /**
+     * Get all guardians with linked student records.
+     */
+    public function getAllParents(): Collection
     {
-        $parents = Guardian::with('students')->latest()->get();
-        return response()->json($parents);
+        return Guardian::with('students')->latest()->get();
     }
 
-    public function store(Request $request): JsonResponse
+    /**
+     * Register a new parent user and guardian profile.
+     */
+    public function createParent(array $data, int $currentUserId): Guardian
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'required|email|unique:users,email',
-            'student_id' => 'nullable|integer|exists:students,id',
-            'relation' => 'nullable|string|max:50',
-        ]);
-
         $parent = DB::transaction(function () use ($data) {
             $schoolId = auth()->user()->school_id;
 
@@ -58,25 +54,27 @@ class ParentController extends Controller
             return $guardian;
         });
 
-        // Log Activity
         ActivityLog::create([
             'school_id' => $parent->school_id,
-            'user_id' => auth()->id(),
+            'user_id' => $currentUserId,
             'action' => 'Parent Registered',
             'description' => "Registered parent: {$parent->name} for ward",
             'model_type' => Guardian::class,
             'model_id' => $parent->id,
         ]);
 
-        return response()->json($parent, 201);
+        return $parent;
     }
 
-    public function destroy(int $id): JsonResponse
+    /**
+     * Delete parent record and linked user.
+     */
+    public function deleteParent(int $id): bool
     {
         $parent = Guardian::find($id);
 
         if (!$parent) {
-            return response()->json(['message' => 'Parent not found'], 404);
+            return false;
         }
 
         DB::transaction(function () use ($parent) {
@@ -86,6 +84,6 @@ class ParentController extends Controller
             $parent->delete();
         });
 
-        return response()->json(['success' => true]);
+        return true;
     }
 }
