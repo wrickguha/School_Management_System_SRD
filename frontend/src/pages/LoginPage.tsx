@@ -31,6 +31,12 @@ export default function LoginPage() {
     setIsSubmitting(true);
     setError('');
 
+    if (selectedRole !== 'Super Admin' && !schoolId.trim()) {
+      setError('Please enter your School ID or Subdomain to log in.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const success = await login(email, selectedRole, password, schoolId);
       if (success) {
@@ -42,8 +48,9 @@ export default function LoginPage() {
             : 'Invalid credentials. Please check your username, password, and School ID.'
         );
       }
-    } catch (err) {
-      setError('An error occurred during authentication.');
+    } catch (err: any) {
+      const serverMsg = err.response?.data?.errors?.school_id?.[0] || err.response?.data?.message;
+      setError(serverMsg || 'An error occurred during authentication.');
     } finally {
       setIsSubmitting(false);
     }
@@ -98,15 +105,16 @@ export default function LoginPage() {
             {selectedRole !== 'Super Admin' && (
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-450 uppercase tracking-widest block mb-1">
-                  School ID / Institution Code <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  School ID / Institution Code <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <div className="relative">
                   <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
                   <input
                     type="text"
+                    required
                     value={schoolId}
                     onChange={(e) => setSchoolId(e.target.value)}
-                    placeholder="e.g. SCH-1001 or greenwood"
+                    placeholder="e.g. BHS2026 or beaconwood"
                     className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all"
                   />
                 </div>

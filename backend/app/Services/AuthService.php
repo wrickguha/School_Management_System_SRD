@@ -32,6 +32,28 @@ class AuthService
             ]);
         }
 
+        // Non-Super Admin users MUST provide a matching School ID / Code or Subdomain
+        if ($user->role !== 'super_admin') {
+            $schoolInput = trim($credentials['school_id'] ?? '');
+
+            if (empty($schoolInput)) {
+                throw ValidationException::withMessages([
+                    'school_id' => ['School ID or Subdomain is required to log in.'],
+                ]);
+            }
+
+            $matchingSchool = \App\Models\School::where('code', $schoolInput)
+                ->orWhere('subdomain', strtolower($schoolInput))
+                ->orWhere('id', $schoolInput)
+                ->first();
+
+            if (!$matchingSchool || $user->school_id != $matchingSchool->id) {
+                throw ValidationException::withMessages([
+                    'school_id' => ['Invalid School ID or Subdomain for this account.'],
+                ]);
+            }
+        }
+
         // Update last login
         $user->update([
             'last_login_at' => now(),
