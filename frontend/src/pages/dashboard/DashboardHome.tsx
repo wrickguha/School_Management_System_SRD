@@ -22,11 +22,22 @@ export default function DashboardHome() {
   // Selected demo request modal state
   const [selectedDemoRequest, setSelectedDemoRequest] = useState<DemoRequest | null>(null);
 
+  // School ID auto-generator: First letters capitalized + Establish Year
+  const computeSchoolId = (name: string, year: string) => {
+    if (!name || !name.trim()) return '';
+    const words = name.trim().split(/\s+/);
+    const initials = words.map(w => w.charAt(0).toUpperCase()).join('');
+    const y = year || new Date().getFullYear().toString();
+    return `${initials}${y}`;
+  };
+
   // School registration modal state
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [registerForm, setRegisterForm] = useState({
     name: '',
     subdomain: '',
+    code: '',
+    established_year: new Date().getFullYear().toString(),
     address: '',
     phone: '',
     email: '',
@@ -50,6 +61,8 @@ export default function DashboardHome() {
       setRegisterForm({
         name: '',
         subdomain: '',
+        code: '',
+        established_year: new Date().getFullYear().toString(),
         address: '',
         phone: '',
         email: '',
@@ -605,10 +618,42 @@ export default function DashboardHome() {
                       type="text"
                       required
                       value={registerForm.name}
-                      onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                      onChange={(e) => {
+                        const nameVal = e.target.value;
+                        const autoCode = computeSchoolId(nameVal, registerForm.established_year);
+                        setRegisterForm({ ...registerForm, name: nameVal, code: autoCode });
+                      }}
                       placeholder="e.g. Beaconwood High School"
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
                     />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Est. Year</label>
+                      <input
+                        type="text"
+                        value={registerForm.established_year}
+                        onChange={(e) => {
+                          const yearVal = e.target.value;
+                          const autoCode = computeSchoolId(registerForm.name, yearVal);
+                          setRegisterForm({ ...registerForm, established_year: yearVal, code: autoCode });
+                        }}
+                        placeholder="e.g. 2026"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 transition-all font-semibold"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest block">School ID</label>
+                      <input
+                        type="text"
+                        value={registerForm.code}
+                        onChange={(e) => setRegisterForm({ ...registerForm, code: e.target.value.toUpperCase() })}
+                        placeholder="e.g. BHS2026"
+                        className="w-full px-4 py-2.5 rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50/50 dark:bg-indigo-950/20 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-indigo-900 dark:text-indigo-200 transition-all font-extrabold tracking-wider"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-1.5">

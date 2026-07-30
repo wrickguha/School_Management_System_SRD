@@ -34,6 +34,8 @@ class SchoolController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'subdomain' => 'required|string|alpha_dash|max:100|unique:schools,subdomain',
+            'code' => 'nullable|string|max:50',
+            'established_year' => 'nullable|string|max:10',
             'address' => 'nullable|string',
             'phone' => 'nullable|string|max:20',
             'email' => 'required|email|max:255',
@@ -43,12 +45,27 @@ class SchoolController extends Controller
             'admin_password' => 'required|string|min:6',
         ]);
 
+        // Auto-generate School ID/Code if not provided
+        $estYear = $validated['established_year'] ?? date('Y');
+        if (empty($validated['code'])) {
+            $words = preg_split('/\s+/', trim($validated['name']));
+            $initials = '';
+            foreach ($words as $w) {
+                if (!empty($w)) {
+                    $initials .= mb_strtoupper(mb_substr($w, 0, 1));
+                }
+            }
+            $validated['code'] = ($initials ?: 'SCH') . $estYear;
+        }
+
         // 2. Database transaction to ensure atomicity
-        $result = DB::transaction(function () use ($validated) {
+        $result = DB::transaction(function () use ($validated, $estYear) {
             // Create School
             $school = School::create([
                 'name' => $validated['name'],
                 'subdomain' => $validated['subdomain'],
+                'code' => $validated['code'],
+                'established_year' => $estYear,
                 'address' => $validated['address'] ?? null,
                 'phone' => $validated['phone'] ?? null,
                 'email' => $validated['email'],

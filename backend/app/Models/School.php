@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class School extends Model
 {
     protected $fillable = [
-        'name', 'subdomain', 'address', 'phone', 'email',
+        'name', 'subdomain', 'code', 'established_year', 'address', 'phone', 'email',
         'logo_path', 'plan', 'status',
     ];
 

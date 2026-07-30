@@ -263,6 +263,8 @@ export interface School {
   id: number;
   name: string;
   subdomain: string;
+  code?: string;
+  established_year?: string;
   address: string;
   phone: string;
   email: string;
