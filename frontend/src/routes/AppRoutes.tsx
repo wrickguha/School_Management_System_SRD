@@ -43,6 +43,7 @@ const PayrollModule = lazy(() => import('../pages/dashboard/PayrollModule'));
 const CommunicationModule = lazy(() => import('../pages/dashboard/CommunicationModule'));
 const EventCalendarModule = lazy(() => import('../pages/dashboard/EventCalendarModule'));
 const MembersModule = lazy(() => import('../pages/dashboard/MembersModule'));
+const CertificatesModule = lazy(() => import('../pages/dashboard/CertificatesModule'));
 
 // Dynamic Navbar Detail Sub-Pages
 const NavbarDetailPage = lazy(() => import('../pages/NavbarDetailPage'));
@@ -102,6 +103,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="communication" element={<CommunicationModule />} />
           <Route path="events" element={<EventCalendarModule />} />
           <Route path="members" element={<MembersModule />} />
+          <Route path="certificates" element={<CertificatesModule />} />
           
           {/* Wildcard redirect inside Dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

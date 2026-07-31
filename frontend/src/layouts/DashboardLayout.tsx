@@ -26,6 +26,7 @@ const sidebarItems: SidebarItem[] = [
   { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal'] },
   { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
   { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
+  { name: 'Certificates', path: '/dashboard/certificates', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
   { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
   { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Parent', 'Super Admin', 'School Admin', 'Principal', 'Accountant'] },
   { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },

@@ -14,6 +14,7 @@ use App\Http\Controllers\Reports\AuditReportController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Student\ParentController;
 use App\Http\Controllers\Academics\HomeworkController;
+use App\Http\Controllers\Academics\CertificateController;
 use App\Http\Controllers\Facility\TransportController;
 use App\Http\Controllers\Facility\HostelController;
 use App\Http\Controllers\Facility\LibraryController;
@@ -85,6 +86,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Homework
     Route::apiResource('homework', HomeworkController::class)
         ->middleware('role:school_admin,principal,teacher,faculty,student,parent');
+
+    // Certificates
+    Route::get('/certificates', [CertificateController::class, 'index'])
+        ->middleware('role:super_admin,school_admin,principal,teacher,faculty,student,parent');
+    Route::post('/certificates', [CertificateController::class, 'store'])
+        ->middleware('role:super_admin,school_admin,principal,teacher,faculty');
+    Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])
+        ->middleware('role:super_admin,school_admin,principal,teacher,faculty');
 
     // Transport
     Route::apiResource('transport', TransportController::class)

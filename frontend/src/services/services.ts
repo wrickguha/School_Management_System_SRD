@@ -223,6 +223,51 @@ export const enquiryService = {
   }
 };
 
+export interface CertificateItem {
+  id: number;
+  school_id: number;
+  student_id: number;
+  issued_by_user_id: number | null;
+  title: string;
+  certificate_type: 'Academic Excellence' | 'Sports & Athletics' | 'Course Completion' | 'Extra-Curricular' | 'Character & Conduct' | 'Merit' | 'Other';
+  issue_date: string;
+  file_path: string;
+  file_name: string;
+  file_size?: string;
+  description?: string;
+  student?: {
+    id: number | string;
+    name: string;
+    grade: string;
+    section: string;
+    admissionNo?: string;
+    admission_no?: string;
+  };
+  issued_by?: {
+    id: number;
+    name: string;
+    role: string;
+  };
+  created_at: string;
+}
+
+export const certificateService = {
+  getAll: async (params?: { student_id?: number | string; certificate_type?: string }) => {
+    const res = await apiClient.get<CertificateItem[]>('/certificates', { params });
+    return res.data;
+  },
+  upload: async (formData: FormData) => {
+    const res = await apiClient.post<{ message: string; certificate: CertificateItem }>('/certificates', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return res.data;
+  },
+  delete: async (id: number | string) => {
+    const res = await apiClient.delete<{ message: string }>(`/certificates/${id}`);
+    return res.data;
+  }
+};
+
 export interface SuperStats {
   totalSchools: number;
   totalStudents: number;
