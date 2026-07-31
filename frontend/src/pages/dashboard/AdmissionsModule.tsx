@@ -5,7 +5,7 @@ import {
   User, GraduationCap, Users, Home, HeartPulse, Bus, CreditCard,
   FileText, ShieldCheck, CheckCircle, ChevronLeft, ChevronRight,
   RefreshCw, Check, AlertCircle, MapPin, Bed, ShieldAlert, Sparkles,
-  FileUp, CheckCircle2, UserCheck, Phone, Mail, FileCheck
+  FileUp, CheckCircle2, UserCheck, Phone, Mail, FileCheck, Copy
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -438,6 +438,31 @@ export default function AdmissionsModule() {
     queryFn: enquiryService.getAll
   });
 
+  interface SuccessRegistration {
+    name: string;
+    admissionNo: string;
+    grade: string;
+    section: string;
+    email: string;
+    password: string;
+  }
+  const [registrationSuccessData, setRegistrationSuccessData] = useState<SuccessRegistration | null>(null);
+  const [copiedState, setCopiedState] = useState(false);
+
+  const handleCopyCredentials = () => {
+    if (!registrationSuccessData) return;
+    const text = `🎉 SubhraEdu Student Registration Details\n\n` +
+      `Student Name: ${registrationSuccessData.name}\n` +
+      `Admission No: ${registrationSuccessData.admissionNo}\n` +
+      `Class & Section: ${registrationSuccessData.grade} - Section ${registrationSuccessData.section}\n` +
+      `Portal Email: ${registrationSuccessData.email}\n` +
+      `Default Password: ${registrationSuccessData.password}\n\n` +
+      `Access Portal: ${window.location.origin}/login`;
+    navigator.clipboard.writeText(text);
+    setCopiedState(true);
+    setTimeout(() => setCopiedState(false), 2000);
+  };
+
   // Mutations
   const createStudentMutation = useMutation({
     mutationFn: studentService.create,
@@ -447,15 +472,15 @@ export default function AdmissionsModule() {
       const admNo = (variables.admissionNo || variables.admission_no || '').toLowerCase().replace(/[\s-]/g, '');
       const loginEmail = variables.parentEmail || variables.parent_email || `${admNo}@student.school`;
       const loginPassword = (variables.dob || '').replace(/-/g, '') || 'student123';
-      alert(
-        `🎉 Student Registration Completed Successfully!\n\n` +
-        `Student Name: ${variables.name}\n` +
-        `Admission No: ${variables.admissionNo || variables.admission_no}\n` +
-        `Class & Section: ${variables.grade} - ${variables.section}\n` +
-        `Portal Login Email: ${loginEmail}\n` +
-        `Default Password: ${loginPassword}\n\n` +
-        `Login credentials have been provisioned.`
-      );
+      
+      setRegistrationSuccessData({
+        name: variables.name,
+        admissionNo: variables.admissionNo || variables.admission_no,
+        grade: variables.grade,
+        section: variables.section,
+        email: loginEmail,
+        password: loginPassword,
+      });
     },
     onError: (err: any) => {
       console.error(err);
@@ -2110,6 +2135,105 @@ export default function AdmissionsModule() {
             <div className="flex justify-end pt-4 border-t border-slate-150 dark:border-slate-800">
               <Button variant="outline" onClick={() => setIsProfileOpen(false)}>
                 Close Profile
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* BEAUTIFUL SUCCESS CONFIRMATION MODAL */}
+      <Modal
+        isOpen={Boolean(registrationSuccessData)}
+        onClose={() => setRegistrationSuccessData(null)}
+        title="Student Registration Successful"
+        size="md"
+      >
+        {registrationSuccessData && (
+          <div className="text-center space-y-6 py-2">
+            {/* Animated Celebration Icon */}
+            <div className="relative mx-auto h-20 w-20 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping opacity-75" />
+              <div className="relative h-20 w-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
+                <CheckCircle className="h-10 w-10" />
+              </div>
+            </div>
+
+            {/* Header Title */}
+            <div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">
+                Student Registered Successfully!
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1">
+                Student portfolio created and portal credentials provisioned.
+              </p>
+            </div>
+
+            {/* Credential Details Card */}
+            <div className="p-5 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-3 shadow-inner">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <User className="h-4 w-4 text-school-blue" />
+                  {registrationSuccessData.name}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 dark:bg-blue-950/40 text-school-blue border border-blue-200 dark:border-blue-900 font-mono">
+                  {registrationSuccessData.admissionNo}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Class & Section</span>
+                  <span className="font-extrabold text-slate-800 dark:text-slate-200">
+                    {registrationSuccessData.grade} - Section {registrationSuccessData.section}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Account Role</span>
+                  <span className="font-extrabold text-emerald-600 dark:text-emerald-400">Student Account</span>
+                </div>
+              </div>
+
+              {/* Login Credentials Subcard */}
+              <div className="p-3 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 rounded-xl text-white space-y-2 border border-slate-800 shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1">
+                    <Key className="h-3.5 w-3.5" /> Student Login Credentials
+                  </span>
+                  <span className="text-[9px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-slate-300">Auto-Generated</span>
+                </div>
+
+                <div className="space-y-1 text-xs font-mono">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400 font-sans text-[11px]">Portal Email:</span>
+                    <span className="font-extrabold text-white">{registrationSuccessData.email}</span>
+                  </div>
+                  <div className="flex justify-between items-center font-mono">
+                    <span className="text-slate-400 font-sans text-[11px]">Default Password:</span>
+                    <span className="font-extrabold text-amber-300 bg-amber-400/20 px-2 py-0.5 rounded-lg border border-amber-400/30">
+                      {registrationSuccessData.password}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCopyCredentials}
+                leftIcon={copiedState ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-school-blue" />}
+              >
+                {copiedState ? 'Credentials Copied!' : 'Copy Credentials'}
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setRegistrationSuccessData(null)}
+                leftIcon={<CheckCircle className="h-4 w-4" />}
+              >
+                Done
               </Button>
             </div>
           </div>
