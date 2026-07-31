@@ -42,16 +42,25 @@ class AuthService
                 ]);
             }
 
-            $matchingSchool = \App\Models\School::where('code', $schoolInput)
-                ->orWhere('subdomain', strtolower($schoolInput))
-                ->orWhere('id', $schoolInput)
-                ->orWhereRaw('LOWER(code) = ?', [strtolower($schoolInput)])
-                ->first();
+            $userSchool = $user->school;
+            $matchesUserSchool = $userSchool && (
+                strcasecmp($userSchool->code ?? '', $schoolInput) === 0 ||
+                strcasecmp($userSchool->subdomain ?? '', $schoolInput) === 0 ||
+                (string)$userSchool->id === (string)$schoolInput
+            );
 
-            if (!$matchingSchool || $user->school_id != $matchingSchool->id) {
-                throw ValidationException::withMessages([
-                    'school_id' => ['Invalid School ID or Subdomain for this account.'],
-                ]);
+            if (!$matchesUserSchool) {
+                $matchingSchool = \App\Models\School::where('code', $schoolInput)
+                    ->orWhere('subdomain', strtolower($schoolInput))
+                    ->orWhere('id', $schoolInput)
+                    ->orWhereRaw('LOWER(code) = ?', [strtolower($schoolInput)])
+                    ->first();
+
+                if (!$matchingSchool || $user->school_id != $matchingSchool->id) {
+                    throw ValidationException::withMessages([
+                        'school_id' => ['Invalid School ID or Subdomain for this account.'],
+                    ]);
+                }
             }
         }
 

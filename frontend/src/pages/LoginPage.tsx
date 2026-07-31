@@ -38,19 +38,12 @@ export default function LoginPage() {
     }
 
     try {
-      const success = await login(email, selectedRole, password, schoolId);
-      if (success) {
-        navigate('/dashboard');
-      } else {
-        setError(
-          selectedRole === 'Super Admin'
-            ? 'Invalid credentials.'
-            : 'Invalid credentials. Please check your username, password, and School ID.'
-        );
-      }
+      await login(email, selectedRole, password, schoolId);
+      navigate('/dashboard');
     } catch (err: any) {
-      const serverMsg = err.response?.data?.errors?.school_id?.[0] || err.response?.data?.message;
-      setError(serverMsg || 'An error occurred during authentication.');
+      const errors = err.response?.data?.errors;
+      const serverMsg = errors?.school_id?.[0] || errors?.email?.[0] || errors?.password?.[0] || err.response?.data?.message;
+      setError(serverMsg || 'Invalid credentials. Please check your username, password, and School ID.');
     } finally {
       setIsSubmitting(false);
     }
