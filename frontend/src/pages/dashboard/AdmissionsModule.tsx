@@ -525,13 +525,17 @@ export default function AdmissionsModule() {
     }
 
     // Submit final payload
+    const parentName = registerForm.fatherName.trim() || registerForm.motherName.trim() || registerForm.guardianName.trim() || registerForm.parentName.trim();
+    const parentPhone = registerForm.fatherPhone.trim() || registerForm.motherPhone.trim() || registerForm.guardianPhone.trim() || registerForm.parentPhone.trim();
+    const parentEmail = registerForm.fatherEmail.trim() || registerForm.motherEmail.trim() || registerForm.guardianEmail.trim() || registerForm.parentEmail.trim();
+
     const payload = {
       ...registerForm,
       admission_no: registerForm.admissionNo,
       roll_no: registerForm.rollNo,
-      parent_name: registerForm.parentName || registerForm.fatherName || 'Guardian',
-      parent_phone: registerForm.parentPhone || registerForm.fatherPhone || '0000000000',
-      parent_email: registerForm.parentEmail || registerForm.fatherEmail || `${registerForm.admissionNo.toLowerCase()}@student.school`,
+      parent_name: parentName,
+      parent_phone: parentPhone,
+      parent_email: parentEmail || (registerForm.admissionNo ? `${registerForm.admissionNo.toLowerCase()}@${schoolSubdomain}.subhraedu.com` : ''),
       blood_group: registerForm.bloodGroup,
       total_fees: registerForm.totalFees,
     };

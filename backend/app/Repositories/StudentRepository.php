@@ -144,25 +144,43 @@ class StudentRepository
             ]);
 
             // Create/link Parent profile if provided
-            if (!empty($data['parent_name'])) {
+            $parentName = trim($data['parent_name'] ?? '');
+            if (!empty($parentName)) {
                 $parent = null;
-                
+                $parentEmail = trim($data['parent_email'] ?? '');
+                $parentPhone = trim($data['parent_phone'] ?? '');
+
                 // If parent email is provided, check if parent already exists in this school
-                if (!empty($data['parent_email'])) {
+                if (!empty($parentEmail)) {
                     $parent = Guardian::where('school_id', $schoolId)
-                        ->where('email', $data['parent_email'])
+                        ->where('email', $parentEmail)
                         ->first();
                 }
 
                 if (!$parent) {
-                    // The student account (created above) uses parent_email as login.
-                    // The Guardian record is purely for contact/relationship tracking.
+                    $parentUserId = null;
+                    if (!empty($parentEmail)) {
+                        $parentUser = User::where('email', $parentEmail)->first();
+                        if (!$parentUser) {
+                            $parentUser = User::create([
+                                'school_id' => $schoolId,
+                                'name'      => $parentName,
+                                'email'     => $parentEmail,
+                                'password'  => Hash::make($dobPassword),
+                                'role'      => 'parent',
+                                'status'    => 'active',
+                            ]);
+                            $parentUser->assignRole('parent');
+                        }
+                        $parentUserId = $parentUser->id;
+                    }
+
                     $parent = Guardian::create([
                         'school_id' => $schoolId,
-                        'user_id'   => null,
-                        'name'      => $data['parent_name'],
-                        'phone'     => $data['parent_phone'] ?? null,
-                        'email'     => $data['parent_email'] ?? null,
+                        'user_id'   => $parentUserId,
+                        'name'      => $parentName,
+                        'phone'     => $parentPhone ?: null,
+                        'email'     => $parentEmail ?: null,
                     ]);
                 }
 
