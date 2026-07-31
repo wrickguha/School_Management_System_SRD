@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Plus, Eye, Trash2, FileText, UploadCloud, Camera
+  Eye, Trash2, FileText, UploadCloud, Camera
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -39,13 +39,6 @@ export default function StudentModule() {
     bloodGroup: 'O+',
     totalFees: 45000
   });
-
-  const handleOpenAdmission = () => {
-    setGeneratedAdmNo(generateAdmissionNo());
-    setStudentImageFile(null);
-    setStudentImagePreview('');
-    setIsAdmissionOpen(true);
-  };
 
   const handleStudentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -142,9 +135,9 @@ export default function StudentModule() {
     setIsProfileOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | number) => {
     if (confirm('Are you sure you want to delete this student record?')) {
-      deleteMutation.mutate(id);
+      deleteMutation.mutate(String(id));
     }
   };
 

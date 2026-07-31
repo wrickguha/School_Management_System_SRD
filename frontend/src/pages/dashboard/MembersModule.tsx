@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus, Search, Camera, UploadCloud, Users, ShieldCheck, ToggleLeft, ToggleRight, Key,
   User, Briefcase, GraduationCap, Phone, Building2, FileText, CheckCircle, ChevronLeft, ChevronRight,
-  RefreshCw, Check, Sparkles, CreditCard, Mail, Copy, Award, DollarSign, IdCard, MapPin, FileCheck
+  RefreshCw, Check, Sparkles, CreditCard, Copy, Award, IdCard, MapPin, FileCheck
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';

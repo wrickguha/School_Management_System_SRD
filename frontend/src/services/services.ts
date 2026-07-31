@@ -209,6 +209,10 @@ export const enquiryService = {
     const res = await apiClient.post<any>('/admissions/enquiries', data);
     return res.data;
   },
+  update: async (id: number, data: any) => {
+    const res = await apiClient.put<any>(`/admissions/enquiries/${id}`, data);
+    return res.data;
+  },
   updateStatus: async (id: number, data: { status: 'New' | 'Contacted' | 'Admitted' | 'Closed'; notes?: string }) => {
     const res = await apiClient.put<any>(`/admissions/enquiries/${id}`, data);
     return res.data;

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Users, IndianRupee, Activity, AlertCircle,
-  FileSpreadsheet, ArrowUpRight, TrendingUp, Calendar, Megaphone,
+  ArrowUpRight, TrendingUp, Calendar, Megaphone,
   BookOpen, CheckCircle, CreditCard, Building, Clock, Server, Upload,
-  Search, Trash2, Eye, Globe, ExternalLink, ShieldCheck, Layers, Filter
+  Search, Trash2, Eye, ExternalLink
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';

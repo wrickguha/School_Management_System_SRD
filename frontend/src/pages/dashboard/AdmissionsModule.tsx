@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Plus, Eye, Trash2, HelpCircle, Camera, UploadCloud, Key,
+  Eye, Trash2, HelpCircle, Camera, UploadCloud, Key,
   User, GraduationCap, Users, Home, HeartPulse, Bus, CreditCard,
   FileText, ShieldCheck, CheckCircle, ChevronLeft, ChevronRight,
-  RefreshCw, Check, AlertCircle, MapPin, Bed, ShieldAlert, Sparkles,
-  FileUp, CheckCircle2, UserCheck, Phone, Mail, FileCheck, Copy
+  RefreshCw, Check, MapPin, Bed, ShieldAlert, Sparkles,
+  FileUp, CheckCircle2, FileCheck, Copy
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -60,9 +60,6 @@ export default function AdmissionsModule() {
 
   // Wizard current step state (1 to 9)
   const [currentStep, setCurrentStep] = useState(1);
-
-  // Single photo ref
-  const studentPhotoInputRef = useRef<HTMLInputElement>(null);
 
   // Document Uploads State (Step 8)
   const [documentsState, setDocumentsState] = useState<{
@@ -470,7 +467,7 @@ export default function AdmissionsModule() {
   // Mutations
   const createStudentMutation = useMutation({
     mutationFn: studentService.create,
-    onSuccess: (_data, variables) => {
+    onSuccess: (_data, variables: any) => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setIsRegisterOpen(false);
       const admNo = (variables.admissionNo || variables.admission_no || '').toLowerCase().replace(/[\s-]/g, '');
@@ -558,17 +555,15 @@ export default function AdmissionsModule() {
   const studentColumns: Column<Student>[] = [
     {
       header: 'Admission No',
-      accessor: 'admission_no',
-      cell: (row) => (
+      accessor: (row: Student) => (
         <span className="font-mono font-extrabold text-school-blue bg-blue-50 dark:bg-blue-950/40 px-2.5 py-1 rounded-lg text-xs">
-          {row.admission_no}
+          {row.admissionNo || row.admission_no}
         </span>
       )
     },
     {
       header: 'Student Name',
-      accessor: 'name',
-      cell: (row) => (
+      accessor: (row: Student) => (
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-700 dark:text-slate-200 text-xs shrink-0">
             {row.name.charAt(0)}
@@ -584,17 +579,16 @@ export default function AdmissionsModule() {
     { header: 'Section', accessor: 'section' },
     {
       header: 'Parent Info',
-      cell: (row) => (
+      accessor: (row: Student) => (
         <div>
-          <span className="font-semibold block text-xs">{row.parentName}</span>
-          <span className="text-[10px] text-slate-400 font-mono block">{row.parentPhone}</span>
+          <span className="font-semibold block text-xs">{row.parentName || row.parent_name}</span>
+          <span className="text-[10px] text-slate-400 font-mono block">{row.parentPhone || row.parent_phone}</span>
         </div>
       )
     },
     {
       header: 'Status',
-      accessor: 'status',
-      cell: (row) => (
+      accessor: (row: Student) => (
         <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
           row.status === 'Active' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30' : 'bg-slate-100 text-slate-500'
         }`}>
@@ -610,7 +604,7 @@ export default function AdmissionsModule() {
     { header: 'Grade Applied', accessor: 'applying_grade' },
     {
       header: 'Contact',
-      cell: (row) => (
+      accessor: (row: Enquiry) => (
         <div>
           <span className="block text-xs font-semibold">{row.parent_phone}</span>
           <span className="text-[10px] text-slate-400 block">{row.parent_email}</span>
@@ -619,8 +613,7 @@ export default function AdmissionsModule() {
     },
     {
       header: 'Status',
-      accessor: 'status',
-      cell: (row) => (
+      accessor: (row: Enquiry) => (
         <select
           value={row.status}
           onChange={(e) => updateEnquiryMutation.mutate({ id: row.id, data: { status: e.target.value as any } })}
@@ -2102,10 +2095,10 @@ export default function AdmissionsModule() {
               <div>
                 <h3 className="text-lg font-black text-slate-900 dark:text-white">{selectedStudent.name}</h3>
                 <p className="text-xs text-slate-500 font-semibold">
-                  Admission No: <span className="font-mono font-bold text-school-blue">{selectedStudent.admission_no}</span>
+                  Admission No: <span className="font-mono font-bold text-school-blue">{selectedStudent.admissionNo || selectedStudent.admission_no}</span>
                 </p>
                 <p className="text-xs text-slate-500">
-                  {selectedStudent.grade} • Section {selectedStudent.section} • Roll No: {selectedStudent.roll_no || 'N/A'}
+                  {selectedStudent.grade} • Section {selectedStudent.section} • Roll No: {selectedStudent.rollNo || selectedStudent.roll_no || 'N/A'}
                 </p>
               </div>
             </div>

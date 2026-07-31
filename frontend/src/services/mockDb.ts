@@ -1,22 +1,29 @@
 export interface Student {
-  id: string;
+  id: string | number;
   name: string;
   admissionNo: string;
+  admission_no?: string;
   rollNo: string;
+  roll_no?: string;
   photo?: string;
   grade: string;
   section: string;
   gender: string;
   dob: string;
   parentName: string;
+  parent_name?: string;
   parentPhone: string;
+  parent_phone?: string;
   parentEmail: string;
+  parent_email?: string;
   address: string;
   bloodGroup: string;
+  blood_group?: string;
   admissionDate: string;
+  admission_date?: string;
   status: 'Active' | 'Inactive' | 'Suspended';
   attendanceRate: number;
-  feeStatus: 'Paid' | 'Partial' | 'Unpaid';
+  feeStatus: 'Paid' | 'Partial' | 'Unpaid' | 'Pending';
   pendingFees: number;
   totalFees: number;
   academicPerformance: number; // percentage

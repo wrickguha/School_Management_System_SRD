@@ -14,6 +14,8 @@ interface DataTableProps<T> {
   data: T[];
   searchPlaceholder?: string;
   searchKey?: keyof T;
+  searchable?: boolean;
+  isLoading?: boolean;
   actions?: (row: T) => React.ReactNode;
 }
 
@@ -22,6 +24,7 @@ export function DataTable<T extends { id: string | number }>({
   data,
   searchPlaceholder = 'Search records...',
   searchKey,
+  isLoading,
   actions
 }: DataTableProps<T>) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -145,7 +148,13 @@ export function DataTable<T extends { id: string | number }>({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-350">
-            {paginatedData.length > 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-slate-400 font-semibold animate-pulse">
+                  Loading records...
+                </td>
+              </tr>
+            ) : paginatedData.length > 0 ? (
               paginatedData.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors">
                   {columns.map((col, cIdx) => {

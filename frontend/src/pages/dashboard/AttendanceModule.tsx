@@ -26,16 +26,16 @@ export default function AttendanceModule() {
     if (students) {
       const initial: Record<string, 'Present' | 'Absent' | 'Late'> = {};
       students.forEach((s) => {
-        initial[s.id] = 'Present'; // default value
+        initial[String(s.id)] = 'Present'; // default value
       });
       setAttendanceSheet(initial);
     }
   }, [students]);
 
-  const handleStatusChange = (studentId: string, status: 'Present' | 'Absent' | 'Late') => {
+  const handleStatusChange = (studentId: string | number, status: 'Present' | 'Absent' | 'Late') => {
     setAttendanceSheet((prev) => ({
       ...prev,
-      [studentId]: status
+      [String(studentId)]: status
     }));
   };
 
