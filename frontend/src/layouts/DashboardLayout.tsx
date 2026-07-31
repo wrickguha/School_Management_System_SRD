@@ -6,10 +6,9 @@ import {
   LayoutDashboard, UserCheck, Users, ShieldAlert,
   ClipboardList, BookOpen, CreditCard, Bus,
   Library as LibraryIcon, Home as HomeIcon, Award, MessageSquare,
-  FileBarChart, Settings, LogOut, Sun, Moon, Bell, Search,
-  Menu, ChevronLeft, ChevronRight, RefreshCw
+  FileBarChart, Settings, LogOut, Sun, Moon, Search,
+  Menu, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import NotificationPanel from '../components/NotificationPanel';
 import logoUrl from '../assets/subhraedu_logo.png';
 
 interface SidebarItem {
@@ -41,20 +40,12 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export const DashboardLayout: React.FC = () => {
-  const { user, role, switchRole, logout } = useAuth();
+  const { user, role, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [showRoleSwapper, setShowRoleSwapper] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const handleRoleChange = (newRole: UserRole) => {
-    switchRole(newRole);
-    setShowRoleSwapper(false);
-    navigate('/dashboard'); // redirect to dash home
-  };
 
   const filteredItems = sidebarItems.filter(item => role && item.roles.includes(role));
 
@@ -205,41 +196,6 @@ export const DashboardLayout: React.FC = () => {
           {/* User actions and controls */}
           <div className="flex items-center gap-4">
             
-            {/* Role Swapper Dropdown (Enterprise Demo utility) */}
-            <div className="relative">
-              <button
-                onClick={() => setShowRoleSwapper(!showRoleSwapper)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-250 dark:border-slate-750 text-xs font-bold text-school-blue dark:text-school-greenLight hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm"
-              >
-                <RefreshCw className="h-3 w-3 animate-spin-slow" />
-                <span>Portal: {role}</span>
-              </button>
-
-              {showRoleSwapper && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowRoleSwapper(false)} />
-                  <div className="absolute right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-premium z-50 p-2 space-y-1 scrollbar-thin">
-                    <div className="px-3 py-2 text-[10px] font-bold text-slate-455 uppercase tracking-widest border-b border-slate-150 dark:border-slate-800 mb-1 sticky top-0 bg-white dark:bg-slate-900 z-10">
-                      Choose demo portal
-                    </div>
-                    {(['Super Admin', 'School Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
-                      <button
-                        key={r}
-                        onClick={() => handleRoleChange(r)}
-                        className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
-                          role === r 
-                            ? 'bg-school-blue text-white' 
-                            : 'text-slate-655 hover:bg-slate-100 dark:hover:bg-slate-800'
-                        }`}
-                      >
-                        {r} View
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
             {/* Dark Mode toggle */}
             <button
               onClick={toggleTheme}
@@ -247,22 +203,6 @@ export const DashboardLayout: React.FC = () => {
             >
               {theme === 'dark' ? <Sun className="h-4.5 w-4.5 text-yellow-500" /> : <Moon className="h-4.5 w-4.5" />}
             </button>
-
-            {/* Notification Center */}
-            <div className="relative">
-              <button 
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 relative transition-colors"
-              >
-                <Bell className="h-4.5 w-4.5" />
-                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon animate-ping" />
-                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-school-maroon" />
-              </button>
-              
-              {showNotifications && (
-                <NotificationPanel onClose={() => setShowNotifications(false)} />
-              )}
-            </div>
 
             {/* User Profile */}
             <div className="flex items-center gap-3 pl-2 border-l border-slate-200 dark:border-slate-800">
