@@ -8,6 +8,9 @@ interface User {
   email: string;
   role: UserRole;
   avatar: string | null;
+  school_id?: number | null;
+  school_name?: string | null;
+  school?: any;
 }
 
 interface AuthContextType {
@@ -57,7 +60,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: apiUser.name,
             email: apiUser.email,
             role: frontendRole,
-            avatar: apiUser.profile_image_path || apiUser.avatar_path || null
+            avatar: apiUser.profile_image_path || apiUser.avatar_path || null,
+            school: apiUser.school,
+            school_id: apiUser.school_id,
+            school_name: apiUser.school?.name
           };
           setUser(userData);
           setRole(frontendRole);
@@ -93,7 +99,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: apiUser.name,
         email: apiUser.email,
         role: frontendRole,
-        avatar: apiUser.profile_image_path || apiUser.avatar_path || null
+        avatar: apiUser.profile_image_path || apiUser.avatar_path || null,
+        school: apiUser.school,
+        school_id: apiUser.school_id,
+        school_name: apiUser.school?.name
       };
 
       setUser(userData);

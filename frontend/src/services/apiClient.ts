@@ -54,4 +54,14 @@ apiClient.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+export const getImageUrl = (path?: string | null): string => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  const apiBase = getBaseURL().replace(/\/api\/?$/, '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${apiBase}${cleanPath}`;
+};
+
 export default apiClient;

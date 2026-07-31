@@ -11,6 +11,7 @@ import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { studentService, financeService, announcementService, activityService, demoService, dashboardService, libraryService, schoolService, homeworkService, type DemoRequest } from '../../services/services';
 import { useAuth } from '../../store/AuthContext';
+import { getImageUrl } from '../../services/apiClient';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend
@@ -386,7 +387,7 @@ export default function DashboardHome() {
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
                           {school.logo_path ? (
-                            <img src={school.logo_path} alt={school.name} className="h-full w-full object-cover" />
+                            <img src={getImageUrl(school.logo_path)} alt={school.name} className="h-full w-full object-cover" />
                           ) : (
                             <Building className="h-5 w-5 text-indigo-500" />
                           )}
@@ -830,7 +831,7 @@ export default function DashboardHome() {
               <div className="flex items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div className="h-16 w-16 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
                   {selectedSchoolDetails.logo_path ? (
-                    <img src={selectedSchoolDetails.logo_path} alt={selectedSchoolDetails.name} className="h-full w-full object-cover" />
+                    <img src={getImageUrl(selectedSchoolDetails.logo_path)} alt={selectedSchoolDetails.name} className="h-full w-full object-cover" />
                   ) : (
                     <Building className="h-8 w-8 text-indigo-500" />
                   )}
@@ -1164,6 +1165,8 @@ export default function DashboardHome() {
       logo_path: null
     };
 
+    const logoSrc = getImageUrl(school.logo_path);
+
     return (
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-blue-950 p-6 md:p-8 text-white shadow-premium border border-indigo-800/40 mb-8">
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -1171,8 +1174,8 @@ export default function DashboardHome() {
           <div className="flex items-center gap-5">
             {/* Prominent Huge School Logo Avatar */}
             <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl border-2 border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center overflow-hidden shrink-0 shadow-cardHover">
-              {school.logo_path ? (
-                <img src={school.logo_path} alt={school.name} className="h-full w-full object-cover" />
+              {logoSrc ? (
+                <img src={logoSrc} alt={school.name} className="h-full w-full object-cover" />
               ) : (
                 <Building className="h-10 w-10 md:h-12 md:w-12 text-indigo-200" />
               )}
