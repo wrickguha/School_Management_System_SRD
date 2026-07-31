@@ -9,6 +9,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import apiClient from '../../services/apiClient';
+import { useAuth } from '../../store/AuthContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 type MemberRole =
@@ -219,6 +220,8 @@ const initialDocState = (): StaffDocState => ({ name: '', file: null, preview: '
 
 export default function MembersModule() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const schoolSubdomain = user?.school?.subdomain || user?.school_name?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'paella';
 
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
@@ -386,6 +389,19 @@ export default function MembersModule() {
     form.presentPin,
   ]);
 
+  // Auto Compute Official Email (Username + Subdomain) & Username
+  useEffect(() => {
+    const uname = (form.employeeId || '').toLowerCase().trim();
+    if (uname) {
+      const computedEmail = `${uname}@${schoolSubdomain}.subhraedu.com`;
+      setForm(prev => ({
+        ...prev,
+        username: uname,
+        officialEmail: computedEmail,
+      }));
+    }
+  }, [form.employeeId, schoolSubdomain]);
+
   const handleDocumentUpload = (key: keyof typeof docsState, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -408,6 +424,8 @@ export default function MembersModule() {
 
   const handleOpenModal = () => {
     const empId = generateEmpId();
+    const uname = empId.toLowerCase();
+    const autoEmail = `${uname}@${schoolSubdomain}.subhraedu.com`;
     setCurrentStep(1);
     setForm(prev => ({
       ...prev,
@@ -416,9 +434,9 @@ export default function MembersModule() {
       middleName: '',
       lastName: '',
       name: '',
-      email: `${empId.toLowerCase()}@school.edu.in`,
-      officialEmail: `${empId.toLowerCase()}@school.edu.in`,
-      username: empId,
+      email: autoEmail,
+      officialEmail: autoEmail,
+      username: uname,
     }));
     setDocsState({
       passportPhoto: initialDocState(),
@@ -1531,15 +1549,15 @@ export default function MembersModule() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                     <div>
                       <span className="text-[10px] text-slate-400 font-sans block">Institutional Username:</span>
-                      <span className="font-extrabold text-white text-sm">{form.employeeId}</span>
+                      <span className="font-extrabold text-white text-sm font-mono">{form.employeeId.toLowerCase()}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 font-sans block">Official Email Address:</span>
+                      <span className="text-[10px] text-slate-400 font-sans block">Official Email Address ({schoolSubdomain}):</span>
                       <input
                         type="email"
-                        value={form.officialEmail || `${form.employeeId.toLowerCase()}@school.edu.in`}
+                        value={form.officialEmail || `${form.employeeId.toLowerCase()}@${schoolSubdomain}.subhraedu.com`}
                         onChange={(e) => setForm({ ...form, officialEmail: e.target.value })}
-                        className="bg-white/10 px-3 py-1 rounded-lg text-white w-full border border-white/20 focus:outline-none"
+                        className="bg-white/10 px-3 py-1.5 rounded-lg text-white w-full border border-white/20 focus:outline-none font-mono text-xs font-bold"
                       />
                     </div>
                     <div>

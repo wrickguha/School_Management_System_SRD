@@ -14,6 +14,7 @@ import type { Column } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { studentService, enquiryService } from '../../services/services';
 import type { Student } from '../../services/mockDb';
+import { useAuth } from '../../store/AuthContext';
 
 function generateAdmissionNo(): string {
   const year = new Date().getFullYear();
@@ -463,6 +464,9 @@ export default function AdmissionsModule() {
     setTimeout(() => setCopiedState(false), 2000);
   };
 
+  const { user } = useAuth();
+  const schoolSubdomain = user?.school?.subdomain || user?.school_name?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'school';
+
   // Mutations
   const createStudentMutation = useMutation({
     mutationFn: studentService.create,
@@ -470,7 +474,7 @@ export default function AdmissionsModule() {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setIsRegisterOpen(false);
       const admNo = (variables.admissionNo || variables.admission_no || '').toLowerCase().replace(/[\s-]/g, '');
-      const loginEmail = variables.parentEmail || variables.parent_email || `${admNo}@student.school`;
+      const loginEmail = variables.parentEmail || variables.parent_email || `${admNo}@${schoolSubdomain}.subhraedu.com`;
       const loginPassword = (variables.dob || '').replace(/-/g, '') || 'student123';
       
       setRegistrationSuccessData({
