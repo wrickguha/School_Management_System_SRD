@@ -182,9 +182,6 @@ export default function StudentModule() {
             Browse and manage all registered pupils and new admissions.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={handleOpenAdmission} leftIcon={<Plus className="h-4 w-4" />}>
-          Register Student
-        </Button>
       </div>
 
       {/* Filters Section */}
