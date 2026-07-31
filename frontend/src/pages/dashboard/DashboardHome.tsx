@@ -278,9 +278,6 @@ export default function DashboardHome() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm" onClick={() => alert('[Demo Mode] Opening tenant configuration panel...')}>
-              Configure Settings
-            </Button>
             <Button variant="primary" size="sm" onClick={() => setIsRegisterModalOpen(true)}>
               Register New School
             </Button>
@@ -1157,6 +1154,67 @@ export default function DashboardHome() {
     );
   }
 
+  // Helper component for Non-Super Admin Tenant Hero Banner
+  const TenantSchoolHeroBanner = () => {
+    const school = user?.school || {
+      name: user?.school_name || 'SubhraEdu Academic Institution',
+      code: 'SCH2026',
+      established_year: '2026',
+      subdomain: 'demo',
+      logo_path: null
+    };
+
+    return (
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-blue-950 p-6 md:p-8 text-white shadow-premium border border-indigo-800/40 mb-8">
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            {/* Prominent Huge School Logo Avatar */}
+            <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl border-2 border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center overflow-hidden shrink-0 shadow-cardHover">
+              {school.logo_path ? (
+                <img src={school.logo_path} alt={school.name} className="h-full w-full object-cover" />
+              ) : (
+                <Building className="h-10 w-10 md:h-12 md:w-12 text-indigo-200" />
+              )}
+            </div>
+
+            {/* Huge School Name Headline & Badges */}
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl md:text-4xl font-black tracking-tight text-white drop-shadow-sm">
+                  {school.name}
+                </h1>
+                {school.code && (
+                  <span className="px-3 py-1 rounded-xl text-xs font-black bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 tracking-wider backdrop-blur-sm shadow-xs">
+                    ID: {school.code}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm font-semibold text-slate-300">
+                {school.established_year && (
+                  <span className="font-bold text-indigo-300">Est. {school.established_year}</span>
+                )}
+                {school.subdomain && (
+                  <>
+                    <span className="text-slate-500">•</span>
+                    <span className="text-blue-300 font-bold">{school.subdomain}.subhraedu.com</span>
+                  </>
+                )}
+                <span className="text-slate-500">•</span>
+                <span className="text-slate-300">Academic Tenant Portal</span>
+              </div>
+
+              <p className="text-xs text-slate-400 font-semibold pt-1">
+                Welcome back, <span className="text-white font-extrabold">{user?.name}</span> ({role})
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // ----------------------------------------------------
   // VIEW A: SCHOOL ADMIN PORTAL (School-level Dashboard)
   // ----------------------------------------------------
@@ -1174,17 +1232,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Executive Dashboard</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Real-time operations monitor for St. Xavier Academy.
-            </p>
-          </div>
-          <Button variant="outline" size="sm" leftIcon={<FileSpreadsheet className="h-4 w-4" />}>
-            Generate Monthly Report
-          </Button>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {kpis.map((kpi) => {
@@ -1367,14 +1415,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            {role === 'Faculty' ? 'Faculty Command Portal' : 'Teacher Command Portal'}
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-            Welcome back, {user?.name}. {classPupilsCount > 0 ? 'You have 2 classes scheduled today.' : 'No lectures scheduled today.'}
-          </p>
-        </div>
+        <TenantSchoolHeroBanner />
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1469,19 +1510,12 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Parent Portal</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Active child profile: {aarav.name} ({aarav.grade}).
-            </p>
-          </div>
-          {aarav.pendingFees > 0 && (
-            <Button variant="accent" size="sm" onClick={() => setIsPayModalOpen(true)} leftIcon={<CreditCard className="h-4 w-4" />}>
-              Pay Outstanding Dues (${aarav.pendingFees.toLocaleString()})
-            </Button>
-          )}
-        </div>
+        <TenantSchoolHeroBanner />
+        {aarav.pendingFees > 0 && (
+          <Button variant="accent" size="sm" onClick={() => setIsPayModalOpen(true)} leftIcon={<CreditCard className="h-4 w-4" />}>
+            Pay Outstanding Dues (${aarav.pendingFees.toLocaleString()})
+          </Button>
+        )}
 
         {/* Child statistics cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1652,14 +1686,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Student Command Center</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Welcome back, {user?.name} ({aarav.grade}). Track your classes, grades, and schedules.
-            </p>
-          </div>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
@@ -1753,17 +1780,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Librarian Command Portal</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Welcome back, {user?.name}. Manage book records, checkouts, and student library catalog access.
-            </p>
-          </div>
-          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Opening book catalog addition form...')}>
-            Catalog New Title
-          </Button>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
@@ -1856,12 +1873,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Principal Command Console</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-            Welcome back, {user?.name}. Global campus performance metrics and oversight logs.
-          </p>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
@@ -1951,17 +1963,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Finance Command Center</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Welcome back, {user?.name}. Review transactions, generate invoices, and audit outstanding dues.
-            </p>
-          </div>
-          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Launching custom fee invoice generator...')}>
-            Issue Fee Invoice
-          </Button>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
@@ -2046,17 +2048,7 @@ export default function DashboardHome() {
 
     return (
       <div className="space-y-8 text-left">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">HR Command Portal</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Welcome back, {user?.name}. Monitor active rosters, timesheets, and leave allocations.
-            </p>
-          </div>
-          <Button variant="primary" size="sm" onClick={() => alert('[Demo Mode] Opening staff leave evaluation forms...')}>
-            Review Leave Requests
-          </Button>
-        </div>
+        <TenantSchoolHeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">

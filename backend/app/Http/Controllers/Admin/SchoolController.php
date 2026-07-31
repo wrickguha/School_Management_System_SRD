@@ -158,4 +158,3 @@ class SchoolController extends Controller
         return response()->json(['message' => 'School deleted successfully']);
     }
 }
-}
