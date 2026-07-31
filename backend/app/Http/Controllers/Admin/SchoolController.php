@@ -18,7 +18,7 @@ class SchoolController extends Controller
      */
     public function index(): JsonResponse
     {
-        $schools = School::with(['setting', 'users' => function($q) {
+        $schools = School::with(['settings', 'users' => function($q) {
             $q->where('role', 'school_admin');
         }])->withCount(['students', 'teachers', 'users'])->orderBy('created_at', 'desc')->get();
 

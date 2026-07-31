@@ -34,6 +34,11 @@ class School extends Model
         return $this->hasOne(SchoolSetting::class);
     }
 
+    public function setting(): HasOne
+    {
+        return $this->hasOne(SchoolSetting::class);
+    }
+
     public function announcements(): HasMany
     {
         return $this->hasMany(Announcement::class);
