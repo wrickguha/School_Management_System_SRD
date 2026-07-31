@@ -274,6 +274,18 @@ export interface School {
 }
 
 export const schoolService = {
+  getAll: async () => {
+    const res = await apiClient.get('/admin/schools');
+    return res.data;
+  },
+  updateStatus: async (id: number, status: string) => {
+    const res = await apiClient.put(`/admin/schools/${id}/status`, { status });
+    return res.data;
+  },
+  delete: async (id: number) => {
+    const res = await apiClient.delete(`/admin/schools/${id}`);
+    return res.data;
+  },
   create: async (data: any) => {
     let payload = data;
     if (data.logoFile instanceof File) {

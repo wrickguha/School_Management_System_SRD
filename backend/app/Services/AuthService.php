@@ -45,6 +45,7 @@ class AuthService
             $matchingSchool = \App\Models\School::where('code', $schoolInput)
                 ->orWhere('subdomain', strtolower($schoolInput))
                 ->orWhere('id', $schoolInput)
+                ->orWhereRaw('LOWER(code) = ?', [strtolower($schoolInput)])
                 ->first();
 
             if (!$matchingSchool || $user->school_id != $matchingSchool->id) {

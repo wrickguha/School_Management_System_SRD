@@ -25,6 +25,7 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'school_id' => 'nullable|string',
         ]);
 
         $result = $this->authService->login($credentials);
