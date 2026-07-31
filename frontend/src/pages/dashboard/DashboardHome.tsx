@@ -23,6 +23,7 @@ export default function DashboardHome() {
 
   // Selected demo request modal state
   const [selectedDemoRequest, setSelectedDemoRequest] = useState<DemoRequest | null>(null);
+  const [logoError, setLogoError] = useState(false);
 
   // Registered Schools directory state for Super Admin
   const [schoolSearchTerm, setSchoolSearchTerm] = useState('');
@@ -1174,8 +1175,13 @@ export default function DashboardHome() {
           <div className="flex items-center gap-5">
             {/* Prominent Huge School Logo Avatar */}
             <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl border-2 border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center overflow-hidden shrink-0 shadow-cardHover">
-              {logoSrc ? (
-                <img src={logoSrc} alt={school.name} className="h-full w-full object-cover" />
+              {logoSrc && !logoError ? (
+                <img
+                  src={logoSrc}
+                  alt={school.name}
+                  className="h-full w-full object-cover"
+                  onError={() => setLogoError(true)}
+                />
               ) : (
                 <Building className="h-10 w-10 md:h-12 md:w-12 text-indigo-200" />
               )}
