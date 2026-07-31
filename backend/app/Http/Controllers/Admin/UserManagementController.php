@@ -29,7 +29,12 @@ class UserManagementController extends Controller
             'email' => 'required|email|unique:users',
             'role' => [
                 'required',
-                Rule::in(['principal', 'vice_principal', 'dept_head', 'teacher', 'class_teacher', 'faculty', 'librarian', 'accountant', 'hr', 'staff', 'driver']),
+                Rule::in([
+                    'principal', 'vice_principal', 'dept_head', 'teacher', 'class_teacher', 
+                    'faculty', 'librarian', 'accountant', 'hr', 'staff', 'driver',
+                    'office_staff', 'receptionist', 'lab_assistant', 'transport_manager',
+                    'security_guard', 'cleaner', 'hostel_warden', 'nurse', 'counselor', 'other'
+                ]),
             ],
             'date_of_birth' => 'required|date|before:today',
             'status' => 'sometimes|in:active,inactive',

@@ -129,21 +129,18 @@ export default function LoginPage() {
             )}
 
             {/* Password info for non-admin roles */}
+            {/* Password info for non-admin roles */}
             {!['Super Admin', 'School Admin'].includes(selectedRole) && (
-              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-700 dark:text-blue-400 space-y-1">
-                <p className="font-bold">Login Note ({selectedRole})</p>
-                {selectedRole === 'Student' && (
-                  <>
-                    <p><span className="font-semibold">Email:</span> Your admission number in lowercase + @student.school<br/><span className="font-mono font-bold ml-4">e.g. adm20261234@student.school</span></p>
-                    <p><span className="font-semibold">Password:</span> Your date of birth in YYYYMMDD format<br/><span className="font-mono font-bold ml-4">e.g. 20100315</span></p>
-                  </>
-                )}
-                {selectedRole === 'Parent' && (
-                  <p>Your password is your child&apos;s date of birth in YYYYMMDD format (e.g. 20100315)</p>
-                )}
-                {!['Student', 'Parent'].includes(selectedRole) && (
-                  <p>Your password is your date of birth in YYYYMMDD format (e.g. 20100315)</p>
-                )}
+              <div className="p-3.5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-700 dark:text-blue-300 space-y-1.5">
+                <p className="font-extrabold flex items-center gap-1">
+                  <span>📌 Member Authentication Guidance ({selectedRole})</span>
+                </p>
+                <p>
+                  <span className="font-semibold">Official Email:</span> <code className="font-mono bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded text-[11px] font-bold">username@subdomain.subhraedu.com</code>
+                </p>
+                <p>
+                  <span className="font-semibold">Default Password:</span> Member&apos;s Date of Birth in <code className="font-mono bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded text-[11px] font-bold">YYYYMMDD</code> format (e.g. <span className="font-mono font-bold">19920515</span>).
+                </p>
               </div>
             )}
 
