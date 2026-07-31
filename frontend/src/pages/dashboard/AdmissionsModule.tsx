@@ -762,41 +762,19 @@ export default function AdmissionsModule() {
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Section 01 / 09</span>
                 </div>
 
-                {/* Auto Admission No & Roll No Header */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-center justify-between p-3 bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-2xl">
-                    <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Admission Number (Auto)</span>
-                      <span className="text-base font-extrabold text-school-blue font-mono">{registerForm.admissionNo}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setRegisterForm(prev => ({ ...prev, admissionNo: generateAdmissionNo() }))}
-                      className="text-xs font-bold text-school-blue hover:underline flex items-center gap-1 shrink-0"
-                    >
-                      <RefreshCw className="h-3.5 w-3.5" /> Regenerate
-                    </button>
+                {/* Auto Admission No Header */}
+                <div className="p-3.5 bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-2xl flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Admission Number (Auto)</span>
+                    <span className="text-base font-extrabold text-school-blue font-mono">{registerForm.admissionNo}</span>
                   </div>
-
-                  <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                    <div className="flex-1 pr-2">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Roll Number</span>
-                      <input
-                        type="text"
-                        value={registerForm.rollNo}
-                        onChange={(e) => setRegisterForm({ ...registerForm, rollNo: e.target.value })}
-                        className="w-full bg-transparent text-sm font-extrabold text-slate-900 dark:text-white focus:outline-none font-mono"
-                        placeholder="R-101"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setRegisterForm(prev => ({ ...prev, rollNo: generateRollNo() }))}
-                      className="text-xs font-bold text-slate-500 hover:text-slate-800 shrink-0"
-                    >
-                      Auto
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setRegisterForm(prev => ({ ...prev, admissionNo: generateAdmissionNo() }))}
+                    className="text-xs font-bold text-school-blue hover:underline flex items-center gap-1 shrink-0"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" /> Regenerate
+                  </button>
                 </div>
 
                 {/* Name Fields */}
@@ -997,7 +975,7 @@ export default function AdmissionsModule() {
                     <select
                       value={registerForm.admissionType}
                       onChange={(e) => setRegisterForm({ ...registerForm, admissionType: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white font-extrabold text-school-blue"
                     >
                       <option value="New">New Admission</option>
                       <option value="Transfer">Transfer Student</option>
@@ -1005,7 +983,7 @@ export default function AdmissionsModule() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Class / Grade *</label>
                     <select
@@ -1032,6 +1010,25 @@ export default function AdmissionsModule() {
                     </select>
                   </div>
                   <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Roll Number</label>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="text"
+                        value={registerForm.rollNo}
+                        onChange={(e) => setRegisterForm({ ...registerForm, rollNo: e.target.value })}
+                        placeholder="R-101"
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white font-mono font-bold"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setRegisterForm(prev => ({ ...prev, rollNo: generateRollNo() }))}
+                        className="px-2 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-500 hover:text-slate-900 shrink-0"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">House (Optional)</label>
                     <select
                       value={registerForm.house}
@@ -1047,53 +1044,59 @@ export default function AdmissionsModule() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Previous School Name</label>
-                    <input
-                      type="text"
-                      value={registerForm.prevSchoolName}
-                      onChange={(e) => setRegisterForm({ ...registerForm, prevSchoolName: e.target.value })}
-                      placeholder="e.g. St. Xavier International Academy"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Medium of Instruction</label>
-                    <select
-                      value={registerForm.mediumOfInstruction}
-                      onChange={(e) => setRegisterForm({ ...registerForm, mediumOfInstruction: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white"
-                    >
-                      <option value="English">English</option>
-                      <option value="Hindi">Hindi</option>
-                      <option value="Regional">Regional Language</option>
-                    </select>
-                  </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Medium of Instruction</label>
+                  <select
+                    value={registerForm.mediumOfInstruction}
+                    onChange={(e) => setRegisterForm({ ...registerForm, mediumOfInstruction: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white"
+                  >
+                    <option value="English">English</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Regional">Regional Language</option>
+                  </select>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Previous School Address</label>
-                    <input
-                      type="text"
-                      value={registerForm.prevSchoolAddress}
-                      onChange={(e) => setRegisterForm({ ...registerForm, prevSchoolAddress: e.target.value })}
-                      placeholder="City, State"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white"
-                    />
+                {/* Transfer Student Previous Academic History (Shown ONLY for Transfer Admission) */}
+                {registerForm.admissionType === 'Transfer' && (
+                  <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 pt-3">
+                    <h4 className="text-xs font-extrabold text-school-blue uppercase tracking-wider flex items-center gap-1.5">
+                      <GraduationCap className="h-4 w-4" /> Transfer Student Previous Academic History
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Previous School Name</label>
+                        <input
+                          type="text"
+                          value={registerForm.prevSchoolName}
+                          onChange={(e) => setRegisterForm({ ...registerForm, prevSchoolName: e.target.value })}
+                          placeholder="e.g. St. Xavier International Academy"
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none dark:text-white"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Last Exam Grade / Percentage</label>
+                        <input
+                          type="text"
+                          value={registerForm.lastExamGrade}
+                          onChange={(e) => setRegisterForm({ ...registerForm, lastExamGrade: e.target.value })}
+                          placeholder="88.5% or A Grade"
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none dark:text-white font-bold"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Previous School Address</label>
+                      <input
+                        type="text"
+                        value={registerForm.prevSchoolAddress}
+                        onChange={(e) => setRegisterForm({ ...registerForm, prevSchoolAddress: e.target.value })}
+                        placeholder="City, State"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none dark:text-white"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Last Exam Grade / Percentage</label>
-                    <input
-                      type="text"
-                      value={registerForm.lastExamGrade}
-                      onChange={(e) => setRegisterForm({ ...registerForm, lastExamGrade: e.target.value })}
-                      placeholder="88.5% or A Grade"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none dark:text-white font-bold"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
             )}
 
