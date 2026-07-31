@@ -152,9 +152,6 @@ export default function ParentsModule() {
             Browse and sync parent profiles associated with registered students.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={() => setIsOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
-          Add Parent Profile
-        </Button>
       </div>
 
       {/* Stats */}

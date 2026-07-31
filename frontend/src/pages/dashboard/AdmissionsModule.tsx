@@ -644,9 +644,6 @@ export default function AdmissionsModule() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Button variant="outline" onClick={() => setIsEnquiryOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
-            Record Enquiry
-          </Button>
           <Button variant="primary" onClick={handleOpenRegister} leftIcon={<Sparkles className="h-4 w-4" />}>
             Register Student Portfolio
           </Button>

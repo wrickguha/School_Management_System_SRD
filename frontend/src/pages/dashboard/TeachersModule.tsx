@@ -164,9 +164,6 @@ export default function TeachersModule() {
             Browse and manage school teachers, principal, librarians, accountants, HR, and other administrative staff roles.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={handleOpenRegister} leftIcon={<Plus className="h-4 w-4" />}>
-          Register Staff Member
-        </Button>
       </div>
 
       {/* Stats */}
