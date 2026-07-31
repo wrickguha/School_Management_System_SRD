@@ -4,6 +4,8 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { ShieldAlert, Sliders, ToggleLeft, ToggleRight, AlertCircle, Check } from 'lucide-react';
 
+import apiClient from '../../services/apiClient';
+
 interface SchoolSettings {
   school: {
     id: number;
@@ -40,29 +42,16 @@ export default function SettingsModule() {
   const { data: settingsData, isLoading, error } = useQuery<SchoolSettings>({
     queryKey: ['settings'],
     queryFn: async () => {
-      const response = await fetch('/api/settings', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (!response.ok) throw new Error('Failed to fetch settings');
-      return response.json();
+      const response = await apiClient.get('/settings');
+      return response.data;
     },
   });
 
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) throw new Error('Failed to update settings');
-      return response.json();
+      const response = await apiClient.put('/settings', data);
+      return response.data;
     },
     onSuccess: () => {
       setSaveSuccess(true);

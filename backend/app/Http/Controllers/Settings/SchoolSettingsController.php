@@ -14,19 +14,13 @@ class SchoolSettingsController extends Controller
     /**
      * Get settings for the authenticated user's school.
      */
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $user = auth()->user();
         
-        // Super admin can view all schools
-        if ($user->isSuperAdmin()) {
-            return response()->json([
-                'message' => 'Super Admin - Use school_id parameter to view specific school',
-                'note' => 'Add ?school_id=X to get specific school settings'
-            ]);
-        }
+        $schoolId = $request->query('school_id') ?? $user->school_id;
+        $school = $schoolId ? \App\Models\School::find($schoolId) : \App\Models\School::first();
 
-        $school = $user->school;
         if (!$school) {
             return response()->json(['message' => 'School context not found'], 404);
         }
@@ -75,7 +69,8 @@ class SchoolSettingsController extends Controller
     public function update(Request $request): JsonResponse
     {
         $user = auth()->user();
-        $school = $user->school;
+        $schoolId = $request->input('school_id') ?? $user->school_id;
+        $school = $schoolId ? \App\Models\School::find($schoolId) : \App\Models\School::first();
         
         if (!$school) {
             return response()->json(['message' => 'School context not found'], 404);
