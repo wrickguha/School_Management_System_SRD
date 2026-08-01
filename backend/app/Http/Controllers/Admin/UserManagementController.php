@@ -36,15 +36,16 @@ class UserManagementController extends Controller
                     'security_guard', 'cleaner', 'hostel_warden', 'nurse', 'counselor', 'other'
                 ]),
             ],
-            'date_of_birth' => 'required|date|before:today',
+            'date_of_birth' => 'nullable|date|before:today',
             'status' => 'sometimes|in:active,inactive',
         ]);
 
         // School admin must assign to their own school
         $validated['school_id'] = $user->school_id;
 
-        // Generate password from date of birth (YYYYMMDD format)
-        $dateOfBirth = $validated['date_of_birth'];
+        // Generate password from date of birth (YYYYMMDD format) or default
+        $dateOfBirth = $validated['date_of_birth'] ?? '1995-01-01';
+        $validated['date_of_birth'] = $dateOfBirth;
         $validated['password'] = Hash::make(str_replace('-', '', $dateOfBirth));
 
         $newUser = User::create($validated);
