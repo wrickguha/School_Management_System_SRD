@@ -25,13 +25,24 @@ class DatabaseSeeder extends Seeder
             'dept_head',
             'teacher',
             'class_teacher',
+            'faculty',
+            'accountant',
+            'office_staff',
+            'receptionist',
+            'librarian',
+            'lab_assistant',
+            'transport_manager',
+            'driver',
+            'security_guard',
+            'cleaner',
+            'hostel_warden',
+            'nurse',
+            'counselor',
+            'other',
             'student',
             'parent',
             'staff',
-            'accountant',
-            'hr',
-            'librarian',
-            'driver'
+            'hr'
         ];
 
         foreach ($roles as $roleName) {

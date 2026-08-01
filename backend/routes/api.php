@@ -97,11 +97,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Transport
     Route::apiResource('transport', TransportController::class)
-        ->middleware('role:school_admin,principal,teacher,student,parent');
+        ->middleware('role:school_admin,principal,transport_manager,driver,teacher,student,parent');
 
     // Hostel
     Route::apiResource('hostel', HostelController::class)
-        ->middleware('role:school_admin,principal,student');
+        ->middleware('role:school_admin,principal,hostel_warden,student');
 
     // Library
     Route::get('/library/books', [LibraryController::class, 'indexBooks'])
@@ -115,7 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Payroll
     Route::apiResource('payroll', PayrollController::class)
-        ->middleware('role:school_admin,principal,hr');
+        ->middleware('role:school_admin,principal,hr,accountant');
 
     // Attendance
     Route::post('/attendance/bulk', [AttendanceController::class, 'submitBulk'])

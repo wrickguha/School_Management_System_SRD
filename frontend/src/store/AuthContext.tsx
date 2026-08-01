@@ -1,7 +1,32 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import apiClient from '../services/apiClient';
 
-export type UserRole = 'Super Admin' | 'School Admin' | 'Principal' | 'Teacher' | 'Faculty' | 'Librarian' | 'Parent' | 'Student' | 'Accountant' | 'HR';
+export type UserRole =
+  | 'Super Admin'
+  | 'School Admin'
+  | 'Principal'
+  | 'Vice Principal'
+  | 'Teacher'
+  | 'Faculty'
+  | 'Accountant'
+  | 'Office Staff'
+  | 'Receptionist'
+  | 'Librarian'
+  | 'Lab Assistant'
+  | 'Transport Manager'
+  | 'Driver'
+  | 'Security Guard'
+  | 'Cleaner'
+  | 'Hostel Warden'
+  | 'Nurse'
+  | 'Counselor'
+  | 'Other'
+  | 'Parent'
+  | 'Student'
+  | 'HR'
+  | 'Staff'
+  | 'Department Head'
+  | 'Class Teacher';
 
 interface User {
   name: string;
@@ -29,13 +54,28 @@ const roleMapToFrontend: Record<string, UserRole> = {
   super_admin: 'Super Admin',
   school_admin: 'School Admin',
   principal: 'Principal',
+  vice_principal: 'Vice Principal',
   teacher: 'Teacher',
   faculty: 'Faculty',
+  accountant: 'Accountant',
+  office_staff: 'Office Staff',
+  receptionist: 'Receptionist',
   librarian: 'Librarian',
+  lab_assistant: 'Lab Assistant',
+  transport_manager: 'Transport Manager',
+  driver: 'Driver',
+  security_guard: 'Security Guard',
+  cleaner: 'Cleaner',
+  hostel_warden: 'Hostel Warden',
+  nurse: 'Nurse',
+  counselor: 'Counselor',
+  other: 'Other',
   parent: 'Parent',
   student: 'Student',
-  accountant: 'Accountant',
-  hr: 'HR'
+  hr: 'HR',
+  staff: 'Staff',
+  dept_head: 'Department Head',
+  class_teacher: 'Class Teacher',
 };
 
 

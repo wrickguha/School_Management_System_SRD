@@ -83,6 +83,25 @@ class User extends Authenticatable
         return $this->role === 'librarian';
     }
 
+    public function isHostelWarden(): bool
+    {
+        return $this->role === 'hostel_warden';
+    }
+
+    public function isTransportManager(): bool
+    {
+        return in_array($this->role, ['transport_manager', 'driver']);
+    }
+
+    public function isSupportStaff(): bool
+    {
+        return in_array($this->role, [
+            'office_staff', 'receptionist', 'lab_assistant', 'transport_manager', 
+            'driver', 'security_guard', 'cleaner', 'hostel_warden', 'nurse', 
+            'counselor', 'staff', 'other'
+        ]);
+    }
+
     /**
      * Returns true if the user can manage data for a given school_id.
      * Super admins can access any school.

@@ -80,7 +80,12 @@ export default function LoginPage() {
                   onChange={(e) => handleRoleSelect(e.target.value as UserRole)}
                   className="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 appearance-none transition-all cursor-pointer"
                 >
-                  {(['Super Admin', 'School Admin', 'Principal', 'Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Accountant', 'HR'] as UserRole[]).map((r) => (
+                  {([
+                    'Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Teacher', 
+                    'Faculty', 'Accountant', 'Office Staff', 'Receptionist', 'Librarian', 
+                    'Lab Assistant', 'Transport Manager', 'Driver', 'Security Guard', 
+                    'Cleaner', 'Hostel Warden', 'Nurse', 'Counselor', 'Other', 'Student', 'Parent', 'HR'
+                  ] as UserRole[]).map((r) => (
                     <option key={r} value={r} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 font-semibold">
                       {r} Profile
                     </option>

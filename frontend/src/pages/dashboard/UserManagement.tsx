@@ -36,7 +36,8 @@ export default function UserManagement() {
   });
 
   // Check authorization
-  if (!['school_admin', 'principal'].includes(role ?? '')) {
+  const allowedRoles = ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'super_admin', 'school_admin', 'principal', 'vice_principal'];
+  if (!role || !allowedRoles.includes(role)) {
     return (
       <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg text-red-700 dark:text-red-400">
         You don't have permission to manage users. Only School Admin and Principal can access this.
