@@ -21,6 +21,20 @@ Route::get('/clear-route-cache', function () {
     }
 });
 
+Route::get('/fix-roles-column', function () {
+    try {
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN role VARCHAR(50) NOT NULL DEFAULT 'student'");
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database users table role column updated to VARCHAR(50) and seeded successfully!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 Route::get('/deploy-utility', function (\Illuminate\Http\Request $request) {
     $expectedSecret = env('DEPLOY_SECRET');
     
