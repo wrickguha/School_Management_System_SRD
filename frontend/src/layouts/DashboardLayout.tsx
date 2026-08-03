@@ -7,7 +7,7 @@ import {
   ClipboardList, BookOpen, CreditCard, Bus,
   Library as LibraryIcon, Home as HomeIcon, Award, MessageSquare,
   FileBarChart, Settings, LogOut, Sun, Moon, Search,
-  Menu, ChevronLeft, ChevronRight
+  Menu, ChevronLeft, ChevronRight, Briefcase
 } from 'lucide-react';
 import logoUrl from '../assets/subhraedu_logo.png';
 
@@ -20,6 +20,7 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Teacher', 'Parent', 'Student', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
+  { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: ['Super Admin', 'School Admin', 'Principal', 'Teacher', 'Faculty', 'Accountant', 'HR', 'Librarian'] },
   { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Super Admin', 'School Admin'] },
   { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Teacher', 'Faculty', 'Super Admin', 'School Admin', 'Principal'] },
   { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Super Admin', 'School Admin', 'HR'] },

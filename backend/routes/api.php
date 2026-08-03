@@ -21,6 +21,7 @@ use App\Http\Controllers\Facility\LibraryController;
 use App\Http\Controllers\HR\PayrollController;
 use App\Http\Controllers\Communication\TestimonialController;
 use App\Http\Controllers\Admin\DemoRequestController;
+use App\Http\Controllers\Admin\WorkAssignmentController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ───────────────────────────────────────────────────────────
@@ -226,5 +227,14 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:school_admin,principal,teacher,faculty');
     Route::get('/attendance/teacher-classes', [AttendanceController::class, 'getTeacherClasses'])
         ->middleware('role:teacher,faculty');
+
+    // Role Work Allocation & Assignments
+    Route::get('/work-assignments/analytics', [WorkAssignmentController::class, 'analytics']);
+    Route::get('/work-assignments', [WorkAssignmentController::class, 'index']);
+    Route::post('/work-assignments', [WorkAssignmentController::class, 'store']);
+    Route::get('/work-assignments/{id}', [WorkAssignmentController::class, 'show']);
+    Route::put('/work-assignments/{id}', [WorkAssignmentController::class, 'update']);
+    Route::patch('/work-assignments/{id}/status', [WorkAssignmentController::class, 'updateStatus']);
+    Route::delete('/work-assignments/{id}', [WorkAssignmentController::class, 'destroy']);
 });
 
