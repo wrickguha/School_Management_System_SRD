@@ -59,7 +59,24 @@ export const DashboardLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const filteredItems = sidebarItems.filter(item => role && item.roles.includes(role));
+  const receptionistSidebarItems: SidebarItem[] = [
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Receptionist'] },
+    { name: 'Visitor Management', path: '/dashboard/visitors', icon: UserCheck, roles: ['Receptionist'] },
+    { name: 'Admission Enquiries', path: '/dashboard/admissions', icon: UserCheck, roles: ['Receptionist'] },
+    { name: 'Student Registration', path: '/dashboard/students', icon: Users, roles: ['Receptionist'] },
+    { name: 'Student Search', path: '/dashboard/students', icon: Search, roles: ['Receptionist'] },
+    { name: 'Parent Directory', path: '/dashboard/parents', icon: Users, roles: ['Receptionist'] },
+    { name: 'Appointments', path: '/dashboard/appointments', icon: Award, roles: ['Receptionist'] },
+    { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Receptionist'] },
+    { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: ['Receptionist'] },
+    { name: 'Complaints', path: '/dashboard/complaints', icon: ShieldAlert, roles: ['Receptionist'] },
+    { name: 'Event Calendar', path: '/dashboard/events', icon: Award, roles: ['Receptionist'] },
+    { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Receptionist'] },
+  ];
+
+  const filteredItems = role === 'Receptionist' 
+    ? receptionistSidebarItems 
+    : sidebarItems.filter(item => role && item.roles.includes(role));
 
   const handleLogout = () => {
     logout();

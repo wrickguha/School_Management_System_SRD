@@ -80,13 +80,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Students
     Route::apiResource('students', StudentController::class)->only(['index'])
-        ->middleware('role:school_admin,principal,teacher,faculty,accountant,hr');
+        ->middleware('role:school_admin,principal,teacher,faculty,accountant,hr,receptionist');
     Route::apiResource('students', StudentController::class)->except(['index'])
-        ->middleware('role:school_admin,principal');
+        ->middleware('role:school_admin,principal,receptionist');
 
     // Admission Enquiries
     Route::apiResource('admissions/enquiries', \App\Http\Controllers\Student\AdmissionEnquiryController::class)
-        ->middleware('role:school_admin,principal');
+        ->middleware('role:school_admin,principal,receptionist');
 
     // Teachers
     Route::get('/teachers', [TeacherController::class, 'index'])
@@ -96,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Parents
     Route::apiResource('parents', ParentController::class)
-        ->middleware('role:school_admin,principal');
+        ->middleware('role:school_admin,principal,receptionist');
 
     // Homework
     Route::apiResource('homework', HomeworkController::class)

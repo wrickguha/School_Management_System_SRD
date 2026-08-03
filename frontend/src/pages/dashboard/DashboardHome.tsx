@@ -16,6 +16,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
+import ReceptionistModule from './ReceptionistModule';
 
 export default function DashboardHome() {
   const { role, user } = useAuth();
@@ -2240,33 +2241,7 @@ export default function DashboardHome() {
   // VIEW: RECEPTIONIST PORTAL
   // ----------------------------------------------------
   if (role === 'Receptionist') {
-    return (
-      <div className="space-y-8 text-left">
-        <TenantSchoolHeroBanner />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Today's Visitors</span>
-            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">28 Logged</span>
-            <span className="text-[10px] text-slate-500 font-bold block mt-1">Gate Pass Badges Issued</span>
-          </Card>
-          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Parent Enquiries</span>
-            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">14 New</span>
-            <span className="text-[10px] text-slate-500 font-bold block mt-1">Admission Desk Inquiries</span>
-          </Card>
-          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Principal Appointments</span>
-            <span className="block text-2xl font-extrabold text-amber-500 mt-2">5 Scheduled</span>
-            <span className="text-[10px] text-slate-500 font-bold block mt-1">Front desk calendar</span>
-          </Card>
-          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
-            <span className="block text-2xl font-extrabold text-sky-500 mt-2">3 Pending</span>
-            <span className="text-[10px] text-slate-500 font-bold block mt-1">Work Allocation Master</span>
-          </Card>
-        </div>
-      </div>
-    );
+    return <ReceptionistModule />;
   }
 
   // ----------------------------------------------------
