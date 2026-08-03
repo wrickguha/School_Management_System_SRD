@@ -18,27 +18,37 @@ interface SidebarItem {
   roles: UserRole[];
 }
 
+const ALL_SYSTEM_ROLES: UserRole[] = [
+  'Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head',
+  'Class Teacher', 'Teacher', 'Faculty', 'Accountant', 'HR', 'Office Staff',
+  'Receptionist', 'Librarian', 'Lab Assistant', 'Transport Manager', 'Driver',
+  'Security Guard', 'Cleaner', 'Hostel Warden', 'Nurse', 'Counselor',
+  'Student', 'Parent', 'Staff', 'Other'
+];
+
+const STAFF_ROLES: UserRole[] = ALL_SYSTEM_ROLES.filter(r => r !== 'Student' && r !== 'Parent');
+
 const sidebarItems: SidebarItem[] = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Teacher', 'Parent', 'Student', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: ['Super Admin', 'School Admin', 'Principal', 'Teacher', 'Faculty', 'Accountant', 'HR', 'Librarian'] },
-  { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Super Admin', 'School Admin'] },
-  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Teacher', 'Faculty', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Super Admin', 'School Admin', 'HR'] },
-  { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Certificates', path: '/dashboard/certificates', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Parent', 'Super Admin', 'School Admin', 'Principal', 'Accountant'] },
-  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Teacher', 'Faculty', 'Librarian', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Super Admin', 'School Admin', 'Principal'] },
-  { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Super Admin', 'School Admin', 'Accountant', 'HR'] },
-  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Teacher', 'Faculty', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Event Calendar', path: '/dashboard/events', icon: Award, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'Super Admin', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Teacher', 'Faculty', 'Parent', 'Student', 'Librarian', 'School Admin', 'Principal', 'Accountant', 'HR'] },
-  { name: 'Manage Members', path: '/dashboard/members', icon: Users, roles: ['School Admin'] },
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ALL_SYSTEM_ROLES },
+  { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: STAFF_ROLES },
+  { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Office Staff', 'Receptionist'] },
+  { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Office Staff', 'Counselor'] },
+  { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'HR', 'Department Head'] },
+  { name: 'Parents', path: '/dashboard/parents', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Counselor', 'Receptionist'] },
+  { name: 'Attendance', path: '/dashboard/attendance', icon: ClipboardList, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Examinations', path: '/dashboard/exams', icon: Award, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Certificates', path: '/dashboard/certificates', icon: Award, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Teacher', 'Faculty', 'Office Staff', 'Parent', 'Student'] },
+  { name: 'Homework', path: '/dashboard/homework', icon: BookOpen, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Fees & Finance', path: '/dashboard/fees', icon: CreditCard, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Accountant', 'Parent'] },
+  { name: 'Transport', path: '/dashboard/transport', icon: Bus, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Transport Manager', 'Driver', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Library', path: '/dashboard/library', icon: LibraryIcon, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Librarian', 'Lab Assistant', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'Hostel', path: '/dashboard/hostel', icon: HomeIcon, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Hostel Warden', 'Teacher', 'Faculty', 'Parent', 'Student'] },
+  { name: 'HR & Payroll', path: '/dashboard/payroll', icon: ShieldAlert, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Accountant', 'HR'] },
+  { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ALL_SYSTEM_ROLES },
+  { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Librarian', 'Accountant', 'HR'] },
+  { name: 'Event Calendar', path: '/dashboard/events', icon: Award, roles: ALL_SYSTEM_ROLES },
+  { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'HR', 'Accountant'] },
+  { name: 'Manage Members', path: '/dashboard/members', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'HR'] },
 ];
 
 export const DashboardLayout: React.FC = () => {

@@ -22,8 +22,24 @@ export default function LoginPage() {
     }
   }, [isLoading, isAuthenticated, navigate]);
  
+  const ALL_ROLES: UserRole[] = [
+    'Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head',
+    'Class Teacher', 'Teacher', 'Faculty', 'Accountant', 'HR', 'Office Staff',
+    'Receptionist', 'Librarian', 'Lab Assistant', 'Transport Manager', 'Driver',
+    'Security Guard', 'Cleaner', 'Hostel Warden', 'Nurse', 'Counselor',
+    'Student', 'Parent', 'Staff', 'Other'
+  ];
+
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
+    if (role === 'Super Admin') {
+      setEmail('admin@subhraedu.com');
+      setSchoolId('');
+    } else {
+      setSchoolId('BHS2026');
+      const roleSlug = role.toLowerCase().replace(/\s+/g, '');
+      setEmail(`${roleSlug}@beaconwood.edu`);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,12 +96,7 @@ export default function LoginPage() {
                   onChange={(e) => handleRoleSelect(e.target.value as UserRole)}
                   className="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-250 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-school-blue/20 focus:border-school-blue text-slate-900 dark:text-slate-100 appearance-none transition-all cursor-pointer"
                 >
-                  {([
-                    'Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Teacher', 
-                    'Faculty', 'Accountant', 'Office Staff', 'Receptionist', 'Librarian', 
-                    'Lab Assistant', 'Transport Manager', 'Driver', 'Security Guard', 
-                    'Cleaner', 'Hostel Warden', 'Nurse', 'Counselor', 'Other', 'Student', 'Parent', 'HR'
-                  ] as UserRole[]).map((r) => (
+                  {ALL_ROLES.map((r) => (
                     <option key={r} value={r} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 font-semibold">
                       {r} Profile
                     </option>

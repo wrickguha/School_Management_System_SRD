@@ -2137,5 +2137,430 @@ export default function DashboardHome() {
     );
   }
 
-  return null;
+  // ----------------------------------------------------
+  // VIEW: VICE PRINCIPAL PORTAL
+  // ----------------------------------------------------
+  if (role === 'Vice Principal') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Academic Supervision</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">18 Depts</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Curricula compliance: 98.4%</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Faculty Attendance</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">97.2%</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">74 teachers present today</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Student Discipline</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">3 Cases</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Under Vice Principal review</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">6 Active</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Role Allocation Master</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: DEPARTMENT HEAD PORTAL
+  // ----------------------------------------------------
+  if (role === 'Department Head') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Department Faculty</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">12 Teachers</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Subject: Science & Mathematics</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Exam Blueprints</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">100% Ready</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Submitted for approval</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Syllabus Completion</span>
+            <span className="block text-2xl font-extrabold text-sky-600 mt-2">91.5%</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">On track for Term 2</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Reviews</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">4 Homeworks</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Awaiting HOD sign-off</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: CLASS TEACHER PORTAL
+  // ----------------------------------------------------
+  if (role === 'Class Teacher') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Class</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">Grade 10-A</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">42 Registered Students</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Today's Attendance</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">95.2%</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">40 Present, 2 Absent</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Pending Marks Entry</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">1 Exam</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Mid-Term Physics Paper</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Class Announcements</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">2 Broadcasts</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Sent to parents</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: RECEPTIONIST PORTAL
+  // ----------------------------------------------------
+  if (role === 'Receptionist') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Today's Visitors</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">28 Logged</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Gate Pass Badges Issued</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Parent Enquiries</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">14 New</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Admission Desk Inquiries</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Principal Appointments</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">5 Scheduled</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Front desk calendar</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">3 Pending</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Work Allocation Master</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: LAB ASSISTANT PORTAL
+  // ----------------------------------------------------
+  if (role === 'Lab Assistant') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Lab Inventory Items</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">480 Items</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Physics, Chemistry, Bio Labs</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Chemical / Apparatus Stock</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">94% Stocked</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">2 reorder requests pending</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Safety Audit Status</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Passed</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Fire extinguishers verified</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Scheduled Practical Sessions</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">8 Today</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Grades 9 to 12</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: TRANSPORT MANAGER PORTAL
+  // ----------------------------------------------------
+  if (role === 'Transport Manager') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Bus Fleet Size</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">14 Vehicles</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">All GPS & CCTV Enabled</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Active Routes Today</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">14 / 14</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Morning & Evening Roster</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">On-Time Arrival</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">99.1%</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Traffic telemetry synced</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Fuel & Maintenance</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">1 Due</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Bus #4 Oil Inspection</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: DRIVER PORTAL
+  // ----------------------------------------------------
+  if (role === 'Driver') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Bus</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">Bus #07</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Route: North Sector - Stop A-G</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Student Pickup Roster</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">34 Students</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">All RFID Swiped</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Vehicle Fitness Check</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Passed</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Brakes & Tires Verified</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">2 Tasks</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Work Allocation Master</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: SECURITY GUARD PORTAL
+  // ----------------------------------------------------
+  if (role === 'Security Guard') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Gate Checkins Today</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">1,240 Total</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Students, Staff & Visitors</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Visitor Badges Active</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">12 Active</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">On campus currently</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">CCTV Surveillance</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">64/64 Online</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Perimeter feed secured</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Campus Incidents</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">0 Reported</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">All clear</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: CLEANER & MAINTENANCE PORTAL
+  // ----------------------------------------------------
+  if (role === 'Cleaner') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Facility Zones</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">Block A & B</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Classrooms & Restrooms</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Hygiene Checklist</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">100% Verified</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Morning sanitization done</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">4 Tasks</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Work Allocation Master</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Supply Restock</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Adequate</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Cleaning agents & papers</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: HOSTEL WARDEN PORTAL
+  // ----------------------------------------------------
+  if (role === 'Hostel Warden') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Hostel Occupancy</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">184 / 200</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">92% Bed Capacity</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Night Roll Call Attendance</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">100% Present</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">All boarders accounted for</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Outpass Requests</span>
+            <span className="block text-2xl font-extrabold text-amber-500 mt-2">2 Pending</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Weekend home visit slips</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Mess Quality Audit</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Passed</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Meal nutrition verified</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: NURSE & INFIRMARY PORTAL
+  // ----------------------------------------------------
+  if (role === 'Nurse') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Sick Bay Beds</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">1 / 6 Occupied</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Campus infirmary clinic</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">First Aid Consultations</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">5 Today</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Minor injuries & health checks</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Medical Supplies</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Fully Stocked</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Emergency kit verified</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Health Screening Drive</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">Scheduled</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Annual dental & eye checkup</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // VIEW: COUNSELOR PORTAL
+  // ----------------------------------------------------
+  if (role === 'Counselor') {
+    return (
+      <div className="space-y-8 text-left">
+        <TenantSchoolHeroBanner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Counseling Sessions</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">4 Today</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Student well-being & career</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Behavioral Consultations</span>
+            <span className="block text-2xl font-extrabold text-emerald-600 mt-2">2 Completed</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Parent meetings held</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Workshops Conducted</span>
+            <span className="block text-2xl font-extrabold text-sky-500 mt-2">1 This Week</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Exam stress management</span>
+          </Card>
+          <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Confidential Case Files</span>
+            <span className="block text-2xl font-extrabold text-indigo-600 mt-2">15 Active</span>
+            <span className="text-[10px] text-slate-500 font-bold block mt-1">Encrypted records</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // DEFAULT / GENERAL STAFF PORTAL (OFFICE STAFF, STAFF, OTHER)
+  // ----------------------------------------------------
+  return (
+    <div className="space-y-8 text-left">
+      <TenantSchoolHeroBanner />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Assigned Work Duties</span>
+          <span className="block text-2xl font-extrabold text-indigo-600 mt-2">5 Tasks</span>
+          <span className="text-[10px] text-slate-500 font-bold block mt-1">Work Allocation Master</span>
+        </Card>
+        <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Attendance Status</span>
+          <span className="block text-2xl font-extrabold text-emerald-600 mt-2">Present</span>
+          <span className="text-[10px] text-slate-500 font-bold block mt-1">Logged via RFID console</span>
+        </Card>
+        <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">School Announcements</span>
+          <span className="block text-2xl font-extrabold text-sky-500 mt-2">3 Notices</span>
+          <span className="text-[10px] text-slate-500 font-bold block mt-1">Staff circular board</span>
+        </Card>
+        <Card className="p-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Role Authorization</span>
+          <span className="block text-2xl font-extrabold text-indigo-600 mt-2 capitalize">{role || 'Staff'}</span>
+          <span className="text-[10px] text-slate-500 font-bold block mt-1">SubhraEdu Multi-Tenant ERP</span>
+        </Card>
+      </div>
+    </div>
+  );
 }
