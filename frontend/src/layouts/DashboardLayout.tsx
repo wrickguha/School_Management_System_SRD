@@ -7,7 +7,7 @@ import {
   ClipboardList, BookOpen, CreditCard, Bus,
   Library as LibraryIcon, Home as HomeIcon, Award, MessageSquare,
   FileBarChart, Settings, LogOut, Sun, Moon, Search,
-  Menu, ChevronLeft, ChevronRight, Briefcase
+  Menu, ChevronLeft, ChevronRight, Briefcase, Layers
 } from 'lucide-react';
 import logoUrl from '../assets/subhraedu_logo.png';
 
@@ -52,7 +52,7 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export const DashboardLayout: React.FC = () => {
-  const { user, role, logout } = useAuth();
+  const { user, role, logout, switchRole } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -206,8 +206,28 @@ export const DashboardLayout: React.FC = () => {
           </div>
 
           {/* User actions and controls */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             
+            {/* Master Role Dashboard Switcher */}
+            <div className="relative flex items-center gap-2 px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/50 shadow-sm transition-all">
+              <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
+                <Layers className="h-4 w-4 shrink-0" />
+                <span className="hidden xl:inline uppercase tracking-widest text-[10px] font-bold text-indigo-600 dark:text-indigo-400">Role View:</span>
+              </div>
+              <select
+                value={role || 'Super Admin'}
+                onChange={(e) => switchRole(e.target.value as UserRole)}
+                className="bg-transparent text-indigo-900 dark:text-indigo-200 font-extrabold focus:outline-none cursor-pointer text-xs pr-1"
+                title="Switch active role dashboard view"
+              >
+                {ALL_SYSTEM_ROLES.map((r) => (
+                  <option key={r} value={r} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 font-semibold">
+                    {r} Dashboard
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Dark Mode toggle */}
             <button
               onClick={toggleTheme}
