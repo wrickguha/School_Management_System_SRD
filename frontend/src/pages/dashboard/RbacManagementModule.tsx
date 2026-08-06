@@ -97,11 +97,26 @@ export const RbacManagementModule: React.FC = () => {
     }
   }, [activeTab, userSearch]);
 
+  const normalizeResponseData = <T extends any>(res: any): T => {
+    if (!res) return [] as unknown as T;
+    if (Array.isArray(res)) return res as unknown as T;
+    if (res.data !== undefined) {
+      if (Array.isArray(res.data)) return res.data as unknown as T;
+      if (res.data.data !== undefined) {
+        if (Array.isArray(res.data.data)) return res.data.data as unknown as T;
+        if (Array.isArray(res.data.data.data)) return res.data.data.data as unknown as T;
+        return res.data.data as unknown as T;
+      }
+      return res.data as unknown as T;
+    }
+    return res as unknown as T;
+  };
+
   const fetchRoles = async () => {
     setLoading(true);
     try {
       const res = await apiClient.get('/admin/rbac/roles');
-      const data = res.data.data || [];
+      const data = normalizeResponseData<RoleItem[]>(res) || [];
       setRoles(data);
       if (data.length > 0 && !selectedRole) {
         setSelectedRole(data[0]);
@@ -117,27 +132,33 @@ export const RbacManagementModule: React.FC = () => {
   const fetchPermissions = async () => {
     try {
       const res = await apiClient.get('/admin/rbac/permissions');
-      setPermissionsGrouped(res.data.data || {});
+      const data = normalizeResponseData<Record<string, PermissionItem[]>>(res) || {};
+      setPermissionsGrouped(data);
     } catch (err) {
       console.error('Failed to fetch permissions', err);
+      setPermissionsGrouped({});
     }
   };
 
   const fetchUsers = async () => {
     try {
       const res = await apiClient.get('/admin/rbac/users', { params: { search: userSearch } });
-      setUsersList(res.data.data.data || res.data.data || []);
+      const data = normalizeResponseData<UserItem[]>(res) || [];
+      setUsersList(data);
     } catch (err) {
       console.error('Failed to fetch users', err);
+      setUsersList([]);
     }
   };
 
   const fetchAuditLogs = async () => {
     try {
       const res = await apiClient.get('/admin/rbac/audit-logs');
-      setAuditLogs(res.data.data.data || res.data.data || []);
+      const data = normalizeResponseData<AuditLogItem[]>(res) || [];
+      setAuditLogs(data);
     } catch (err) {
       console.error('Failed to fetch audit logs', err);
+      setAuditLogs([]);
     }
   };
 
