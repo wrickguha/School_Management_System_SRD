@@ -292,11 +292,11 @@ export const RbacManagementModule: React.FC = () => {
   };
 
   const filteredRoles = useMemo(() => {
-    return roles.filter(r => 
+    return safeRoles.filter(r => 
       r.name.toLowerCase().includes(roleSearch.toLowerCase()) || 
       r.description.toLowerCase().includes(roleSearch.toLowerCase())
     );
-  }, [roles, roleSearch]);
+  }, [safeRoles, roleSearch]);
 
   const isRolePermissionsModified = useMemo(() => {
     if (!selectedRole) return false;
