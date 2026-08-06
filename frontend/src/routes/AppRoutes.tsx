@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../store/AuthContext';
 import { LandingLayout } from '../layouts/LandingLayout';
 import { DashboardLayout } from '../layouts/DashboardLayout';
+import { PermissionGuard } from '../components/PermissionGuard';
 
 // Loading Skeleton Component for Suspense
 const RouteSkeleton = () => (
@@ -86,32 +87,32 @@ export const AppRoutes: React.FC = () => {
             </AuthGuard>
           }
         >
-          <Route index element={<DashboardHome />} />
-          <Route path="rbac" element={<RbacManagementModule />} />
-          <Route path="students" element={<StudentModule />} />
-          <Route path="attendance" element={<AttendanceModule />} />
-          <Route path="exams" element={<ExaminationModule />} />
-          <Route path="fees" element={<FeeModule />} />
-          <Route path="reports" element={<ReportsModule />} />
-          <Route path="settings" element={<SettingsModule />} />
+          <Route index element={<PermissionGuard permission="dashboard.view"><DashboardHome /></PermissionGuard>} />
+          <Route path="rbac" element={<PermissionGuard permission="role.view"><RbacManagementModule /></PermissionGuard>} />
+          <Route path="students" element={<PermissionGuard permission="student.view"><StudentModule /></PermissionGuard>} />
+          <Route path="attendance" element={<PermissionGuard permission="attendance.view"><AttendanceModule /></PermissionGuard>} />
+          <Route path="exams" element={<PermissionGuard permission="exam.view"><ExaminationModule /></PermissionGuard>} />
+          <Route path="fees" element={<PermissionGuard permission="fee.view"><FeeModule /></PermissionGuard>} />
+          <Route path="reports" element={<PermissionGuard permission="dashboard.reports"><ReportsModule /></PermissionGuard>} />
+          <Route path="settings" element={<PermissionGuard permission="settings.view"><SettingsModule /></PermissionGuard>} />
           
           {/* Custom Integrated Modules */}
-          <Route path="admissions" element={<AdmissionsModule />} />
-          <Route path="teachers" element={<TeachersModule />} />
-          <Route path="parents" element={<ParentsModule />} />
-          <Route path="homework" element={<HomeworkModule />} />
-          <Route path="transport" element={<TransportModule />} />
-          <Route path="library" element={<LibraryModule />} />
-          <Route path="hostel" element={<HostelModule />} />
-          <Route path="payroll" element={<PayrollModule />} />
-          <Route path="communication" element={<CommunicationModule />} />
+          <Route path="admissions" element={<PermissionGuard permission="enquiry.view"><AdmissionsModule /></PermissionGuard>} />
+          <Route path="teachers" element={<PermissionGuard permission="teacher.view"><TeachersModule /></PermissionGuard>} />
+          <Route path="parents" element={<PermissionGuard permission="parent.view"><ParentsModule /></PermissionGuard>} />
+          <Route path="homework" element={<PermissionGuard permission="homework.view"><HomeworkModule /></PermissionGuard>} />
+          <Route path="transport" element={<PermissionGuard permission="transport.view"><TransportModule /></PermissionGuard>} />
+          <Route path="library" element={<PermissionGuard permission="library.view"><LibraryModule /></PermissionGuard>} />
+          <Route path="hostel" element={<PermissionGuard permission="hostel.view"><HostelModule /></PermissionGuard>} />
+          <Route path="payroll" element={<PermissionGuard permission="payroll.view"><PayrollModule /></PermissionGuard>} />
+          <Route path="communication" element={<PermissionGuard permission="communication.view"><CommunicationModule /></PermissionGuard>} />
           <Route path="events" element={<EventCalendarModule />} />
-          <Route path="members" element={<MembersModule />} />
-          <Route path="certificates" element={<CertificatesModule />} />
-          <Route path="work-assignments" element={<WorkAssignmentModule />} />
-          <Route path="visitors" element={<ReceptionistModule initialTab="visitors" />} />
-          <Route path="appointments" element={<ReceptionistModule initialTab="appointments" />} />
-          <Route path="complaints" element={<ReceptionistModule initialTab="complaints" />} />
+          <Route path="members" element={<PermissionGuard permission="user.view"><MembersModule /></PermissionGuard>} />
+          <Route path="certificates" element={<PermissionGuard permission="certificate.view"><CertificatesModule /></PermissionGuard>} />
+          <Route path="work-assignments" element={<PermissionGuard permission="work.view"><WorkAssignmentModule /></PermissionGuard>} />
+          <Route path="visitors" element={<PermissionGuard permission="visitor.view"><ReceptionistModule initialTab="visitors" /></PermissionGuard>} />
+          <Route path="appointments" element={<PermissionGuard permission="appointment.view"><ReceptionistModule initialTab="appointments" /></PermissionGuard>} />
+          <Route path="complaints" element={<PermissionGuard permission="complaint.view"><ReceptionistModule initialTab="complaints" /></PermissionGuard>} />
           
           {/* Wildcard redirect inside Dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

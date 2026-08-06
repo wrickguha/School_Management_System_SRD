@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { GraduationCap, Filter, Camera, UploadCloud } from 'lucide-react';
+import { Can } from '../../store/PermissionContext';
 
 function generateEmployeeId(): string {
   const year = new Date().getFullYear();
@@ -417,9 +418,11 @@ export default function TeachersModule() {
             <Button type="button" variant="ghost" onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" isLoading={createMutation.isPending}>
-              Register Staff Member
-            </Button>
+            <Can permission="teacher.create">
+              <Button type="submit" variant="primary" isLoading={createMutation.isPending}>
+                Register Staff Member
+              </Button>
+            </Can>
           </div>
         </form>
       </Modal>

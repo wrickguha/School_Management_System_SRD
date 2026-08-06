@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
+import { usePermission } from '../store/PermissionContext';
 import { useTheme } from '../store/ThemeContext';
 import {
   LayoutDashboard, UserCheck, Users, ShieldAlert,
@@ -92,6 +93,7 @@ const ROLE_TO_KEY: Record<string, string> = {
 
 export const DashboardLayout: React.FC = () => {
   const { user, role, logout, switchRole } = useAuth();
+  const { hasPermission } = usePermission();
   const { theme, toggleTheme } = useTheme();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -128,22 +130,38 @@ export const DashboardLayout: React.FC = () => {
   ];
 
   const getFilteredItems = (): SidebarItem[] => {
-    if (role === 'Super Admin') return sidebarItems;
+    const isItemAllowedByPermission = (item: SidebarItem) => {
+      if (!item.permission) return true;
+      return hasPermission(item.permission);
+    };
+
+    if (role === 'Super Admin') {
+      return sidebarItems.filter(isItemAllowedByPermission);
+    }
 
     const roleKey = role ? (ROLE_TO_KEY[role] || role.toLowerCase().replace(/ /g, '_')) : '';
     const allowedModules = customPermissions && roleKey ? customPermissions[roleKey] : null;
 
-    if (allowedModules) {
-      return sidebarItems.filter(item => {
-        if (item.path === '/dashboard') return true;
-        const moduleId = PATH_TO_MODULE_ID[item.path];
-        return moduleId ? allowedModules.includes(moduleId) : item.roles.includes(role as UserRole);
-      });
-    }
+    const shouldDisplayItem = (item: SidebarItem) => {
+      if (!isItemAllowedByPermission(item)) {
+        return false;
+      }
 
-    return role === 'Receptionist' 
-      ? receptionistSidebarItems 
-      : sidebarItems.filter(item => role && item.roles.includes(role as UserRole));
+      if (!allowedModules) {
+        return item.path === '/dashboard' || item.roles.includes(role as UserRole);
+      }
+
+      if (item.path === '/dashboard') {
+        return true;
+      }
+
+      const moduleId = PATH_TO_MODULE_ID[item.path];
+      return moduleId ? allowedModules.includes(moduleId) : true;
+    };
+
+    return role === 'Receptionist'
+      ? receptionistSidebarItems.filter(shouldDisplayItem)
+      : sidebarItems.filter(shouldDisplayItem);
   };
 
   const filteredItems = getFilteredItems();

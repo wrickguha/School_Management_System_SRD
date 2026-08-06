@@ -10,6 +10,7 @@ import type { Column } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { studentService } from '../../services/services';
 import type { Student } from '../../services/mockDb';
+import { Can } from '../../store/PermissionContext';
 
 function generateAdmissionNo(): string {
   const year = new Date().getFullYear();
@@ -250,12 +251,16 @@ export default function StudentModule() {
             searchPlaceholder="Search by student name..."
             actions={(row) => (
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" size="sm" className="px-2" onClick={() => handleViewProfile(row)}>
-                  <Eye className="h-4.5 w-4.5 text-school-blue" />
-                </Button>
-                <Button variant="ghost" size="sm" className="px-2" onClick={() => handleDelete(row.id)}>
-                  <Trash2 className="h-4.5 w-4.5 text-red-555" />
-                </Button>
+                <Can permission="student.view">
+                  <Button variant="ghost" size="sm" className="px-2" onClick={() => handleViewProfile(row)}>
+                    <Eye className="h-4.5 w-4.5 text-school-blue" />
+                  </Button>
+                </Can>
+                <Can permission="student.delete">
+                  <Button variant="ghost" size="sm" className="px-2" onClick={() => handleDelete(row.id)}>
+                    <Trash2 className="h-4.5 w-4.5 text-red-555" />
+                  </Button>
+                </Can>
               </div>
             )}
           />
@@ -444,9 +449,11 @@ export default function StudentModule() {
             <Button type="button" variant="ghost" onClick={() => setIsAdmissionOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" isLoading={createMutation.isPending}>
-              Register Admission
-            </Button>
+            <Can permission="student.create">
+              <Button type="submit" variant="primary" isLoading={createMutation.isPending}>
+                Register Admission
+              </Button>
+            </Can>
           </div>
         </form>
       </Modal>

@@ -47,6 +47,7 @@ interface AuthContextType {
   login: (email: string, role: UserRole, password?: string, schoolId?: string) => Promise<boolean>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -194,6 +195,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshUser = async () => {
+    const token = localStorage.getItem('erp_auth_token');
+    if (!token) return;
+
+    try {
+      const res = await apiClient.get('/auth/me');
+      const apiUser = res.data;
+      const frontendRole = roleMapToFrontend[apiUser.role] || (apiUser.role as UserRole) || 'Super Admin';
+      const userData: User = {
+        name: apiUser.name,
+        email: apiUser.email,
+        role: frontendRole,
+        avatar: apiUser.profile_image_path || apiUser.avatar_path || null,
+        school: apiUser.school,
+        school_id: apiUser.school_id,
+        school_name: apiUser.school?.name,
+        permissions: apiUser.permissions || [],
+      };
+
+      setUser(userData);
+      setRole(frontendRole);
+      setIsAuthenticated(true);
+      localStorage.setItem('erp_auth_user', JSON.stringify(userData));
+      localStorage.setItem('erp_auth_role', frontendRole);
+    } catch (err) {
+      await logout();
+    }
+  };
+
   const switchRole = (newRole: UserRole) => {
     if (!user) return;
 
@@ -209,7 +239,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, isAuthenticated, isLoading, login, logout, switchRole }}>
+    <AuthContext.Provider value={{ user, role, isAuthenticated, isLoading, login, logout, switchRole, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
