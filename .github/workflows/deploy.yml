@@ -67,14 +67,15 @@ jobs:
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' '${{ secrets.FTP_SERVER }}';
             mirror -R \
               --no-perms \
-              --exclude-glob .git/ \
-              --exclude-glob .github/ \
-              --exclude-glob node_modules/ \
-              --exclude-glob vendor/ \
-              --exclude-glob bootstrap/cache/*.php \
-              --exclude-glob .env \
-              --exclude-glob tests/ \
-              --exclude-glob database/database.sqlite \
+              --parallel=5 \
+              --exclude-glob '**/.git/**' \
+              --exclude-glob '**/.github/**' \
+              --exclude-glob '**/node_modules/**' \
+              --exclude-glob '**/vendor/**' \
+              --exclude-glob '**/bootstrap/cache/*.php' \
+              --exclude-glob '**/.env' \
+              --exclude-glob '**/tests/**' \
+              --exclude-glob '**/database/database.sqlite' \
               --verbose \
               ./backend/ .
           "
