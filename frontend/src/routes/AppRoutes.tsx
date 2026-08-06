@@ -46,6 +46,7 @@ const MembersModule = lazy(() => import('../pages/dashboard/MembersModule'));
 const CertificatesModule = lazy(() => import('../pages/dashboard/CertificatesModule'));
 const WorkAssignmentModule = lazy(() => import('../pages/dashboard/WorkAssignmentModule'));
 const ReceptionistModule = lazy(() => import('../pages/dashboard/ReceptionistModule'));
+const RbacManagementModule = lazy(() => import('../pages/dashboard/RbacManagementModule'));
 
 // Dynamic Navbar Detail Sub-Pages
 const NavbarDetailPage = lazy(() => import('../pages/NavbarDetailPage'));
@@ -86,6 +87,7 @@ export const AppRoutes: React.FC = () => {
           }
         >
           <Route index element={<DashboardHome />} />
+          <Route path="rbac" element={<RbacManagementModule />} />
           <Route path="students" element={<StudentModule />} />
           <Route path="attendance" element={<AttendanceModule />} />
           <Route path="exams" element={<ExaminationModule />} />

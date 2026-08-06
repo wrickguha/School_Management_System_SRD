@@ -236,5 +236,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/work-assignments/{id}', [WorkAssignmentController::class, 'update']);
     Route::patch('/work-assignments/{id}/status', [WorkAssignmentController::class, 'updateStatus']);
     Route::delete('/work-assignments/{id}', [WorkAssignmentController::class, 'destroy']);
+
+    // Dynamic Role & Permission Management System (RBAC)
+    Route::get('/admin/rbac/roles', [\App\Http\Controllers\Admin\RbacController::class, 'indexRoles']);
+    Route::post('/admin/rbac/roles', [\App\Http\Controllers\Admin\RbacController::class, 'storeRole']);
+    Route::get('/admin/rbac/roles/{id}', [\App\Http\Controllers\Admin\RbacController::class, 'showRole']);
+    Route::put('/admin/rbac/roles/{id}', [\App\Http\Controllers\Admin\RbacController::class, 'updateRole']);
+    Route::delete('/admin/rbac/roles/{id}', [\App\Http\Controllers\Admin\RbacController::class, 'destroyRole']);
+    Route::post('/admin/rbac/roles/{id}/clone', [\App\Http\Controllers\Admin\RbacController::class, 'cloneRole']);
+    Route::post('/admin/rbac/roles/{id}/permissions', [\App\Http\Controllers\Admin\RbacController::class, 'syncRolePermissions']);
+    Route::get('/admin/rbac/permissions', [\App\Http\Controllers\Admin\RbacController::class, 'indexPermissions']);
+    Route::get('/admin/rbac/users', [\App\Http\Controllers\Admin\RbacController::class, 'indexUsers']);
+    Route::post('/admin/rbac/users/{userId}/permissions', [\App\Http\Controllers\Admin\RbacController::class, 'updateUserPermissions']);
+    Route::get('/admin/rbac/audit-logs', [\App\Http\Controllers\Admin\RbacController::class, 'auditLogs']);
 });
 

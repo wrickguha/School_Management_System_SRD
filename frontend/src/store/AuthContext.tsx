@@ -36,6 +36,7 @@ interface User {
   school_id?: number | null;
   school_name?: string | null;
   school?: any;
+  permissions?: string[];
 }
 
 interface AuthContextType {
@@ -95,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       apiClient.get('/auth/me')
         .then((res) => {
           const apiUser = res.data;
-          const frontendRole = roleMapToFrontend[apiUser.role] || 'Super Admin';
+          const frontendRole = roleMapToFrontend[apiUser.role] || (apiUser.role as UserRole) || 'Super Admin';
           const userData: User = {
             name: apiUser.name,
             email: apiUser.email,
@@ -103,7 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             avatar: apiUser.profile_image_path || apiUser.avatar_path || null,
             school: apiUser.school,
             school_id: apiUser.school_id,
-            school_name: apiUser.school?.name
+            school_name: apiUser.school?.name,
+            permissions: apiUser.permissions || [],
           };
           setUser(userData);
           setRole(frontendRole);
@@ -142,7 +144,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         avatar: apiUser.profile_image_path || apiUser.avatar_path || null,
         school: apiUser.school,
         school_id: apiUser.school_id,
-        school_name: apiUser.school?.name
+        school_name: apiUser.school?.name,
+        permissions: apiUser.permissions || [],
       };
 
       setUser(userData);
