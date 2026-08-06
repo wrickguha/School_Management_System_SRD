@@ -49,6 +49,17 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  const baseURL = config.baseURL || '';
+  const requestUrl = config.url || '';
+  const apiPathPattern = /\/api(?:\/|$)/i;
+
+  // Axios resolves absolute paths against the baseURL origin, which drops any base path.
+  // When the API base URL includes /api, preserve the path by stripping the leading slash.
+  if (apiPathPattern.test(baseURL) && requestUrl.startsWith('/')) {
+    config.url = requestUrl.replace(/^\/+/, '');
+  }
+
   return config;
 }, (error) => {
   return Promise.reject(error);
