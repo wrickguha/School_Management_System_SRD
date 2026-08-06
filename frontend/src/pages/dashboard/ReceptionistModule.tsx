@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../store/AuthContext';
-import apiClient from '../../services/apiClient';
+import React, { useState } from 'react';
 import {
-  Users, UserCheck, Calendar, Phone, Mail, Clock, MessageSquare,
-  Search, Filter, Plus, CheckCircle2, AlertTriangle, Printer, Download,
-  FileText, ArrowRight, ShieldCheck, ChevronRight, Eye, Edit3, Trash2,
-  Send, UserPlus, Briefcase, Bell, Sparkles, X, Check, HelpCircle, MapPin,
-  Camera, FileSpreadsheet, RefreshCw, AlertCircle, FilePlus
+  UserCheck, Calendar, Search, Plus, Printer, ShieldCheck, ChevronRight,
+  Send, UserPlus, Briefcase, X, FileSpreadsheet, AlertCircle
 } from 'lucide-react';
 
 interface Visitor {
@@ -74,7 +69,6 @@ interface WorkTask {
 }
 
 export const ReceptionistModule: React.FC<{ initialTab?: string }> = ({ initialTab = 'dashboard' }) => {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>(initialTab);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -99,7 +93,7 @@ export const ReceptionistModule: React.FC<{ initialTab?: string }> = ({ initialT
     { id: 1, parentName: 'Subhash Sen', studentName: 'Rohan Sen (Grade 6-B)', mobile: '+91 98555 66677', department: 'Transport', subject: 'Bus Route #4 15-min delay in morning pickup', description: 'Bus arrived late 3 days in a row at Salt Lake Stop', date: '2026-08-02', status: 'assigned' },
   ]);
 
-  const [tasks, setTasks] = useState<WorkTask[]>([
+  const [tasks] = useState<WorkTask[]>([
     { id: 1, title: 'Verify Grade 11 Admission Form Documents', assignedBy: 'Super Admin', dueDate: 'Today, 5:00 PM', priority: 'high', status: 'in_progress' },
     { id: 2, title: 'Dispatch Monthly Parent Circular SMS', assignedBy: 'Principal', dueDate: 'Tomorrow, 12:00 PM', priority: 'medium', status: 'pending' },
   ]);
@@ -672,6 +666,172 @@ export const ReceptionistModule: React.FC<{ initialTab?: string }> = ({ initialT
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: New Admission Enquiry */}
+      {isEnquiryModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-extrabold text-base">New Admission Enquiry</h3>
+              <button onClick={() => setIsEnquiryModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
+            </div>
+
+            <form onSubmit={handleCreateEnquiry} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Student Name *</label>
+                  <input required type="text" value={newEnquiry.studentName} onChange={e => setNewEnquiry({...newEnquiry, studentName: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Parent Name *</label>
+                  <input required type="text" value={newEnquiry.parentName} onChange={e => setNewEnquiry({...newEnquiry, parentName: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Mobile Number *</label>
+                  <input required type="text" value={newEnquiry.mobile} onChange={e => setNewEnquiry({...newEnquiry, mobile: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Email</label>
+                  <input type="email" value={newEnquiry.email} onChange={e => setNewEnquiry({...newEnquiry, email: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Course / Grade</label>
+                  <input type="text" value={newEnquiry.course} onChange={e => setNewEnquiry({...newEnquiry, course: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">City</label>
+                  <input type="text" value={newEnquiry.city} onChange={e => setNewEnquiry({...newEnquiry, city: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <div>
+                <label className="font-bold text-slate-500 block mb-1">Previous School</label>
+                <input type="text" value={newEnquiry.previousSchool} onChange={e => setNewEnquiry({...newEnquiry, previousSchool: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+              </div>
+              <div>
+                <label className="font-bold text-slate-500 block mb-1">Notes / Special Remarks</label>
+                <textarea value={newEnquiry.notes} onChange={e => setNewEnquiry({...newEnquiry, notes: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" rows={2} />
+              </div>
+              <button type="submit" className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl mt-2">
+                Save Admission Enquiry
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Schedule Appointment */}
+      {isAppointmentModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-extrabold text-base">Schedule Appointment</h3>
+              <button onClick={() => setIsAppointmentModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
+            </div>
+
+            <form onSubmit={handleCreateAppointment} className="space-y-3 text-xs">
+              <div>
+                <label className="font-bold text-slate-500 block mb-1">Visitor / Parent Name *</label>
+                <input required type="text" value={newAppointment.visitorOrParentName} onChange={e => setNewAppointment({...newAppointment, visitorOrParentName: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Mobile Number *</label>
+                  <input required type="text" value={newAppointment.mobile} onChange={e => setNewAppointment({...newAppointment, mobile: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Meet With Role</label>
+                  <select value={newAppointment.meetWithRole} onChange={e => setNewAppointment({...newAppointment, meetWithRole: e.target.value as any})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950">
+                    <option value="Principal">Principal</option>
+                    <option value="Vice Principal">Vice Principal</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Counsellor">Counsellor</option>
+                    <option value="Accounts Office">Accounts Office</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Person Name *</label>
+                  <input required type="text" value={newAppointment.meetWithPerson} onChange={e => setNewAppointment({...newAppointment, meetWithPerson: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Date *</label>
+                  <input required type="date" value={newAppointment.date} onChange={e => setNewAppointment({...newAppointment, date: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Time *</label>
+                  <input required type="text" placeholder="e.g. 11:30 AM" value={newAppointment.time} onChange={e => setNewAppointment({...newAppointment, time: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Purpose *</label>
+                  <input required type="text" value={newAppointment.purpose} onChange={e => setNewAppointment({...newAppointment, purpose: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <button type="submit" className="w-full py-3 bg-sky-600 text-white font-bold rounded-xl mt-2">
+                Schedule Appointment
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Register Complaint */}
+      {isComplaintModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-extrabold text-base">Register Parent Complaint</h3>
+              <button onClick={() => setIsComplaintModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
+            </div>
+
+            <form onSubmit={handleCreateComplaint} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Parent Name *</label>
+                  <input required type="text" value={newComplaint.parentName} onChange={e => setNewComplaint({...newComplaint, parentName: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Student Name *</label>
+                  <input required type="text" value={newComplaint.studentName} onChange={e => setNewComplaint({...newComplaint, studentName: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Mobile Number *</label>
+                  <input required type="text" value={newComplaint.mobile} onChange={e => setNewComplaint({...newComplaint, mobile: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-500 block mb-1">Department</label>
+                  <select value={newComplaint.department} onChange={e => setNewComplaint({...newComplaint, department: e.target.value as any})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950">
+                    <option value="Administrative">Administrative</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Hostel">Hostel</option>
+                    <option value="Finance">Finance</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="font-bold text-slate-500 block mb-1">Subject *</label>
+                <input required type="text" value={newComplaint.subject} onChange={e => setNewComplaint({...newComplaint, subject: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" />
+              </div>
+              <div>
+                <label className="font-bold text-slate-500 block mb-1">Description *</label>
+                <textarea required value={newComplaint.description} onChange={e => setNewComplaint({...newComplaint, description: e.target.value})} className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-950" rows={2} />
+              </div>
+              <button type="submit" className="w-full py-3 bg-rose-600 text-white font-bold rounded-xl mt-2">
+                Register Complaint
+              </button>
+            </form>
           </div>
         </div>
       )}

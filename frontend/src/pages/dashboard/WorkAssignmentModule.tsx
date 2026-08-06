@@ -3,9 +3,8 @@ import { useAuth } from '../../store/AuthContext';
 import apiClient from '../../services/apiClient';
 import {
   Briefcase, ClipboardCheck, Users, CheckCircle2, Clock, AlertTriangle,
-  Plus, Search, Filter, Calendar, Building2, TrendingUp, Send, Check, X,
-  ChevronRight, BarChart3, RefreshCw, Eye, Edit3, Trash2, Award, ShieldAlert,
-  FileText, Sparkles, UserCheck, Layers
+  Plus, Search, Calendar, TrendingUp, Send, X,
+  BarChart3, RefreshCw, Eye, Edit3, Trash2, Sparkles
 } from 'lucide-react';
 
 interface WorkAssignment {
@@ -56,7 +55,7 @@ const AVAILABLE_ROLES = [
 ];
 
 export const WorkAssignmentModule: React.FC = () => {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const isSuperAdmin = role === 'Super Admin';
   const isSchoolAdmin = role === 'School Admin' || role === 'Principal';
 
