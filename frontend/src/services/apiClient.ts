@@ -2,38 +2,34 @@ import axios from 'axios';
 
 const getBaseURL = (): string => {
   if (typeof window !== 'undefined') {
-    const origin = window.location.origin; // e.g. "https://www.subhraedu.com" or "https://subhraedu.com" or "http://localhost:5173"
-    const envUrl = import.meta.env.VITE_API_URL;
+    const origin = window.location.origin;
+    const envUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, '');
 
     if (envUrl) {
       try {
         const parsedEnv = new URL(envUrl, origin);
-        const windowHost = window.location.hostname; // e.g. "www.subhraedu.com"
-        
-        // Compare base domain stripping 'www.'
+        const windowHost = window.location.hostname;
         const baseWindowHost = windowHost.replace(/^www\./i, '');
         const baseEnvHost = parsedEnv.hostname.replace(/^www\./i, '');
 
-        // If visiting subhraedu.com or www.subhraedu.com, align origin to match current window origin
         if (baseWindowHost === baseEnvHost) {
-          return `${origin}${parsedEnv.pathname}`;
+          return `${origin}${parsedEnv.pathname.replace(/\/+$/, '')}`;
         }
-        return envUrl;
+
+        return parsedEnv.toString().replace(/\/+$/, '');
       } catch (e) {
         return envUrl;
       }
     }
 
-    // Dev server fallback
-    if (window.location.port === '5173' || window.location.port === '3000' || window.location.port === '5174') {
+    if (['5173', '3000', '5174'].includes(window.location.port)) {
       return `${window.location.protocol}//${window.location.hostname}:8000/api`;
     }
 
-    // Default same-origin production fallback
     return `${origin}/api`;
   }
 
-  return import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+  return import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://localhost:8000/api';
 };
 
 const apiClient = axios.create({
@@ -42,6 +38,20 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+const normalizeRequestUrl = (baseURL: string, url: string): string => {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+
+  const normalizedBase = baseURL.replace(/\/+$/, '');
+  const strippedUrl = url.replace(/^\/+/, '');
+
+  if (normalizedBase.endsWith('/api')) {
+    return strippedUrl.replace(/^api\//i, '');
+  }
+
+  return strippedUrl;
+};
 
 // Real Backend Request Interceptor
 apiClient.interceptors.request.use((config) => {
@@ -52,12 +62,8 @@ apiClient.interceptors.request.use((config) => {
 
   const baseURL = config.baseURL || '';
   const requestUrl = config.url || '';
-  const apiPathPattern = /\/api(?:\/|$)/i;
-
-  // Axios resolves absolute paths against the baseURL origin, which drops any base path.
-  // When the API base URL includes /api, preserve the path by stripping the leading slash.
-  if (apiPathPattern.test(baseURL) && requestUrl.startsWith('/')) {
-    config.url = requestUrl.replace(/^\/+/, '');
+  if (baseURL.includes('/api') && requestUrl.startsWith('/')) {
+    config.url = normalizeRequestUrl(baseURL, requestUrl);
   }
 
   return config;
