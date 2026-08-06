@@ -13,7 +13,7 @@ interface PermissionContextType {
 const PermissionContext = createContext<PermissionContextType | undefined>(undefined);
 
 export const PermissionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, role } = useAuth();
+  const { user, role, refreshUser } = useAuth();
   const [permissions, setPermissions] = useState<string[]>([]);
 
   const isSuperAdmin = role === 'Super Admin' || String(user?.role) === 'super_admin' || String(user?.role) === 'Super Admin';

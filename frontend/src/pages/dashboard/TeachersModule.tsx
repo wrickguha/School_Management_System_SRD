@@ -2,18 +2,18 @@ import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { GraduationCap, Filter, Camera, UploadCloud } from 'lucide-react';
 import { Can } from '../../store/PermissionContext';
-
-function generateEmployeeId(): string {
-  const year = new Date().getFullYear();
-  const random = Math.floor(1000 + Math.random() * 9000);
-  return `EMP${year}${random}`;
-}
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
 import type { Column } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { teacherService } from '../../services/services';
+
+function generateEmployeeId(): string {
+  const year = new Date().getFullYear();
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `EMP${year}${random}`;
+}
 
 interface StaffMember {
   id: number;
