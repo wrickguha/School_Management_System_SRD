@@ -4,7 +4,7 @@ import apiClient from '../../services/apiClient';
 import {
   Briefcase, ClipboardCheck, Users, CheckCircle2, Clock, AlertTriangle,
   Plus, Search, Calendar, TrendingUp, Send, X,
-  BarChart3, RefreshCw, Eye, Edit3, Trash2, Sparkles
+  BarChart3, RefreshCw, Eye, Edit3, Trash2, Sparkles, ShieldCheck, Lock, CheckSquare, Square
 } from 'lucide-react';
 
 interface WorkAssignment {
@@ -54,16 +54,82 @@ const AVAILABLE_ROLES = [
   { id: 'office_staff', label: 'Office & Admin Staff', color: 'bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400' },
 ];
 
+export const SYSTEM_SIDEBAR_MODULES = [
+  { id: 'work_assignments', name: 'Work Allocation', category: 'Administrative' },
+  { id: 'admissions', name: 'Admissions Desk', category: 'Administrative' },
+  { id: 'students', name: 'Students Directory', category: 'Academic' },
+  { id: 'teachers', name: 'Teachers & Faculty', category: 'Academic' },
+  { id: 'parents', name: 'Parent Directory', category: 'Administrative' },
+  { id: 'attendance', name: 'Attendance & Leave', category: 'Academic' },
+  { id: 'exams', name: 'Examinations & Marks', category: 'Academic' },
+  { id: 'certificates', name: 'Certificates & TC', category: 'Academic' },
+  { id: 'homework', name: 'Homework & Study', category: 'Academic' },
+  { id: 'fees', name: 'Fees & Finance', category: 'Financial' },
+  { id: 'transport', name: 'Transport & Fleet', category: 'Operations' },
+  { id: 'library', name: 'Library Catalog', category: 'Operations' },
+  { id: 'hostel', name: 'Hostel Management', category: 'Operations' },
+  { id: 'payroll', name: 'HR & Payroll Desk', category: 'Financial' },
+  { id: 'communication', name: 'Communication & SMS', category: 'Administrative' },
+  { id: 'reports', name: 'Reports & Analytics', category: 'Administrative' },
+  { id: 'events', name: 'Event Calendar', category: 'Operations' },
+  { id: 'members', name: 'Manage Members', category: 'Administrative' },
+  { id: 'settings', name: 'System Settings', category: 'Administrative' },
+];
+
+export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
+  teacher: ['work_assignments', 'students', 'attendance', 'exams', 'homework', 'certificates', 'library', 'communication', 'events', 'reports'],
+  accountant: ['work_assignments', 'fees', 'payroll', 'reports', 'communication', 'events'],
+  hr: ['work_assignments', 'teachers', 'payroll', 'members', 'reports', 'settings', 'communication', 'events'],
+  librarian: ['work_assignments', 'library', 'students', 'reports', 'communication', 'events'],
+  principal: ['work_assignments', 'admissions', 'students', 'teachers', 'parents', 'attendance', 'exams', 'certificates', 'homework', 'fees', 'transport', 'library', 'hostel', 'payroll', 'communication', 'reports', 'events', 'settings', 'members'],
+  receptionist: ['work_assignments', 'admissions', 'students', 'parents', 'communication', 'events', 'reports'],
+  transport_manager: ['work_assignments', 'transport', 'students', 'reports', 'communication', 'events'],
+  hostel_warden: ['work_assignments', 'hostel', 'students', 'reports', 'communication', 'events'],
+  office_staff: ['work_assignments', 'admissions', 'students', 'certificates', 'communication', 'events', 'reports'],
+};
+
 export const WorkAssignmentModule: React.FC = () => {
   const { role } = useAuth();
   const isSuperAdmin = role === 'Super Admin';
   const isSchoolAdmin = role === 'School Admin' || role === 'Principal';
 
-  const [activeTab, setActiveTab] = useState<'assignments' | 'role_matrix' | 'analytics'>('assignments');
+  const [activeTab, setActiveTab] = useState<'assignments' | 'role_matrix' | 'analytics' | 'sidebar_permissions'>('assignments');
   const [assignments, setAssignments] = useState<WorkAssignment[]>([]);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [schools, setSchools] = useState<{ id: number; name: string }[]>([]);
+
+  // Custom Role Sidebar Access Permissions State
+  const [rolePermissions, setRolePermissions] = useState<Record<string, string[]>>(() => {
+    const saved = localStorage.getItem('subhraedu_role_permissions');
+    return saved ? JSON.parse(saved) : DEFAULT_ROLE_PERMISSIONS;
+  });
+
+  const handleTogglePermission = (roleId: string, moduleId: string) => {
+    setRolePermissions(prev => {
+      const current = prev[roleId] || [];
+      const updated = current.includes(moduleId)
+        ? current.filter(m => m !== moduleId)
+        : [...current, moduleId];
+      const newPerms = { ...prev, [roleId]: updated };
+      localStorage.setItem('subhraedu_role_permissions', JSON.stringify(newPerms));
+      window.dispatchEvent(new Event('role-permissions-updated'));
+      return newPerms;
+    });
+  };
+
+  const handleResetPermissionsToDefault = () => {
+    if (!confirm('Reset all sidebar access permissions to default?')) return;
+    setRolePermissions(DEFAULT_ROLE_PERMISSIONS);
+    localStorage.setItem('subhraedu_role_permissions', JSON.stringify(DEFAULT_ROLE_PERMISSIONS));
+    window.dispatchEvent(new Event('role-permissions-updated'));
+  };
+
+  const handleSavePermissions = () => {
+    localStorage.setItem('subhraedu_role_permissions', JSON.stringify(rolePermissions));
+    window.dispatchEvent(new Event('role-permissions-updated'));
+    alert('Sidebar access permissions successfully saved!');
+  };
 
   // Filters
   const [selectedRoleFilter, setSelectedRoleFilter] = useState<string>('');
@@ -315,7 +381,7 @@ export const WorkAssignmentModule: React.FC = () => {
       </div>
 
       {/* Main Tabs Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8 overflow-x-auto">
         <button
           onClick={() => setActiveTab('assignments')}
           className={`pb-4 font-bold text-sm flex items-center gap-2 border-b-2 transition-all ${
@@ -351,6 +417,20 @@ export const WorkAssignmentModule: React.FC = () => {
           <BarChart3 className="h-4.5 w-4.5" />
           <span>Workload Analytics</span>
         </button>
+
+        {(isSuperAdmin || isSchoolAdmin) && (
+          <button
+            onClick={() => setActiveTab('sidebar_permissions')}
+            className={`pb-4 font-bold text-sm flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === 'sidebar_permissions'
+                ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
+            }`}
+          >
+            <ShieldCheck className="h-4.5 w-4.5 text-indigo-500" />
+            <span>Sidebar Access & Permissions</span>
+          </button>
+        )}
       </div>
 
       {/* Filters Bar */}
@@ -691,6 +771,132 @@ export const WorkAssignmentModule: React.FC = () => {
                 );
               })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Sidebar Access Control & Permissions */}
+      {activeTab === 'sidebar_permissions' && (
+        <div className="space-y-6">
+          {/* Header Policy Notice */}
+          <div className="p-6 bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl border border-indigo-700/40 shadow-xl relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider border border-indigo-400/30">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  Super Admin Governance Module
+                </div>
+                <h3 className="text-xl font-extrabold">Role Sidebar Access & Module Control</h3>
+                <p className="text-xs text-slate-300 max-w-3xl">
+                  Configure which sidebar items and sub-modules are accessible to each role. Changes take immediate effect in navigation sidebars. <strong>Super Admin is the master delegator, retains full access, and cannot be assigned tasks directly.</strong>
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleResetPermissionsToDefault}
+                  className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition-all"
+                >
+                  Reset Defaults
+                </button>
+                <button
+                  onClick={handleSavePermissions}
+                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+                >
+                  <CheckSquare className="h-4 w-4" />
+                  <span>Save Access Matrix</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Policy Notice Box */}
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl flex items-start gap-3 text-xs text-amber-800 dark:text-amber-300">
+            <Lock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-bold block text-sm">Super Admin Task Exclusion Policy</strong>
+              Super Admin manages workspace allocation and sidebar access permissions for staff roles (Teachers, Accountants, HR, Librarians, Receptionists, Wardens, etc.). Super Admin accounts are excluded from task assignment dropdowns.
+            </div>
+          </div>
+
+          {/* Role Access Matrix */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl space-y-6">
+            
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <h4 className="font-extrabold text-base text-slate-900 dark:text-white">Sidebar Navigation Access Matrix</h4>
+                <p className="text-xs text-slate-400">Toggle ON/OFF sidebar module visibility per role.</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const allRoleIds = AVAILABLE_ROLES.filter(r => r.id !== 'all').map(r => r.id);
+                    const fullPerms: Record<string, string[]> = {};
+                    allRoleIds.forEach(roleId => {
+                      fullPerms[roleId] = SYSTEM_SIDEBAR_MODULES.map(m => m.id);
+                    });
+                    setRolePermissions(fullPerms);
+                    localStorage.setItem('subhraedu_role_permissions', JSON.stringify(fullPerms));
+                    window.dispatchEvent(new Event('role-permissions-updated'));
+                    alert('Full sidebar access granted to all roles.');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors"
+                >
+                  Grant Full Access To All
+                </button>
+              </div>
+            </div>
+
+            {/* Matrix Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-950 text-slate-500 uppercase font-bold text-[10px] border-b border-slate-200 dark:border-slate-800">
+                    <th className="py-3 px-4 min-w-[200px]">Sidebar Module</th>
+                    <th className="py-3 px-4">Category</th>
+                    {AVAILABLE_ROLES.filter(r => r.id !== 'all').map(roleItem => (
+                      <th key={roleItem.id} className="py-3 px-3 text-center min-w-[110px]">
+                        <span className={`px-2 py-1 rounded-lg text-[9px] font-extrabold uppercase ${roleItem.color}`}>
+                          {roleItem.id}
+                        </span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                  {SYSTEM_SIDEBAR_MODULES.map((module) => (
+                    <tr key={module.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-850/50 transition-colors">
+                      <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-slate-100">
+                        {module.name}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                          {module.category}
+                        </span>
+                      </td>
+                      {AVAILABLE_ROLES.filter(r => r.id !== 'all').map(roleItem => {
+                        const isGranted = (rolePermissions[roleItem.id] || []).includes(module.id);
+                        return (
+                          <td key={roleItem.id} className="py-3.5 px-3 text-center">
+                            <button
+                              onClick={() => handleTogglePermission(roleItem.id, module.id)}
+                              className={`p-2 rounded-xl transition-all ${
+                                isGranted
+                                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                              }`}
+                              title={`${isGranted ? 'Revoke' : 'Grant'} ${module.name} access for ${roleItem.label}`}
+                            >
+                              {isGranted ? <CheckSquare className="h-4.5 w-4.5 mx-auto" /> : <Square className="h-4.5 w-4.5 mx-auto" />}
+                            </button>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </div>
       )}

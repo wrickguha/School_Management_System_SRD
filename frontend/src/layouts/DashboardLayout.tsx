@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, type UserRole } from '../store/AuthContext';
 import { useTheme } from '../store/ThemeContext';
@@ -51,6 +51,43 @@ const sidebarItems: SidebarItem[] = [
   { name: 'Manage Members', path: '/dashboard/members', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'HR'] },
 ];
 
+const PATH_TO_MODULE_ID: Record<string, string> = {
+  '/dashboard/work-assignments': 'work_assignments',
+  '/dashboard/admissions': 'admissions',
+  '/dashboard/students': 'students',
+  '/dashboard/teachers': 'teachers',
+  '/dashboard/parents': 'parents',
+  '/dashboard/attendance': 'attendance',
+  '/dashboard/exams': 'exams',
+  '/dashboard/certificates': 'certificates',
+  '/dashboard/homework': 'homework',
+  '/dashboard/fees': 'fees',
+  '/dashboard/transport': 'transport',
+  '/dashboard/library': 'library',
+  '/dashboard/hostel': 'hostel',
+  '/dashboard/payroll': 'payroll',
+  '/dashboard/communication': 'communication',
+  '/dashboard/reports': 'reports',
+  '/dashboard/events': 'events',
+  '/dashboard/settings': 'settings',
+  '/dashboard/members': 'members',
+};
+
+const ROLE_TO_KEY: Record<string, string> = {
+  'Teacher': 'teacher',
+  'Faculty': 'teacher',
+  'Class Teacher': 'teacher',
+  'Accountant': 'accountant',
+  'HR': 'hr',
+  'Librarian': 'librarian',
+  'Principal': 'principal',
+  'Vice Principal': 'principal',
+  'Receptionist': 'receptionist',
+  'Transport Manager': 'transport_manager',
+  'Hostel Warden': 'hostel_warden',
+  'Office Staff': 'office_staff',
+};
+
 export const DashboardLayout: React.FC = () => {
   const { user, role, logout, switchRole } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -58,6 +95,20 @@ export const DashboardLayout: React.FC = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [customPermissions, setCustomPermissions] = useState<Record<string, string[]> | null>(() => {
+    const saved = localStorage.getItem('subhraedu_role_permissions');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      const saved = localStorage.getItem('subhraedu_role_permissions');
+      setCustomPermissions(saved ? JSON.parse(saved) : null);
+    };
+    window.addEventListener('role-permissions-updated', handleUpdate);
+    return () => window.removeEventListener('role-permissions-updated', handleUpdate);
+  }, []);
 
   const receptionistSidebarItems: SidebarItem[] = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Receptionist'] },
@@ -74,9 +125,26 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Receptionist'] },
   ];
 
-  const filteredItems = role === 'Receptionist' 
-    ? receptionistSidebarItems 
-    : sidebarItems.filter(item => role && item.roles.includes(role));
+  const getFilteredItems = (): SidebarItem[] => {
+    if (role === 'Super Admin') return sidebarItems;
+
+    const roleKey = role ? (ROLE_TO_KEY[role] || role.toLowerCase().replace(/ /g, '_')) : '';
+    const allowedModules = customPermissions && roleKey ? customPermissions[roleKey] : null;
+
+    if (allowedModules) {
+      return sidebarItems.filter(item => {
+        if (item.path === '/dashboard') return true;
+        const moduleId = PATH_TO_MODULE_ID[item.path];
+        return moduleId ? allowedModules.includes(moduleId) : item.roles.includes(role as UserRole);
+      });
+    }
+
+    return role === 'Receptionist' 
+      ? receptionistSidebarItems 
+      : sidebarItems.filter(item => role && item.roles.includes(role as UserRole));
+  };
+
+  const filteredItems = getFilteredItems();
 
   const handleLogout = () => {
     logout();
