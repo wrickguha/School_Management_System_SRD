@@ -60,6 +60,12 @@ export const RbacManagementModule: React.FC = () => {
   const [permissionsGrouped, setPermissionsGrouped] = useState<GroupedPermissions>({});
   const [selectedRole, setSelectedRole] = useState<RoleItem | null>(null);
   const [rolePermissionsState, setRolePermissionsState] = useState<string[]>([]);
+
+  const safeRoles = Array.isArray(roles) ? roles : [];
+  const safePermissionsGrouped = permissionsGrouped && typeof permissionsGrouped === 'object' && !Array.isArray(permissionsGrouped)
+    ? permissionsGrouped
+    : {};
+  const safeRolePermissionsState = Array.isArray(rolePermissionsState) ? rolePermissionsState : [];
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
 
@@ -209,7 +215,7 @@ export const RbacManagementModule: React.FC = () => {
     setSaving(true);
     try {
       await apiClient.post(`/admin/rbac/roles/${selectedRole.id}/permissions`, {
-        permissions: rolePermissionsState,
+        permissions: safeRolePermissionsState,
       });
 
       // Update local roles list
@@ -522,7 +528,7 @@ export const RbacManagementModule: React.FC = () => {
                       className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs font-medium text-slate-700 dark:text-slate-300"
                     >
                       <option value="" disabled>Copy permissions from...</option>
-                      {roles.filter(r => r.id !== selectedRole.id).map(r => (
+                      {safeRoles.filter(r => r.id !== selectedRole?.id).map(r => (
                         <option key={r.id} value={r.id}>{r.name}</option>
                       ))}
                     </select>
@@ -543,16 +549,17 @@ export const RbacManagementModule: React.FC = () => {
 
                 {/* Module-Wise Permissions Accordion Cards */}
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1 scrollbar-thin">
-                  {Object.entries(permissionsGrouped).map(([moduleName, modulePerms]) => {
-                    const filteredPerms = modulePerms.filter(p => 
-                      p.name.toLowerCase().includes(permSearch.toLowerCase()) || 
-                      p.description.toLowerCase().includes(permSearch.toLowerCase())
+                  {Object.entries(safePermissionsGrouped).map(([moduleName, modulePerms]) => {
+                    const permsArray = Array.isArray(modulePerms) ? modulePerms : [];
+                    const filteredPerms = permsArray.filter(p => 
+                      p.name?.toLowerCase().includes(permSearch.toLowerCase()) || 
+                      p.description?.toLowerCase().includes(permSearch.toLowerCase())
                     );
 
                     if (filteredPerms.length === 0) return null;
 
                     const isCollapsed = collapsedModules[moduleName];
-                    const selectedCount = filteredPerms.filter(p => rolePermissionsState.includes(p.slug)).length;
+                    const selectedCount = filteredPerms.filter(p => safeRolePermissionsState.includes(p.slug)).length;
                     const isAllModuleSelected = selectedCount === filteredPerms.length;
 
                     return (
@@ -584,7 +591,7 @@ export const RbacManagementModule: React.FC = () => {
                         {!isCollapsed && (
                           <div className="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             {filteredPerms.map((perm) => {
-                              const isChecked = rolePermissionsState.includes(perm.slug);
+                              const isChecked = safeRolePermissionsState.includes(perm.slug);
                               return (
                                 <label
                                   key={perm.id}
