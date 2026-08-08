@@ -8,7 +8,7 @@ import {
   ClipboardList, BookOpen, CreditCard, Bus,
   Library as LibraryIcon, Home as HomeIcon, Award, MessageSquare,
   FileBarChart, Settings, LogOut, Sun, Moon, Search,
-  Menu, ChevronLeft, ChevronRight, Briefcase, Layers, Key
+  Menu, ChevronLeft, ChevronRight, Layers, Key
 } from 'lucide-react';
 import logoUrl from '../assets/subhraedu_logo.png';
 
@@ -27,8 +27,6 @@ const ALL_SYSTEM_ROLES: UserRole[] = [
   'Security Guard', 'Cleaner', 'Hostel Warden', 'Nurse', 'Counselor',
   'Student', 'Parent', 'Staff', 'Other'
 ];
-
-const STAFF_ROLES: UserRole[] = ALL_SYSTEM_ROLES.filter(r => r !== 'Student' && r !== 'Parent');
 
 const sidebarItems: SidebarItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ALL_SYSTEM_ROLES, permission: 'dashboard.view' },

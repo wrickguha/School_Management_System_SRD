@@ -23,7 +23,7 @@ export default function BatchModule() {
     session: '',
     course: '',
     name: '',
-    status: 'ACTIVE' as const,
+    status: 'ACTIVE' as 'ACTIVE' | 'INACTIVE' | 'ARCHIVED',
     description: '',
     start_date: '',
     end_date: '',
@@ -117,7 +117,7 @@ export default function BatchModule() {
       return;
     }
     createMutation.mutate({
-      session: formData.session || undefined,
+      session: formData.session || '',
       course: formData.course,
       name: formData.name,
       status: formData.status,
@@ -212,28 +212,6 @@ export default function BatchModule() {
       header: 'Actions',
       accessor: () => null,
       sortable: false,
-      render: (batch: Batch) => (
-        <div className="flex gap-2">
-          <Can I="edit" a="batch">
-            <button
-              onClick={() => handleEdit(batch)}
-              className="text-blue-600 hover:text-blue-800 font-medium"
-              title="Edit batch"
-            >
-              <Edit2 size={18} />
-            </button>
-          </Can>
-          <Can I="delete" a="batch">
-            <button
-              onClick={() => handleDelete(batch)}
-              className="text-red-600 hover:text-red-800 font-medium"
-              title="Delete batch"
-            >
-              <Trash2 size={18} />
-            </button>
-          </Can>
-        </div>
-      ),
     },
   ];
 
@@ -242,7 +220,7 @@ export default function BatchModule() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Batch Management</h2>
-        <Can I="create" a="batch">
+        <Can permission="batch.create">
           <Button
             onClick={() => {
               setSelectedBatch(null);
@@ -306,7 +284,32 @@ export default function BatchModule() {
         ) : filteredBatches.length === 0 ? (
           <div className="p-8 text-center text-gray-500">No batches found</div>
         ) : (
-          <DataTable<Batch> columns={columns} data={filteredBatches} />
+          <DataTable<Batch>
+            columns={columns}
+            data={filteredBatches}
+            actions={(batch: Batch) => (
+              <div className="flex gap-2">
+                <Can permission="batch.edit">
+                  <button
+                    onClick={() => handleEdit(batch)}
+                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    title="Edit batch"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+                </Can>
+                <Can permission="batch.delete">
+                  <button
+                    onClick={() => handleDelete(batch)}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                    title="Delete batch"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </Can>
+              </div>
+            )}
+          />
         )}
       </Card>
 

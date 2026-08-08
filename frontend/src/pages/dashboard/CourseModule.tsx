@@ -50,11 +50,11 @@ export default function CourseModule() {
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data) => courseService.create(data),
+    mutationFn: (data: any) => courseService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
-      resetForm();
       setIsCreateOpen(false);
+      resetForm();
     },
     onError: (error: any) => {
       setErrors(error.response?.data?.errors || {});
@@ -63,11 +63,11 @@ export default function CourseModule() {
 
   // Update mutation
   const updateMutation = useMutation({
-    mutationFn: (data) => courseService.update(selectedCourse!.id, data),
+    mutationFn: (data: any) => courseService.update(selectedCourse!.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
-      resetForm();
       setIsEditOpen(false);
+      resetForm();
     },
     onError: (error: any) => {
       setErrors(error.response?.data?.errors || {});
@@ -81,6 +81,7 @@ export default function CourseModule() {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       setIsDeleteOpen(false);
       setSelectedCourse(null);
+      resetForm();
     },
   });
 
