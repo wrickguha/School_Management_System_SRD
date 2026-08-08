@@ -20,7 +20,7 @@ class BatchResource extends JsonResource
             'start_date' => $this->start_date?->format('Y-m-d'),
             'end_date' => $this->end_date?->format('Y-m-d'),
             'capacity' => $this->capacity,
-            'student_count' => $this->students()->count(),
+            'student_count' => $this->students_count ?? 0,
             'is_active' => $this->status === 'ACTIVE',
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
