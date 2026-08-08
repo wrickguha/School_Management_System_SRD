@@ -374,8 +374,8 @@ export interface Batch {
 
 export const batchService = {
   getAll: async () => {
-    const res = await apiClient.get<Batch[]>('/batches');
-    return res.data;
+    const res = await apiClient.get<Batch[] | { data: Batch[] }>('/batches');
+    return Array.isArray(res.data) ? res.data : (res.data as { data: Batch[] }).data ?? [];
   },
   getById: async (id: string | number) => {
     const res = await apiClient.get<Batch>(`/batches/${id}`);
@@ -426,8 +426,8 @@ export interface Course {
 
 export const courseService = {
   getAll: async () => {
-    const res = await apiClient.get<Course[]>('/courses');
-    return res.data;
+    const res = await apiClient.get<Course[] | { data: Course[] }>('/courses');
+    return Array.isArray(res.data) ? res.data : (res.data as { data: Course[] }).data ?? [];
   },
   getById: async (id: string | number) => {
     const res = await apiClient.get<Course>(`/courses/${id}`);

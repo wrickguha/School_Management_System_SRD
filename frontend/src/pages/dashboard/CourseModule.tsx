@@ -97,7 +97,7 @@ export default function CourseModule() {
     });
   }, [courses, searchTerm, statusFilter, courseTypeFilter]);
 
-  const uniqueCourseTypes = Array.from(new Set(courses.map(c => c.course_type).filter(Boolean)));
+  const uniqueCourseTypes = Array.from(new Set((courses ?? []).map(c => c.course_type).filter(Boolean)));
 
   const resetForm = () => {
     setFormData({
