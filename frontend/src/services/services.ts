@@ -403,4 +403,59 @@ export const batchService = {
   }
 };
 
+export interface Course {
+  id: number | string;
+  school_id: number;
+  course_code: string;
+  name: string;
+  description?: string;
+  course_type?: 'UG' | 'PG' | 'Diploma' | 'Certificate' | 'Other';
+  duration_months?: number;
+  total_semesters?: number;
+  semester_pattern?: string;
+  credits?: number;
+  fees?: number;
+  eligibility_criteria?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+  batch_count?: number;
+  is_active?: boolean;
+  created_by?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const courseService = {
+  getAll: async () => {
+    const res = await apiClient.get<Course[]>('/courses');
+    return res.data;
+  },
+  getById: async (id: string | number) => {
+    const res = await apiClient.get<Course>(`/courses/${id}`);
+    return res.data;
+  },
+  create: async (data: Omit<Course, 'id' | 'school_id' | 'created_at' | 'updated_at' | 'batch_count' | 'is_active'>) => {
+    const res = await apiClient.post<Course>('/courses', data);
+    return res.data;
+  },
+  update: async (id: string | number, data: Partial<Course>) => {
+    const res = await apiClient.put<Course>(`/courses/${id}`, data);
+    return res.data;
+  },
+  delete: async (id: string | number) => {
+    const res = await apiClient.delete<{ success: boolean }>(`/courses/${id}`);
+    return res.data;
+  },
+  getActive: async () => {
+    const res = await apiClient.get<Course[]>('/courses/active');
+    return res.data;
+  },
+  getByType: async (type: string) => {
+    const res = await apiClient.get<Course[]>(`/courses/by-type/${type}`);
+    return res.data;
+  },
+  getByStatus: async (status: string) => {
+    const res = await apiClient.get<Course[]>(`/courses/by-status/${status}`);
+    return res.data;
+  }
+};
 

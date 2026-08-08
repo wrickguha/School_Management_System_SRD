@@ -46,6 +46,7 @@ const EventCalendarModule = lazy(() => import('../pages/dashboard/EventCalendarM
 const MembersModule = lazy(() => import('../pages/dashboard/MembersModule'));
 const CertificatesModule = lazy(() => import('../pages/dashboard/CertificatesModule'));
 const BatchModule = lazy(() => import('../pages/dashboard/BatchModule'));
+const CourseModule = lazy(() => import('../pages/dashboard/CourseModule'));
 const WorkAssignmentModule = lazy(() => import('../pages/dashboard/WorkAssignmentModule'));
 const ReceptionistModule = lazy(() => import('../pages/dashboard/ReceptionistModule'));
 const RbacManagementModule = lazy(() => import('../pages/dashboard/RbacManagementModule'));
@@ -110,6 +111,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="events" element={<EventCalendarModule />} />
           <Route path="members" element={<PermissionGuard permission="user.view"><MembersModule /></PermissionGuard>} />
           <Route path="certificates" element={<PermissionGuard permission="certificate.view"><CertificatesModule /></PermissionGuard>} />
+          <Route path="courses" element={<PermissionGuard permission="course.view"><CourseModule /></PermissionGuard>} />
           <Route path="batches" element={<PermissionGuard permission="batch.view"><BatchModule /></PermissionGuard>} />
           <Route path="work-assignments" element={<PermissionGuard permission="work.view"><WorkAssignmentModule /></PermissionGuard>} />
           <Route path="visitors" element={<PermissionGuard permission="visitor.view"><ReceptionistModule initialTab="visitors" /></PermissionGuard>} />

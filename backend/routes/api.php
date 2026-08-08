@@ -16,6 +16,7 @@ use App\Http\Controllers\Student\ParentController;
 use App\Http\Controllers\Academics\HomeworkController;
 use App\Http\Controllers\Academics\CertificateController;
 use App\Http\Controllers\Academics\BatchController;
+use App\Http\Controllers\Academics\CourseController;
 use App\Http\Controllers\Facility\TransportController;
 use App\Http\Controllers\Facility\HostelController;
 use App\Http\Controllers\Facility\LibraryController;
@@ -102,6 +103,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // Homework
     Route::apiResource('homework', HomeworkController::class)
         ->middleware('role:school_admin,principal,teacher,faculty,student,parent');
+
+    // Courses (Academic Course Management)
+    Route::get('/courses/active', [CourseController::class, 'getActive'])
+        ->middleware('role:school_admin,principal,teacher,faculty,department_head');
+    Route::get('/courses/by-type/{type}', [CourseController::class, 'getByType'])
+        ->middleware('role:school_admin,principal,teacher,faculty,department_head');
+    Route::get('/courses/by-status/{status}', [CourseController::class, 'getByStatus'])
+        ->middleware('role:school_admin,principal,teacher,faculty,department_head');
+    Route::apiResource('courses', CourseController::class)
+        ->middleware('role:school_admin,principal,teacher,faculty,department_head');
 
     // Batches (Academic Batches/Sessions)
     Route::get('/batches/active', [BatchController::class, 'getActive'])
