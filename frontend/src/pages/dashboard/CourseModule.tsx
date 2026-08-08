@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Trash2, Plus, Edit2 } from 'lucide-react';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { DataTable } from '../../components/ui/DataTable';
+import type { Column } from '../../components/ui/DataTable';
+import { Modal } from '../../components/ui/Modal';
 import { courseService } from '../../services/services';
-import { Course } from '../../services/services';
-import Card from '../../components/Card';
-import Button from '../../components/Button';
-import DataTable from '../../components/DataTable';
-import Modal from '../../components/Modal';
-import { Plus, Edit2, Trash2, AlertCircle } from 'lucide-react';
-import Can from '../../components/Can';
+import type { Course } from '../../services/services';
+import { Can } from '../../store/PermissionContext';
 
 export default function CourseModule() {
   const queryClient = useQueryClient();
@@ -29,7 +30,9 @@ export default function CourseModule() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [filters, setFilters] = useState({ search: '', status: '', courseType: '' });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [courseTypeFilter, setCourseTypeFilter] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Fetch courses
@@ -85,13 +88,15 @@ export default function CourseModule() {
   const filteredCourses = useMemo(() => {
     return courses.filter((course) => {
       const matchSearch =
-        course.name?.toLowerCase().includes(filters.search.toLowerCase()) ||
-        course.course_code?.toLowerCase().includes(filters.search.toLowerCase());
-      const matchStatus = !filters.status || course.status === filters.status;
-      const matchType = !filters.courseType || course.course_type === filters.courseType;
+        course.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.course_code?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchStatus = !statusFilter || course.status === statusFilter;
+      const matchType = !courseTypeFilter || course.course_type === courseTypeFilter;
       return matchSearch && matchStatus && matchType;
     });
-  }, [courses, filters]);
+  }, [courses, searchTerm, statusFilter, courseTypeFilter]);
+
+  const uniqueCourseTypes = Array.from(new Set(courses.map(c => c.course_type).filter(Boolean)));
 
   const resetForm = () => {
     setFormData({
@@ -111,10 +116,7 @@ export default function CourseModule() {
     setSelectedCourse(null);
   };
 
-  const handleCreate = () => {
-    setIsCreateOpen(true);
-    resetForm();
-  };
+
 
   const handleEdit = (course: Course) => {
     setSelectedCourse(course);
@@ -166,54 +168,50 @@ export default function CourseModule() {
     }
   };
 
-  const columns = [
-    { key: 'course_code', label: 'Code' },
-    { key: 'name', label: 'Course Name' },
-    { key: 'duration_months', label: 'Duration (Months)' },
-    { key: 'total_semesters', label: 'Semesters' },
-    { key: 'course_type', label: 'Type' },
+  const columns: Column<Course>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      render: (value: string) => (
+      header: 'Code',
+      accessor: 'course_code',
+      sortable: true,
+    },
+    {
+      header: 'Name',
+      accessor: 'name',
+      sortable: true,
+    },
+    {
+      header: 'Duration (Months)',
+      accessor: (course: Course) => course.duration_months || '-',
+    },
+    {
+      header: 'Semesters',
+      accessor: (course: Course) => course.total_semesters || '-',
+    },
+    {
+      header: 'Type',
+      accessor: 'course_type',
+      sortable: true,
+    },
+    {
+      header: 'Status',
+      accessor: (course: Course) => (
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === 'ACTIVE'
+            course.status === 'ACTIVE'
               ? 'bg-green-100 text-green-800'
-              : value === 'INACTIVE'
+              : course.status === 'INACTIVE'
                 ? 'bg-yellow-100 text-yellow-800'
                 : 'bg-red-100 text-red-800'
           }`}
         >
-          {value}
+          {course.status}
         </span>
       ),
     },
     {
-      key: 'actions',
-      label: 'Actions',
-      render: (_, course: Course) => (
-        <div className="flex gap-2">
-          <Can permission="course.edit">
-            <button
-              onClick={() => handleEdit(course)}
-              className="text-blue-600 hover:text-blue-800 p-1"
-              title="Edit"
-            >
-              <Edit2 size={18} />
-            </button>
-          </Can>
-          <Can permission="course.delete">
-            <button
-              onClick={() => handleDelete(course)}
-              className="text-red-600 hover:text-red-800 p-1"
-              title="Delete"
-            >
-              <Trash2 size={18} />
-            </button>
-          </Can>
-        </div>
-      ),
+      header: 'Actions',
+      accessor: () => null,
+      sortable: false,
     },
   ];
 
@@ -221,33 +219,36 @@ export default function CourseModule() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Course Management</h1>
+        <h2 className="text-2xl font-bold text-gray-800">Course Management</h2>
         <Can permission="course.create">
           <Button
-            variant="primary"
-            onClick={handleCreate}
-            className="flex items-center gap-2"
+            onClick={() => {
+              setSelectedCourse(null);
+              resetForm();
+              setIsCreateOpen(true);
+            }}
+            className="bg-school-blue hover:bg-school-blue-dark text-white"
           >
-            <Plus size={20} />
+            <Plus size={18} className="mr-2" />
             Add Course
           </Button>
         </Can>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input
             type="text"
             placeholder="Search by course name or code..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-blue focus:border-transparent"
           />
           <select
-            value={filters.status}
-            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-blue focus:border-transparent"
           >
             <option value="">All Status</option>
             <option value="ACTIVE">Active</option>
@@ -255,26 +256,53 @@ export default function CourseModule() {
             <option value="ARCHIVED">Archived</option>
           </select>
           <select
-            value={filters.courseType}
-            onChange={(e) => setFilters({ ...filters, courseType: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
+            value={courseTypeFilter}
+            onChange={(e) => setCourseTypeFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-blue focus:border-transparent"
           >
             <option value="">All Types</option>
-            <option value="UG">Undergraduate</option>
-            <option value="PG">Postgraduate</option>
-            <option value="Diploma">Diploma</option>
-            <option value="Certificate">Certificate</option>
-            <option value="Other">Other</option>
+            {uniqueCourseTypes.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
           </select>
         </div>
       </Card>
 
       {/* Data Table */}
-      <Card>
+      <Card className="p-4">
         {isLoading ? (
           <div className="text-center py-8">Loading courses...</div>
         ) : (
-          <DataTable columns={columns} data={filteredCourses} />
+          <DataTable
+            columns={columns}
+            data={filteredCourses.map((course) => ({
+              ...course,
+              id: course.id || Math.random(),
+            }))}
+            searchPlaceholder="Search courses..."
+            actions={(course: Course) => (
+              <div className="flex gap-2">
+                <Can permission="course.edit">
+                  <button
+                    onClick={() => handleEdit(course)}
+                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    title="Edit course"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+                </Can>
+                <Can permission="course.delete">
+                  <button
+                    onClick={() => handleDelete(course)}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                    title="Delete course"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </Can>
+              </div>
+            )}
+          />
         )}
       </Card>
 
@@ -282,7 +310,8 @@ export default function CourseModule() {
       <Modal
         isOpen={isCreateOpen || isEditOpen}
         onClose={() => {
-          selectedCourse ? setIsEditOpen(false) : setIsCreateOpen(false);
+          if (selectedCourse) setIsEditOpen(false);
+          else setIsCreateOpen(false);
           resetForm();
         }}
         title={selectedCourse ? 'Edit Course' : 'Create New Course'}
@@ -451,18 +480,18 @@ export default function CourseModule() {
 
           <div className="flex gap-2 justify-end">
             <Button
-              variant="secondary"
               onClick={() => {
-                selectedCourse ? setIsEditOpen(false) : setIsCreateOpen(false);
+                if (selectedCourse) setIsEditOpen(false);
+                else setIsCreateOpen(false);
                 resetForm();
               }}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800"
             >
               Cancel
             </Button>
             <Button
-              variant="primary"
               type="submit"
-              loading={createMutation.isPending || updateMutation.isPending}
+              className="bg-school-blue hover:bg-school-blue-dark text-white"
             >
               {selectedCourse ? 'Update Course' : 'Create Course'}
             </Button>
@@ -477,23 +506,19 @@ export default function CourseModule() {
         title="Delete Course"
       >
         <div className="space-y-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="text-red-600 flex-shrink-0" size={24} />
-            <div>
-              <p className="font-medium text-gray-900">
-                Are you sure you want to delete "{selectedCourse?.name}"?
-              </p>
-              <p className="text-sm text-gray-600 mt-1">This action cannot be undone.</p>
-            </div>
-          </div>
+          <p className="text-gray-700">
+            Are you sure you want to delete "<strong>{selectedCourse?.name}</strong>"? This action cannot be undone.
+          </p>
           <div className="flex gap-2 justify-end">
-            <Button variant="secondary" onClick={() => setIsDeleteOpen(false)}>
+            <Button
+              onClick={() => setIsDeleteOpen(false)}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800"
+            >
               Cancel
             </Button>
             <Button
-              variant="danger"
               onClick={() => deleteMutation.mutate()}
-              loading={deleteMutation.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               Delete Course
             </Button>

@@ -126,7 +126,6 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Parent Directory', path: '/dashboard/parents', icon: Users, roles: ['Receptionist'] },
     { name: 'Appointments', path: '/dashboard/appointments', icon: Award, roles: ['Receptionist'] },
     { name: 'Communication', path: '/dashboard/communication', icon: MessageSquare, roles: ['Receptionist'] },
-    { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: ['Receptionist'] },
     { name: 'Complaints', path: '/dashboard/complaints', icon: ShieldAlert, roles: ['Receptionist'] },
     { name: 'Event Calendar', path: '/dashboard/events', icon: Award, roles: ['Receptionist'] },
     { name: 'Reports', path: '/dashboard/reports', icon: FileBarChart, roles: ['Receptionist'] },
