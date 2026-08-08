@@ -33,7 +33,6 @@ const STAFF_ROLES: UserRole[] = ALL_SYSTEM_ROLES.filter(r => r !== 'Student' && 
 const sidebarItems: SidebarItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ALL_SYSTEM_ROLES, permission: 'dashboard.view' },
   { name: 'Roles & Permissions', path: '/dashboard/rbac', icon: Key, roles: ['Super Admin', 'School Admin', 'Principal', 'HR'], permission: 'role.view' },
-  { name: 'Work Allocation', path: '/dashboard/work-assignments', icon: Briefcase, roles: STAFF_ROLES, permission: 'work.view' },
   { name: 'Admissions', path: '/dashboard/admissions', icon: UserCheck, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Office Staff', 'Receptionist'], permission: 'enquiry.view' },
   { name: 'Students', path: '/dashboard/students', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'Department Head', 'Class Teacher', 'Teacher', 'Faculty', 'Office Staff', 'Counselor'], permission: 'student.view' },
   { name: 'Teachers', path: '/dashboard/teachers', icon: Users, roles: ['Super Admin', 'School Admin', 'Principal', 'Vice Principal', 'HR', 'Department Head'], permission: 'teacher.view' },
