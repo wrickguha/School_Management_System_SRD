@@ -23,7 +23,7 @@ class CourseResource extends JsonResource
             'status' => $this->status,
             'eligibility_criteria' => $this->eligibility_criteria,
             'fees' => $this->fees ? (float) $this->fees : null,
-            'batch_count' => $this->batches()->count(),
+            'batch_count' => $this->batches_count ?? 0,
             'created_by' => $this->createdBy?->name,
             'is_active' => $this->status === 'ACTIVE',
             'created_at' => $this->created_at?->toIso8601String(),

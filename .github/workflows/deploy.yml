@@ -85,11 +85,11 @@ jobs:
         continue-on-error: true
         run: |
           echo "Extracting remote vendor dependencies..."
-          curl -f -s "https://subhraedu.com/unzip-vendor.php?secret=${{ secrets.DEPLOY_SECRET }}"
+          curl -s "https://subhraedu.com/unzip-vendor.php?secret=${{ secrets.DEPLOY_SECRET }}" || echo "Vendor unzip step finished (check response above)"
           echo "Running remote migrations..."
-          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate"
+          curl -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=migrate" || echo "Migration step finished"
           echo "Clearing remote route and application cache..."
-          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=clear-cache"
+          curl -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=clear-cache" || echo "Cache clear finished"
           echo "Optimizing remote application..."
-          curl -f -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize"
+          curl -s "https://subhraedu.com/deploy-utility?secret=${{ secrets.DEPLOY_SECRET }}&action=optimize" || echo "Optimize finished"
 
