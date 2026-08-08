@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Student\ParentController;
 use App\Http\Controllers\Academics\HomeworkController;
 use App\Http\Controllers\Academics\CertificateController;
+use App\Http\Controllers\Academics\BatchController;
 use App\Http\Controllers\Facility\TransportController;
 use App\Http\Controllers\Facility\HostelController;
 use App\Http\Controllers\Facility\LibraryController;
@@ -101,6 +102,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Homework
     Route::apiResource('homework', HomeworkController::class)
         ->middleware('role:school_admin,principal,teacher,faculty,student,parent');
+
+    // Batches (Academic Batches/Sessions)
+    Route::get('/batches/active', [BatchController::class, 'getActive'])
+        ->middleware('role:school_admin,principal,teacher,faculty,student,parent');
+    Route::get('/batches/by-course/{course}', [BatchController::class, 'getByCourse'])
+        ->middleware('role:school_admin,principal,teacher,faculty');
+    Route::apiResource('batches', BatchController::class)
+        ->middleware('role:school_admin,principal,teacher,faculty');
 
     // Certificates
     Route::get('/certificates', [CertificateController::class, 'index'])

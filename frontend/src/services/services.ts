@@ -355,4 +355,52 @@ export const schoolService = {
   }
 };
 
+export interface Batch {
+  id: number | string;
+  school_id: number;
+  session: string;
+  course: string;
+  name: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  capacity?: number;
+  student_count?: number;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const batchService = {
+  getAll: async () => {
+    const res = await apiClient.get<Batch[]>('/batches');
+    return res.data;
+  },
+  getById: async (id: string | number) => {
+    const res = await apiClient.get<Batch>(`/batches/${id}`);
+    return res.data;
+  },
+  create: async (data: Omit<Batch, 'id' | 'school_id' | 'created_at' | 'updated_at' | 'student_count' | 'is_active'>) => {
+    const res = await apiClient.post<Batch>('/batches', data);
+    return res.data;
+  },
+  update: async (id: string | number, data: Partial<Batch>) => {
+    const res = await apiClient.put<Batch>(`/batches/${id}`, data);
+    return res.data;
+  },
+  delete: async (id: string | number) => {
+    const res = await apiClient.delete<{ success: boolean }>(`/batches/${id}`);
+    return res.data;
+  },
+  getActive: async () => {
+    const res = await apiClient.get<Batch[]>('/batches/active');
+    return res.data;
+  },
+  getByCourse: async (course: string) => {
+    const res = await apiClient.get<Batch[]>(`/batches/by-course/${course}`);
+    return res.data;
+  }
+};
+
 
